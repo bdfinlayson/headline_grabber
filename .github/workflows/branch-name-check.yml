@@ -1,0 +1,35 @@
+name: Enforce Branch Naming Convention
+
+on:
+  push:
+    branches:
+      - "*"
+  pull_request:
+    branches:
+      - "*"
+
+jobs:
+  branch-name-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Check branch name
+        run: |
+          if [[ "$GITHUB_REF" == refs/heads/* ]]; then
+            BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/})
+            # Define the branch naming pattern
+            BRANCH_PATTERN="^(feature|bugfix|hotfix|release)/HG[0-9]+-[a-zA-Z0-9._-]+$"
+
+            # Check if the branch name matches the pattern
+            if ! [[ $BRANCH_NAME =~ $BRANCH_PATTERN ]]; then
+              echo "Error: Branch name '$BRANCH_NAME' does not match the required pattern '$BRANCH_PATTERN'"
+              echo "Branch names must be in the format: <type>/HG<ticket-number>-<title>"
+              echo "Examples: feature/HG100-name-of-the-ticket, bugfix/HG101-fix-bug"
+              exit 1
+            fi
+          else
+            echo "Skipping branch name check for ref: $GITHUB_REF"
+          fi
