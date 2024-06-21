@@ -1,0 +1,16 @@
+abbreviation: nyt
+name: The New York Times
+url: https://www.nytimes.com
+selectors:
+    headline:
+      tag: section
+      identifier: story-wrapper
+    link:
+      tag: a
+      identifier: href
+    title:
+      tag: p
+      identifier: indicate-hover
+    description:
+      tag: p
+      identifier: summary-class

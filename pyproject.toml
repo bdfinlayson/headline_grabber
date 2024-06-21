@@ -8,6 +8,8 @@ packages = [{include = "headline_grabber", from = "src"}]
 
 [tool.poetry.dependencies]
 python = ">3.9,<4.0"
+click = "^8.1.7"
+pyyaml = "^6.0.1"
 
 
 [build-system]
