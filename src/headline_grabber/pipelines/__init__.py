@@ -1,4 +1,5 @@
 from src.headline_grabber.pipeline_steps.classify_subject import ClassifySubject
+from src.headline_grabber.pipeline_steps.display_report import DisplayReport
 from src.headline_grabber.pipeline_steps.filter_sites import FilterSites
 from src.headline_grabber.pipeline_steps.group_by_similarity import GroupBySimilarity
 from src.headline_grabber.pipeline_steps.prepare_for_display import PrepareForDisplay
@@ -14,5 +15,6 @@ news_pipeline = Pipeline([
     ClassifySubject(),
     TextSimilarity(),
     GroupBySimilarity(),
-    PrepareForDisplay()
+    PrepareForDisplay(),
+    DisplayReport()
 ])

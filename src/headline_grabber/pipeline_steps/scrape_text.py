@@ -17,6 +17,9 @@ class ScrapeText(PipelineStep):
             h = self._get_headlines(site_config)
             headlines = headlines + h
         context.headlines = headlines
+        if not context.headlines:
+            print("No headlines found. Please check the site configurations and try again.")
+            exit()
         return context
 
     def _filter_results(self, x: Headline) -> bool:
