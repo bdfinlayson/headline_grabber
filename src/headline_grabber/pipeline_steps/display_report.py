@@ -56,14 +56,11 @@ class DisplayReport(PipelineStep):
         try:
             with open(file_path, "w") as file:
                 file.write(html_content)
-            print(f"HTML file created at: {file_path}")
         except Exception as e:
             print(f"Failed to write HTML file: {e}")
             exit(1)
 
-        # Open the HTML file in the default web browser
         try:
-            print(os.path.realpath(file_path))
             webbrowser.open('file://' + os.path.realpath(file_path))
         except Exception as e:
             print(f"Failed to open HTML file in web browser: {e}")
