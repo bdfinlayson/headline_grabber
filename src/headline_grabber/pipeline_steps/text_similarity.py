@@ -11,7 +11,10 @@ class TextSimilarity(PipelineStep):
     threshold = 0.4
 
     def run(self, context: PipelineContext):
-        texts = [' '.join([headline.title, headline.description]) for headline in context.headlines]
+        texts = [
+            " ".join([headline.title, headline.description])
+            for headline in context.headlines
+        ]
         embeddings = text_similarity_model.encode(texts)
 
         # first calculate the similarities between the texts
@@ -21,16 +24,17 @@ class TextSimilarity(PipelineStep):
 
         # then use the similarity matrix numbers to discover which texts are likely about the same topic
         clustering = AgglomerativeClustering(
-            n_clusters=None,
-            linkage='average',
-            distance_threshold=1 - self.threshold
+            n_clusters=None, linkage="average", distance_threshold=1 - self.threshold
         )
 
         clustering.fit(1 - similarity_matrix)
         similarity_groups = clustering.labels_
 
-        context.headlines = [headline.set_similarity_classification(similarity_group, similarity_scores) for headline, similarity_group, similarity_scores in zip(context.headlines, similarity_groups, similarity_matrix)]
+        context.headlines = [
+            headline.set_similarity_classification(similarity_group, similarity_scores)
+            for headline, similarity_group, similarity_scores in zip(
+                context.headlines, similarity_groups, similarity_matrix
+            )
+        ]
 
         return context
-
-

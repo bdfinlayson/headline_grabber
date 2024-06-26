@@ -16,4 +16,3 @@ class Pipeline:
         for step in self.steps:
             context = step.run(context)
         return context
-

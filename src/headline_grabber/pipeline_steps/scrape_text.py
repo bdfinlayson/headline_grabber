@@ -18,13 +18,18 @@ class ScrapeText(PipelineStep):
             headlines = headlines + h
         context.headlines = headlines
         if not context.headlines:
-            print("No headlines found. Please check the site configurations and try again.")
+            print(
+                "No headlines found. Please check the site configurations and try again."
+            )
             exit()
         return context
 
     def _filter_results(self, x: Headline) -> bool:
         min_content_length = 150
-        return len(x.link) > 0 and len(' '.join([x.title, x.description])) > min_content_length
+        return (
+            len(x.link) > 0
+            and len(" ".join([x.title, x.description])) > min_content_length
+        )
 
     def _parse_headline(self, tag: Tag, page_selectors: PageSelectors) -> Headline:
         link_selector = page_selectors.link
@@ -32,21 +37,44 @@ class ScrapeText(PipelineStep):
         description_selector = page_selectors.description
 
         return Headline(
-            link=tag.find(link_selector.tag)[link_selector.identifier] if tag.find(link_selector.tag) else '',
-            title=tag.find(title_selector.tag, class_=title_selector.identifier).text if tag.find(
-                title_selector.tag, class_=title_selector.identifier) else '',
-            description=tag.find(description_selector.tag, class_=description_selector.identifier).text if tag.find(
-                description_selector.tag, class_=description_selector.identifier) else ''
+            link=(
+                tag.find(link_selector.tag)[link_selector.identifier]
+                if tag.find(link_selector.tag)
+                else ""
+            ),
+            title=(
+                tag.find(title_selector.tag, class_=title_selector.identifier).text
+                if tag.find(title_selector.tag, class_=title_selector.identifier)
+                else ""
+            ),
+            description=(
+                tag.find(
+                    description_selector.tag, class_=description_selector.identifier
+                ).text
+                if tag.find(
+                    description_selector.tag, class_=description_selector.identifier
+                )
+                else ""
+            ),
         )
 
     def _get_headlines_beautifulsoup(self, config: NewsSite, html: str = None):
         if html is None:
             html = requests.get(config.url).text
-        soup = BeautifulSoup(html, 'html.parser')
+        soup = BeautifulSoup(html, "html.parser")
         page_selectors = config.selectors
-        headlines = list(filter(self._filter_results, [self._parse_headline(tag, page_selectors) for tag in
-                                                 soup.find_all(page_selectors.headline.tag,
-                                                               class_=page_selectors.headline.identifier)]))
+        headlines = list(
+            filter(
+                self._filter_results,
+                [
+                    self._parse_headline(tag, page_selectors)
+                    for tag in soup.find_all(
+                        page_selectors.headline.tag,
+                        class_=page_selectors.headline.identifier,
+                    )
+                ],
+            )
+        )
         return headlines
 
     def _get_headlines_selenium(self, config: NewsSite):
@@ -62,4 +90,4 @@ class ScrapeText(PipelineStep):
         elif config.engine == ScraperEngine.SELENIUM.value:
             return self._get_headlines_selenium(config)
         else:
-            print('Unsupported engine')
+            print("Unsupported engine")

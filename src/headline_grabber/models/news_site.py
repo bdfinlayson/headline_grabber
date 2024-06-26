@@ -21,4 +21,4 @@ class NewsSite:
     name: str
     url: str
     selectors: PageSelectors
-    engine: str = 'beautifulsoup'
+    engine: str = "beautifulsoup"

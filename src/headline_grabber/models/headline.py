@@ -27,7 +27,12 @@ class Headline:
         self.subject = subject
         return self
 
-    def set_similarity_classification(self, similarity_group: int, similarity_scores: List[float]) -> Self:
+    def set_similarity_classification(
+        self, similarity_group: int, similarity_scores: List[float]
+    ) -> Self:
         self.similarity_scores = similarity_scores
-        self.similarity_grouping = Classification(label=str(similarity_group), score=max(filter(lambda x: x != 1.0, similarity_scores)))
+        self.similarity_grouping = Classification(
+            label=str(similarity_group),
+            score=max(filter(lambda x: x != 1.0, similarity_scores)),
+        )
         return self

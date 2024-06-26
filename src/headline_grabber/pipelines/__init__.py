@@ -8,13 +8,15 @@ from src.headline_grabber.pipeline_steps.scrape_text import ScrapeText
 from src.headline_grabber.pipeline_steps.text_similarity import TextSimilarity
 from src.headline_grabber.pipelines.pipeline import Pipeline
 
-news_pipeline = Pipeline([
-    FilterSites(),
-    ScrapeText(),
-    ScoreSentiment(),
-    ClassifySubject(),
-    TextSimilarity(),
-    GroupBySimilarity(),
-    PrepareForDisplay(),
-    DisplayReport()
-])
+news_pipeline = Pipeline(
+    [
+        FilterSites(),
+        ScrapeText(),
+        ScoreSentiment(),
+        ClassifySubject(),
+        TextSimilarity(),
+        GroupBySimilarity(),
+        PrepareForDisplay(),
+        DisplayReport(),
+    ]
+)

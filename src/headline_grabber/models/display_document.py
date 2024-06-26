@@ -12,4 +12,3 @@ class DisplayDocument:
     average_sentiment: Classification
     subjects: List[str]
     most_common_subject: str
-

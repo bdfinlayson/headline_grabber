@@ -9,6 +9,8 @@ class GroupBySimilarity(PipelineStep):
             if headline.similarity_grouping.label not in groups:
                 groups[headline.similarity_grouping.label] = [headline]
             else:
-                groups[headline.similarity_grouping.label] = groups[headline.similarity_grouping.label] + [headline]
+                groups[headline.similarity_grouping.label] = groups[
+                    headline.similarity_grouping.label
+                ] + [headline]
         context.grouped_headlines = groups
         return context
