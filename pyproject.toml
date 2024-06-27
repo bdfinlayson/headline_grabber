@@ -8,6 +8,17 @@ packages = [{include = "headline_grabber", from = "src"}]
 
 [tool.poetry.dependencies]
 python = ">3.9,<4.0"
+click = "^8.1.7"
+pyyaml = "^6.0.1"
+beautifulsoup4 = "^4.12.3"
+selenium = "^4.22.0"
+requests = "^2.32.3"
+transformers = "^4.41.2"
+sentence-transformers = "^3.0.1"
+typing-extensions = "^4.12.2"
+sentencepiece = "^0.2.0"
+dominate = "^2.9.1"
+black = "^24.4.2"
 
 
 [build-system]

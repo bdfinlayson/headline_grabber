@@ -1,0 +1,16 @@
+abbreviation: 'bgb'
+name: 'The Boston Globe'
+url: 'https://www.bostonglobe.com'
+selectors:
+  headline:
+    tag: 'div'
+    identifier: 'card'
+  link:
+    tag: 'a'
+    identifier: 'href'
+  title:
+    tag: 'h2'
+    identifier: 'headline'
+  description:
+    tag: 'div'
+    identifier: 'deck'

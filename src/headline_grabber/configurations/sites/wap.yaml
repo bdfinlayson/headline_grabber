@@ -1,0 +1,16 @@
+abbreviation: 'wap'
+name: 'The Washington Post'
+url: 'https://www.washingtonpost.com'
+selectors:
+  headline:
+    tag: 'div'
+    identifier: 'card-text'
+  link:
+    tag: 'a'
+    identifier: 'href'
+  title:
+    tag: 'div'
+    identifier: 'headline'
+  description:
+    tag: 'div'
+    identifier: 'font-size-blurb'

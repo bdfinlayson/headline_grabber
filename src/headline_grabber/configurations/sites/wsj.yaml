@@ -1,0 +1,16 @@
+abbreviation: 'wsj'
+name: 'The Wall Street Journal'
+url: 'https://www.wsj.com'
+selectors:
+  headline:
+    tag: 'article'
+    identifier: ''
+  link:
+    tag: 'a'
+    identifier: 'href'
+  title:
+    tag: 'div'
+    identifier: ''
+  description:
+    tag: 'p'
+    identifier: ''
