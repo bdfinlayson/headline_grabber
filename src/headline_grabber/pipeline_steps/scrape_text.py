@@ -1,8 +1,8 @@
-from src.headline_grabber.configurations.enums.scraper_engine import ScraperEngine
-from src.headline_grabber.models.headline import Headline
-from src.headline_grabber.models.news_site import NewsSite, PageSelectors
-from src.headline_grabber.models.pipeline_context import PipelineContext
-from src.headline_grabber.pipeline_steps.pipeline_step import PipelineStep
+from headline_grabber.configurations.enums.scraper_engine import ScraperEngine
+from headline_grabber.models.headline import Headline
+from headline_grabber.models.news_site import NewsSite, PageSelectors
+from headline_grabber.models.pipeline_context import PipelineContext
+from headline_grabber.pipeline_steps.pipeline_step import PipelineStep
 
 from typing import List
 import requests
@@ -31,16 +31,14 @@ class ScrapeText(PipelineStep):
             and len(" ".join([x.title, x.description])) > min_content_length
         )
 
-    def _parse_headline(self, tag: Tag, page_selectors: PageSelectors) -> Headline:
+    def _parse_headline(self, tag: Tag, page_selectors: PageSelectors, url: str) -> Headline:
         link_selector = page_selectors.link
         title_selector = page_selectors.title
         description_selector = page_selectors.description
-
+        raw_link = tag.find(link_selector.tag)[link_selector.identifier] if tag.find(link_selector.tag) else ""
         return Headline(
             link=(
-                tag.find(link_selector.tag)[link_selector.identifier]
-                if tag.find(link_selector.tag)
-                else ""
+                raw_link if "http" in raw_link else url + raw_link
             ),
             title=(
                 tag.find(title_selector.tag, class_=title_selector.identifier).text
@@ -67,7 +65,7 @@ class ScrapeText(PipelineStep):
             filter(
                 self._filter_results,
                 [
-                    self._parse_headline(tag, page_selectors)
+                    self._parse_headline(tag, page_selectors, config.url)
                     for tag in soup.find_all(
                         page_selectors.headline.tag,
                         class_=page_selectors.headline.identifier,
@@ -78,7 +76,10 @@ class ScrapeText(PipelineStep):
         return headlines
 
     def _get_headlines_selenium(self, config: NewsSite):
-        driver = webdriver.Firefox()
+        firefoxOptions = webdriver.FirefoxOptions()
+        firefoxOptions.add_argument('--headless')
+        firefoxOptions.add_argument('--disable-gpu')
+        driver = webdriver.Firefox(options=firefoxOptions)
         driver.get(config.url)
         html = driver.page_source
         headlines = self._get_headlines_beautifulsoup(config, html)

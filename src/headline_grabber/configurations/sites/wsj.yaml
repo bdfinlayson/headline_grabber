@@ -1,6 +1,7 @@
 abbreviation: 'wsj'
 name: 'The Wall Street Journal'
 url: 'https://www.wsj.com'
+engine: beautifulsoup
 selectors:
   headline:
     tag: 'article'
