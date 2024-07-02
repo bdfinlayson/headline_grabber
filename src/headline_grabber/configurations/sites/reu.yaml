@@ -1,6 +1,7 @@
-abbreviation: rtrs
+abbreviation: reu
 name: The Reuters
 url: https://www.reuters.com
+engine: selenium
 selectors:
     headline:
       tag: li

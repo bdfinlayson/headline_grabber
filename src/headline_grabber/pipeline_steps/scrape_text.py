@@ -31,16 +31,14 @@ class ScrapeText(PipelineStep):
             and len(" ".join([x.title, x.description])) > min_content_length
         )
 
-    def _parse_headline(self, tag: Tag, page_selectors: PageSelectors, url: str = "") -> Headline:
+    def _parse_headline(self, tag: Tag, page_selectors: PageSelectors, url: str) -> Headline:
         link_selector = page_selectors.link
         title_selector = page_selectors.title
         description_selector = page_selectors.description
-
+        raw_link = tag.find(link_selector.tag)[link_selector.identifier] if tag.find(link_selector.tag) else ""
         return Headline(
             link=(
-                (url + tag.find(link_selector.tag)[link_selector.identifier])
-                if tag.find(link_selector.tag)
-                else ""
+                raw_link if "http" in raw_link else url + raw_link
             ),
             title=(
                 tag.find(title_selector.tag, class_=title_selector.identifier).text
@@ -67,7 +65,7 @@ class ScrapeText(PipelineStep):
             filter(
                 self._filter_results,
                 [
-                    self._parse_headline(tag, page_selectors, config.url if config.abbreviation == 'rtrs' else "")
+                    self._parse_headline(tag, page_selectors, config.url)
                     for tag in soup.find_all(
                         page_selectors.headline.tag,
                         class_=page_selectors.headline.identifier,
@@ -88,8 +86,6 @@ class ScrapeText(PipelineStep):
         return headlines
 
     def _get_headlines(self, config: NewsSite):
-        if config.abbreviation == 'rtrs':
-            return self._get_headlines_selenium(config)
         if config.engine == ScraperEngine.BEAUTIFULSOUP.value:
             return self._get_headlines_beautifulsoup(config)
         elif config.engine == ScraperEngine.SELENIUM.value:
