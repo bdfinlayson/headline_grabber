@@ -1,7 +1,7 @@
-from src.headline_grabber.models.headline import Classification
-from src.headline_grabber.models.pipeline_context import PipelineContext
-from src.headline_grabber.pipeline_steps import text_similarity_model
-from src.headline_grabber.pipeline_steps.pipeline_step import PipelineStep
+from headline_grabber.models.headline import Classification
+from headline_grabber.models.pipeline_context import PipelineContext
+from headline_grabber.pipeline_steps import text_similarity_model
+from headline_grabber.pipeline_steps.pipeline_step import PipelineStep
 from sklearn.cluster import AgglomerativeClustering
 import numpy as np
 

@@ -1,4 +1,4 @@
-from src.headline_grabber.configurations.enums.str_enum import StrEnum
+from headline_grabber.configurations.enums.str_enum import StrEnum
 
 
 class ScraperEngine(StrEnum):

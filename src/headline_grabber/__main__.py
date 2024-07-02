@@ -1,10 +1,10 @@
 import click
 
-from src.headline_grabber.configurations.sites import sites
-from src.headline_grabber.models.pipeline_context import PipelineContext
-from src.headline_grabber.models.user_preferences import UserPreferences
-from src.headline_grabber.pipelines import news_pipeline
-from src.headline_grabber.validators.click.validate_site_name import validate_site_name
+from headline_grabber.configurations.sites import sites
+from headline_grabber.models.pipeline_context import PipelineContext
+from headline_grabber.models.user_preferences import UserPreferences
+from headline_grabber.pipelines import news_pipeline
+from headline_grabber.validators.click.validate_site_name import validate_site_name
 
 
 @click.command(

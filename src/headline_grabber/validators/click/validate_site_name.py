@@ -1,6 +1,6 @@
 import click
 
-from src.headline_grabber.configurations.sites import site_names
+from headline_grabber.configurations.sites import site_names
 
 
 def validate_site_name(ctx, param, value):

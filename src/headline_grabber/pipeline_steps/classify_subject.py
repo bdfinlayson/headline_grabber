@@ -1,12 +1,12 @@
 from transformers import pipeline
 
-from src.headline_grabber.models.headline import Classification
-from src.headline_grabber.models.pipeline_context import PipelineContext
-from src.headline_grabber.pipeline_steps import (
+from headline_grabber.models.headline import Classification
+from headline_grabber.models.pipeline_context import PipelineContext
+from headline_grabber.pipeline_steps import (
     subject_classification_model,
     subject_classification_tokenizer,
 )
-from src.headline_grabber.pipeline_steps.pipeline_step import PipelineStep
+from headline_grabber.pipeline_steps.pipeline_step import PipelineStep
 
 
 class ClassifySubject(PipelineStep):

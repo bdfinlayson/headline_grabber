@@ -5,7 +5,7 @@ from typing import Type, TypeVar
 import yaml
 import os
 
-from src.headline_grabber.models.news_site import NewsSite
+from headline_grabber.models.news_site import NewsSite
 
 T = TypeVar("T")
 path = Path(__file__).parent

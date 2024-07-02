@@ -1,6 +1,6 @@
-from src.headline_grabber.models.pipeline_context import PipelineContext
-from src.headline_grabber.pipeline_steps import sentiment_analysis_classifier
-from src.headline_grabber.pipeline_steps.pipeline_step import PipelineStep
+from headline_grabber.models.pipeline_context import PipelineContext
+from headline_grabber.pipeline_steps import sentiment_analysis_classifier
+from headline_grabber.pipeline_steps.pipeline_step import PipelineStep
 
 
 class ScoreSentiment(PipelineStep):

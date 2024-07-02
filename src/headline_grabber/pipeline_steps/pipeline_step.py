@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from src.headline_grabber.models.pipeline_context import PipelineContext
+from headline_grabber.models.pipeline_context import PipelineContext
 
 
 class PipelineStep(ABC):
