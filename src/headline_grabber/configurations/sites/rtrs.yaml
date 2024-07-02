@@ -1,0 +1,16 @@
+abbreviation: rtrs
+name: The Reuters
+url: https://www.reuters.com
+selectors:
+    headline:
+      tag: li
+      identifier: story-card__tpl-common__1Q7br
+    link:
+      tag: a
+      identifier: href
+    title:
+      tag: span
+      identifier: text__text__1FZLe
+    description:
+      tag: p
+      identifier: text__text__1FZLe

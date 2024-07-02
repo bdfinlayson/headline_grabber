@@ -1,0 +1,11 @@
+click
+pyyaml
+beautifulsoup4
+selenium
+requests
+transformers
+sentence-transformers
+typing-extensions
+sentencepiece
+dominate
+black
