@@ -66,7 +66,8 @@ class DisplayReport(PipelineStep):
 
     def _display_report(self, html_content: str, file_path: str):
         try:
-            with open(file_path, "w") as file:
+            #specified encoding (RM)
+            with open(file_path, "w", encoding='utf-8') as file:
                 file.write(html_content)
         except Exception as e:
             print(f"Failed to write HTML file: {e}")

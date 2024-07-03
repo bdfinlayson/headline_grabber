@@ -1,0 +1,17 @@
+abbreviation: apn
+name: AP News
+url: https://www.apnews.com
+engine: beautifulsoup
+selectors:
+    headline:
+      tag: div
+      identifier: PagePromo-content
+    link:
+      tag: a
+      identifier: href
+    title:
+      tag: bsp-custom-headline
+      identifier: custom-headline
+    description:
+      tag: div
+      identifier: PagePromo-description
