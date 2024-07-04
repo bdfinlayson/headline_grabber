@@ -4,7 +4,7 @@ from src.headline_grabber.configurations.sites import sites
 from src.headline_grabber.models.pipeline_context import PipelineContext
 from src.headline_grabber.models.user_preferences import UserPreferences
 from src.headline_grabber.pipelines import news_pipeline
-from src.headline_grabber.validators.click.validate_site_name import validate_site_name
+from src.headline_grabber.validators.click.validate_site_name import validate_site_name, validate_max_entries
 
 
 @click.command(
@@ -30,7 +30,16 @@ from src.headline_grabber.validators.click.validate_site_name import validate_si
     callback=validate_site_name,
     help="Comma-separated list of news sources to exclude from the search",
 )
-def main(include: str, exclude: str):
+@click.option(
+    "--entries",
+    "-n",
+    type=str,
+    default=None,
+    required=False,
+    callback=validate_max_entries,
+    help="Enter a number to specify the maximum number of entries",
+)
+def main(include: str, exclude: str, entries: int):
     """Simple program to collect headlines from various news sources and summarize them in a helpful way"""
     pipeline_context = PipelineContext(
         site_configs=sites,
@@ -40,6 +49,7 @@ def main(include: str, exclude: str):
         user_input=UserPreferences(
             include=(include.split(",") if include else None),
             exclude=(exclude.split(",") if exclude else None),
+            entries=(entries if entries else None),
         ),
     )
     pipeline_context = news_pipeline.run(pipeline_context)

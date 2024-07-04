@@ -6,6 +6,7 @@ from src.headline_grabber.pipeline_steps.prepare_for_display import PrepareForDi
 from src.headline_grabber.pipeline_steps.score_sentiment import ScoreSentiment
 from src.headline_grabber.pipeline_steps.scrape_text import ScrapeText
 from src.headline_grabber.pipeline_steps.text_similarity import TextSimilarity
+from src.headline_grabber.pipeline_steps.filter_max_results import FilterMaxResults
 from src.headline_grabber.pipelines.pipeline import Pipeline
 
 news_pipeline = Pipeline(
@@ -14,6 +15,7 @@ news_pipeline = Pipeline(
         ScrapeText(),
         ScoreSentiment(),
         ClassifySubject(),
+        FilterMaxResults(),
         TextSimilarity(),
         GroupBySimilarity(),
         PrepareForDisplay(),

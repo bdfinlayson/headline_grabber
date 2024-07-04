@@ -16,3 +16,17 @@ def validate_site_name(ctx, param, value):
                 )
 
     return value
+
+def validate_max_entries(ctx, param, value):
+    if value is None:
+        return value
+    
+    if isinstance(value, str):
+        value = value.replace(",", " ").split()[0]
+
+    try:
+        value = int(value)
+    except ValueError:
+        raise click.BadParameter(f'{value} must be a number')
+    
+    return value
