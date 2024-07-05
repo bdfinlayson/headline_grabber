@@ -31,15 +31,15 @@ from src.headline_grabber.validators.click.validate_site_name import validate_si
     help="Comma-separated list of news sources to exclude from the search",
 )
 @click.option(
-    "--entries",
-    "-n",
+    "--limit",
+    "-l",
     type=str,
     default=None,
     required=False,
     callback=validate_max_entries,
-    help="Enter a number to specify the maximum number of entries",
+    help="Number specifying the maximum number of entries per topic in a report",
 )
-def main(include: str, exclude: str, entries: int):
+def main(include: str, exclude: str, limit: int):
     """Simple program to collect headlines from various news sources and summarize them in a helpful way"""
     pipeline_context = PipelineContext(
         site_configs=sites,
@@ -49,7 +49,7 @@ def main(include: str, exclude: str, entries: int):
         user_input=UserPreferences(
             include=(include.split(",") if include else None),
             exclude=(exclude.split(",") if exclude else None),
-            entries=(entries if entries else None),
+            limit=(limit if limit else None),
         ),
     )
     pipeline_context = news_pipeline.run(pipeline_context)

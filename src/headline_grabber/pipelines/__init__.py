@@ -13,9 +13,9 @@ news_pipeline = Pipeline(
     [
         FilterSites(),
         ScrapeText(),
-        ScoreSentiment(),
         ClassifySubject(),
         FilterMaxResults(),
+        ScoreSentiment(),
         TextSimilarity(),
         GroupBySimilarity(),
         PrepareForDisplay(),
