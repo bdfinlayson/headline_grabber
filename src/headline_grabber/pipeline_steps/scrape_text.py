@@ -10,6 +10,9 @@ from bs4 import BeautifulSoup, Tag
 from selenium import webdriver
 
 
+class ScrapeTextException(Exception):
+    pass
+
 class ScrapeText(PipelineStep):
     def run(self, context: PipelineContext) -> PipelineContext:
         headlines: List[Headline] = []
@@ -18,9 +21,7 @@ class ScrapeText(PipelineStep):
             headlines = headlines + h
         context.headlines = headlines
         if not context.headlines:
-            print(
-                "No headlines found. Please check the site configurations and try again."
-            )
+            self.throw_error("No headlines found. Please check the site configurations and try again.")
             exit()
         return context
 
@@ -91,4 +92,8 @@ class ScrapeText(PipelineStep):
         elif config.engine == ScraperEngine.SELENIUM.value:
             return self._get_headlines_selenium(config)
         else:
-            print("Unsupported engine")
+            self.throw_error("No defined or unsupported engine!")
+        
+    def throw_error(self, message: str):
+        print(message)
+        raise ScrapeTextException(message)
