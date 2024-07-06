@@ -1,10 +1,7 @@
 from typing import List
-
 import click
-
-from src.headline_grabber.models.pipeline_context import PipelineContext
-from src.headline_grabber.pipeline_steps.pipeline_step import PipelineStep
-
+from headline_grabber.models.pipeline_context import PipelineContext
+from headline_grabber.pipeline_steps.pipeline_step import PipelineStep
 
 class FilterSites(PipelineStep):
     def run(self, context: PipelineContext) -> PipelineContext:
@@ -12,6 +9,7 @@ class FilterSites(PipelineStep):
             raise click.BadParameter(
                 f"--include and --exclude are mutually exclusive. Use --include or --exclude to specify the sources to include or exclude."
             )
+        
 
         if context.user_input.exclude:
             filtered_sites = [
