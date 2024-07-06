@@ -1,6 +1,7 @@
 abbreviation: 'wap'
 name: 'The Washington Post'
 url: 'https://www.washingtonpost.com'
+engine: beautifulsoup
 selectors:
   headline:
     tag: 'div'
