@@ -7,7 +7,6 @@ from transformers import (
     T5Tokenizer,
 )
 from sentence_transformers import SentenceTransformer
-import torch
 
 # Load the tokenizer and model for subject classification
 subject_classification_tokenizer = AutoTokenizer.from_pretrained(

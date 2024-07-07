@@ -12,7 +12,7 @@ path = Path(__file__).parent
 
 file_names = os.listdir(path)
 
-sites: [NewsSite] = []
+sites: [NewsSite] = [] # type: ignore
 site_names: Dict[str, str] = {}
 
 
@@ -33,10 +33,22 @@ def from_dict(data_class: Type[T], data: dict) -> T:
         return data
 
 
-for file_name in file_names:
+def load_site_config(file_name: str) -> NewsSite:
     if file_name.endswith(".yaml"):
-        with open(f"{path}/{file_name}", "r") as file:
-            yml = yaml.safe_load(file)
-            site_config = from_dict(NewsSite, yml)
+            with open(f"{path}/{file_name}", "r") as file:
+                yml = yaml.safe_load(file)
+                site_config = from_dict(NewsSite, yml)
+                return site_config
+    else:
+        return None
+
+
+def get_sites():
+    for file_name in file_names:
+        site_config = load_site_config(file_name)
+        if site_config:
             sites.append(site_config)
             site_names[site_config.abbreviation] = site_config.name
+
+
+get_sites()
