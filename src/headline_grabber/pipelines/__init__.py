@@ -12,10 +12,10 @@ news_pipeline = Pipeline(
     [
         FilterSites(),
         ScrapeText(),
-        ScoreSentiment(),
-        ClassifySubject(),
-        TextSimilarity(),
-        GroupBySimilarity(),
+        # ScoreSentiment(),
+        # ClassifySubject(),
+        # TextSimilarity(),
+        # GroupBySimilarity(),
         PrepareForDisplay(),
         DisplayReport(),
     ]
