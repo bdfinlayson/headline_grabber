@@ -1,0 +1,17 @@
+abbreviation: tol
+name: The Times of London
+url: https://www.thetimes.com
+engine: beautifulsoup
+selectors:
+    headline:
+      tag: div
+      identifier: Item-content
+    link:
+      tag: a
+      identifier: href
+    title:
+      tag: h3
+      identifier: Item-headline
+    description:
+      tag: p
+      identifier: Dip Item-dip
