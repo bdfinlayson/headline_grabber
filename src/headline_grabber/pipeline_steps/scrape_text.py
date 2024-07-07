@@ -3,7 +3,7 @@ from headline_grabber.models.headline import Headline
 from headline_grabber.models.news_site import NewsSite, PageSelectors
 from headline_grabber.models.pipeline_context import PipelineContext
 from headline_grabber.pipeline_steps.pipeline_step import PipelineStep
-
+from tqdm import tqdm
 from typing import List
 import requests
 from bs4 import BeautifulSoup, Tag
@@ -13,9 +13,13 @@ from selenium import webdriver
 class ScrapeText(PipelineStep):
     def run(self, context: PipelineContext) -> PipelineContext:
         headlines: List[Headline] = []
-        for site_config in context.site_configs:
-            h = self._get_headlines(site_config)
-            headlines = headlines + h
+        num_sites = len(context.site_configs)
+        # Using manual update of the progress bar
+        with tqdm(total=num_sites, desc="Scraping headlines", unit="site") as pbar:
+            for site_config in context.site_configs:
+                h = self._get_headlines(site_config)
+                headlines = headlines + h
+                pbar.update(1)
         context.headlines = headlines
         if not context.headlines:
             print(
