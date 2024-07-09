@@ -6,7 +6,6 @@ class GroupBySimilarity(PipelineStep):
     def run(self, context: PipelineContext):
         groups = {}
         for headline in tqdm(context.headlines, desc="Grouping by similarity", unit="headline"):
-        
             if headline.similarity_grouping.label not in groups:
                 groups[headline.similarity_grouping.label] = [headline]
             else:

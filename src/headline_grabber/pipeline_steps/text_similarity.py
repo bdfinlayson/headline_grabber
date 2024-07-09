@@ -26,20 +26,16 @@ class TextSimilarity(PipelineStep):
         clustering = AgglomerativeClustering(
             n_clusters=None, linkage="average", distance_threshold=1 - self.threshold
         )
-
         clustering.fit(1 - similarity_matrix)
         similarity_groups = clustering.labels_
-
         context.headlines = [
             headline.set_similarity_classification(similarity_group, similarity_scores)
-
             for headline, similarity_group, similarity_scores in tqdm(
                 zip(context.headlines, similarity_groups, similarity_matrix), 
                 desc="Classifying Text Similarities", 
                 unit="headline", 
                 total=len(context.headlines)
             )
-
         ]
 
         return context

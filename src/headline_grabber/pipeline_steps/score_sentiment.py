@@ -12,8 +12,6 @@ class ScoreSentiment(PipelineStep):
         sentiment_scores = sentiment_analysis_classifier(texts)
         context.headlines = [
             headline.set_sentiment_score(sentiment_score)
-            #for headline, sentiment_score in zip(context.headlines, sentiment_scores)
             for headline, sentiment_score in tqdm(zip(context.headlines, sentiment_scores), desc="Setting sentiment scores", unit="headline", total=len(context.headlines))
-       
         ]
         return context

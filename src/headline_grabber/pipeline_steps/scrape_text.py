@@ -17,7 +17,6 @@ class ScrapeText(PipelineStep):
     def run(self, context: PipelineContext) -> PipelineContext:
         headlines: List[Headline] = []
         num_sites = len(context.site_configs)
-        # Using manual update of the progress bar
         with tqdm(total=num_sites, desc="Scraping headlines", unit="site") as pbar:
             for site_config in context.site_configs:
                 h = self._get_headlines(site_config)

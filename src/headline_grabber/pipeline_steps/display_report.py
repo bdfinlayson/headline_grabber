@@ -2,10 +2,8 @@ import os
 import time
 import webbrowser
 from datetime import datetime
-
 from headline_grabber.models.pipeline_context import PipelineContext
 from headline_grabber.pipeline_steps.pipeline_step import PipelineStep
-
 import dominate
 from dominate.tags import *
 from tqdm import tqdm
@@ -46,10 +44,8 @@ class DisplayReport(PipelineStep):
                                 f'This report contains content from the following news sources: {", ".join(news_sources)}'
                             )
                 for subject in tqdm(subjects, desc="Generating report"):
-            
                     with div(cls="row"):
                         h2(subject)
-                        
                         for headline in context.documents_for_display[subject]:
                             with div(cls="col-6"):
                                 h4(headline.summarized_title)

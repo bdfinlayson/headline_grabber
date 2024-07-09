@@ -35,8 +35,6 @@ class ClassifySubject(PipelineStep):
                     self.subject_class_label_mapping[result["label"]], result["score"]
                 )
             )
-            
-            for headline, result in tqdm(zip(context.headlines, results), desc="Classifying subjects", unit="headline", total=len(context.headlines))
-               
+            for headline, result in tqdm(zip(context.headlines, results), desc="Classifying subjects", unit="headline", total=len(context.headlines))  
         ]
         return context
