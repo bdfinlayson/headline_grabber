@@ -37,5 +37,4 @@ class TextSimilarity(PipelineStep):
                 total=len(context.headlines)
             )
         ]
-
         return context
