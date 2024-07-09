@@ -2,11 +2,11 @@ from typing import List, Dict
 from collections import Counter
 from statistics import mean
 
-from src.headline_grabber.models.display_document import DisplayDocument
-from src.headline_grabber.models.headline import Classification
-from src.headline_grabber.models.pipeline_context import PipelineContext
-from src.headline_grabber.pipeline_steps.pipeline_step import PipelineStep
-from src.headline_grabber.pipeline_steps import (
+from headline_grabber.models.display_document import DisplayDocument
+from headline_grabber.models.headline import Classification
+from headline_grabber.models.pipeline_context import PipelineContext
+from headline_grabber.pipeline_steps.pipeline_step import PipelineStep
+from headline_grabber.pipeline_steps import (
     text_summarization_tokenizer,
     text_summarization_model,
     headline_tokenizer,

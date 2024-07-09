@@ -1,6 +1,7 @@
 abbreviation: nyt
 name: The New York Times
 url: https://www.nytimes.com
+engine: beautifulsoup
 selectors:
     headline:
       tag: section

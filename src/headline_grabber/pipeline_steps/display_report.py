@@ -3,8 +3,8 @@ import time
 import webbrowser
 from datetime import datetime
 
-from src.headline_grabber.models.pipeline_context import PipelineContext
-from src.headline_grabber.pipeline_steps.pipeline_step import PipelineStep
+from headline_grabber.models.pipeline_context import PipelineContext
+from headline_grabber.pipeline_steps.pipeline_step import PipelineStep
 
 import dominate
 from dominate.tags import *
@@ -66,7 +66,8 @@ class DisplayReport(PipelineStep):
 
     def _display_report(self, html_content: str, file_path: str):
         try:
-            with open(file_path, "w") as file:
+            #specified encoding (RM)
+            with open(file_path, "w", encoding='utf-8') as file:
                 file.write(html_content)
         except Exception as e:
             print(f"Failed to write HTML file: {e}")

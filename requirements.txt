@@ -1,0 +1,14 @@
+numpy=1.26.4
+click
+pyyaml
+beautifulsoup4
+selenium
+requests
+transformers
+sentence-transformers
+typing-extensions
+sentencepiece
+dominate
+black
+pytest=8.2.2
+pytest-html=4.1.1

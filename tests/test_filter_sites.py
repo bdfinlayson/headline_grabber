@@ -1,6 +1,6 @@
-# test_filter_sites.py
 import pytest
 import click
+import copy
 from src.headline_grabber.models.pipeline_context import PipelineContext
 from src.headline_grabber.models.user_preferences import UserPreferences
 from src.headline_grabber.pipeline_steps.filter_sites import FilterSites
@@ -11,8 +11,7 @@ from src.headline_grabber.models.news_site import NewsSite
 
 @pytest.fixture
 def sample_sites():
-    # Returns actual site configurations loaded from YAML files
-    return sites
+    return copy.copy(sites)
 
 
 def test_include_option(sample_sites):
@@ -28,8 +27,6 @@ def test_include_option(sample_sites):
     )
     filter_sites = FilterSites()
     result_context = filter_sites.run(context)
-
-     # Check if only the included sites are present
     expected_abbreviations = {"nyt", "wsj"}
     result_abbreviations = {site.abbreviation for site in result_context.site_configs}
     assert len(result_context.site_configs) == len(expected_abbreviations)
@@ -48,8 +45,6 @@ def test_exclude_option(sample_sites):
     )
     filter_sites = FilterSites()
     result_context = filter_sites.run(context)
-
-    # Check if the excluded site is not present and the count is correct
     expected_length = total_sites - 1
     assert len(result_context.site_configs) == expected_length
     assert all(site.abbreviation != "nyt" for site in result_context.site_configs)

@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import List
 
-from src.headline_grabber.models.headline import Classification
+from headline_grabber.models.headline import Classification
 
 
 @dataclass
