@@ -1,7 +1,9 @@
 from typing import List
 import click
+
 from headline_grabber.models.pipeline_context import PipelineContext
 from headline_grabber.pipeline_steps.pipeline_step import PipelineStep
+
 
 class FilterSites(PipelineStep):
     def run(self, context: PipelineContext) -> PipelineContext:
