@@ -24,6 +24,8 @@ class OptionValidator:
 
     @staticmethod
     def validate_target_dir(ctx, param, value):
+        if value is None or value == "":
+            return None
         win_regex = r'^(([a-zA-Z]\:)|(\\))(\\{1}|((\\{1})[^\\]([^/:*?<>"|]*))+)$'
         nonwin_regex = r'^(/?)((?:[a-zA-Z0-9]+/)*)([a-zA-Z0-9]+?)(\*?)(/?)$'
         if not re.match(win_regex if platform == 'win32' else nonwin_regex, value):
