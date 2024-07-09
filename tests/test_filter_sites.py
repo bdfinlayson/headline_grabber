@@ -11,10 +11,8 @@ from src.headline_grabber.models.news_site import NewsSite
 def sample_sites():
     return copy.copy(sites)
 
-
 def test_include_option(sample_sites):
     total_sites = len(sample_sites)
-    #user_input = UserPreferences(include=["nyt"])
     user_input = UserPreferences(include=["nyt", "wsj"])
     context = PipelineContext(
         site_configs=sample_sites,
@@ -59,4 +57,3 @@ def test_include_and_exclude_option(sample_sites):
     filter_sites = FilterSites()
     with pytest.raises(click.BadParameter):
         filter_sites.run(context)
-   
