@@ -10,6 +10,7 @@ class FilterSites(PipelineStep):
             raise click.BadParameter(
                 f"--include and --exclude are mutually exclusive. Use --include or --exclude to specify the sources to include or exclude."
             )
+        
 
         filtered_sites = []
         if context.user_input.exclude:
