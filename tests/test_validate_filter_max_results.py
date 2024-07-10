@@ -18,7 +18,8 @@ def test_user_input_none():
         user_input=UserPreferences(
             include=None,
             exclude=None,
-            entries=None,
+            target_dir=None,
+            limit=None,
         ),
     )
     context.headlines.append(Classification("sports", 0.1))
@@ -37,7 +38,8 @@ def test_user_input_two_clips_results():
         user_input=UserPreferences(
             include=None,
             exclude=None,
-            entries=2,
+            target_dir=None,
+            limit=2,
         ),
     )
     context.headlines.append(Headline("a", "b", "c", Classification("sports", 0.1)))
@@ -56,7 +58,8 @@ def test_user_input_two_does_not_clip_results():
         user_input=UserPreferences(
             include=None,
             exclude=None,
-            entries=2,
+            target_dir=None,
+            limit=3,
         ),
     )
     context.headlines.append(Headline("a", "b", "c", Classification("sports", 0.1)))
@@ -75,7 +78,8 @@ def test_user_input_two_clips_3_but_not_one():
         user_input=UserPreferences(
             include=None,
             exclude=None,
-            entries=2,
+            target_dir=None,
+            limit=2,
         ),
     )
     context.headlines.append(Headline("a", "b", "c", Classification("sports", 0.1)))

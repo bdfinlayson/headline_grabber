@@ -45,7 +45,7 @@ from headline_grabber.validators.click.option_validator import OptionValidator
     type=str,
     default=None,
     required=False,
-    callback=validate_max_entries,
+    callback=OptionValidator.validate_max_entries,
     help="Number specifying the maximum number of entries per topic in a report",
 )
 def main(include: str, exclude: str, target_dir: str, limit: int):

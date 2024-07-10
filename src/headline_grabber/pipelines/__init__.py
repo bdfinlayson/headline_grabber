@@ -7,6 +7,7 @@ from headline_grabber.pipeline_steps.score_sentiment import ScoreSentiment
 from headline_grabber.pipeline_steps.scrape_text import ScrapeText
 from headline_grabber.pipeline_steps.text_similarity import TextSimilarity
 from headline_grabber.pipelines.pipeline import Pipeline
+from headline_grabber.pipeline_steps.filter_max_results import FilterMaxResults
 
 news_pipeline = Pipeline(
     [

@@ -32,3 +32,18 @@ class OptionValidator:
             raise click.BadParameter(f"'{value}' is not a valid directory")
         return value
     
+    @staticmethod
+    def validate_max_entries(ctx, param, value):
+        if value is None:
+            return value
+        
+        if isinstance(value, str):
+            value = value.replace(",", " ").split()[0]
+
+        try:
+            value = int(value)
+        except ValueError:
+            raise click.BadParameter(f'{value} must be a number')
+        
+        return value
+    
