@@ -16,7 +16,6 @@ class ClassifySubject(PipelineStep):
         "LABEL_1": "Sports",
         "LABEL_2": "Business",
         "LABEL_3": "Science/Technology",
-        "LABEL_4": "Politics",
     }
 
     def run(self, context: PipelineContext):

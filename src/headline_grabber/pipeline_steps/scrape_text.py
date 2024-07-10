@@ -3,28 +3,24 @@ from headline_grabber.models.headline import Headline
 from headline_grabber.models.news_site import NewsSite, PageSelectors
 from headline_grabber.models.pipeline_context import PipelineContext
 from headline_grabber.pipeline_steps.pipeline_step import PipelineStep
-from tqdm import tqdm
+
 from typing import List
 import requests
 from bs4 import BeautifulSoup, Tag
 from selenium import webdriver
 
 
-class ScrapeTextException(Exception):
-    pass
-
 class ScrapeText(PipelineStep):
     def run(self, context: PipelineContext) -> PipelineContext:
         headlines: List[Headline] = []
-        num_sites = len(context.site_configs)
-        with tqdm(total=num_sites, desc="Scraping headlines", unit="site") as pbar:
-            for site_config in context.site_configs:
-                h = self._get_headlines(site_config)
-                headlines = headlines + h
-                pbar.update(1)
+        for site_config in context.site_configs:
+            h = self._get_headlines(site_config)
+            headlines = headlines + h
         context.headlines = headlines
         if not context.headlines:
-            self.throw_error("No headlines found. Please check the site configurations and try again.")
+            print(
+                "No headlines found. Please check the site configurations and try again."
+            )
             exit()
         return context
 
@@ -95,8 +91,4 @@ class ScrapeText(PipelineStep):
         elif config.engine == ScraperEngine.SELENIUM.value:
             return self._get_headlines_selenium(config)
         else:
-            self.throw_error("No defined or unsupported engine!")
-        
-    def throw_error(self, message: str):
-        print(message)
-        raise ScrapeTextException(message)
+            print("Unsupported engine")
