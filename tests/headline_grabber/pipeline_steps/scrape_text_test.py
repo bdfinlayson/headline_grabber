@@ -13,6 +13,38 @@ def test_get_headlines_nyt_beautifulsoup():
     config = ScrapeTextData.NYT_CONFIG
     assert scrape_text._get_headlines(config) != []
 
+def test_get_headlines_tol_beautifulsoup():
+    scrape_text = ScrapeText()
+    config = ScrapeTextData.TOL_CONFIG
+    assert scrape_text._get_headlines(config) != []
+
+def test_parse_headline_tol():
+    scrape_text = ScrapeText()
+    config = ScrapeTextData.TOL_CONFIG
+    with open("tests/headline_grabber/pipeline_steps/test_data/tol.html", "r") as file:
+        html = file.read()
+    soup = BeautifulSoup(html, "html.parser")
+    headline = soup.find_all(config.selectors.headline.tag, class_=config.selectors.headline.identifier)[0]
+    actualResult = scrape_text._parse_headline(headline, config.selectors, config.url)
+    assert actualResult.title.strip() == "Braverman claims leadership rival Jenrick is from left of Tory party"
+    assert actualResult.description.strip() == 'Suella Braverman has accused Robert Jenrick of being a “centrist Rishi supporter” who is “from the left of the party”, after one of her key supporters switched to backing the former immigration minister. Jenrick and Braverman, the former home secretary, are among seven of the remaining 121 Tory MPs preparing to stand for the leadership...'
+    assert actualResult.link.strip() == "https://www.thetimes.com/uk/politics/article/suella-braverman-tory-leadership-race-robert-jenrick-rivals-mnghlk9fn"
+
+def test_run_TOL_Success():
+    scrape_text = ScrapeText()
+    config = ScrapeTextData.TOL_CONFIG
+    pipeline_context = PipelineContext(
+        site_configs=[config],
+        headlines=[],
+        grouped_headlines={},
+        documents_for_display={},
+        user_input=UserPreferences(
+            include=['tol'],
+            exclude=None,
+        ),
+    )
+    actualResult = scrape_text.run(pipeline_context)
+    assert len(actualResult.headlines) > 0
 
 def test_get_headlines_no_engine():
     scrape_text = ScrapeText()
