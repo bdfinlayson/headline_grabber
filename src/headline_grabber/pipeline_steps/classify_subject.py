@@ -1,12 +1,12 @@
 from transformers import pipeline
-
-from src.headline_grabber.models.headline import Classification
-from src.headline_grabber.models.pipeline_context import PipelineContext
-from src.headline_grabber.pipeline_steps import (
+from tqdm import tqdm
+from headline_grabber.models.headline import Classification
+from headline_grabber.models.pipeline_context import PipelineContext
+from headline_grabber.pipeline_steps import (
     subject_classification_model,
     subject_classification_tokenizer,
 )
-from src.headline_grabber.pipeline_steps.pipeline_step import PipelineStep
+from headline_grabber.pipeline_steps.pipeline_step import PipelineStep
 
 
 class ClassifySubject(PipelineStep):
@@ -35,6 +35,6 @@ class ClassifySubject(PipelineStep):
                     self.subject_class_label_mapping[result["label"]], result["score"]
                 )
             )
-            for headline, result in zip(context.headlines, results)
+            for headline, result in tqdm(zip(context.headlines, results), desc="Classifying subjects", unit="headline", total=len(context.headlines))  
         ]
         return context

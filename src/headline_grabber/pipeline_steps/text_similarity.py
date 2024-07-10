@@ -1,10 +1,10 @@
-from src.headline_grabber.models.headline import Classification
-from src.headline_grabber.models.pipeline_context import PipelineContext
-from src.headline_grabber.pipeline_steps import text_similarity_model
-from src.headline_grabber.pipeline_steps.pipeline_step import PipelineStep
+from headline_grabber.models.headline import Classification
+from headline_grabber.models.pipeline_context import PipelineContext
+from headline_grabber.pipeline_steps import text_similarity_model
+from headline_grabber.pipeline_steps.pipeline_step import PipelineStep
 from sklearn.cluster import AgglomerativeClustering
 import numpy as np
-
+from tqdm import tqdm
 
 class TextSimilarity(PipelineStep):
     # hyperparameter that limits the distance one document can be from another to be marked as sharing the same subject
@@ -26,15 +26,15 @@ class TextSimilarity(PipelineStep):
         clustering = AgglomerativeClustering(
             n_clusters=None, linkage="average", distance_threshold=1 - self.threshold
         )
-
         clustering.fit(1 - similarity_matrix)
         similarity_groups = clustering.labels_
-
         context.headlines = [
             headline.set_similarity_classification(similarity_group, similarity_scores)
-            for headline, similarity_group, similarity_scores in zip(
-                context.headlines, similarity_groups, similarity_matrix
+            for headline, similarity_group, similarity_scores in tqdm(
+                zip(context.headlines, similarity_groups, similarity_matrix), 
+                desc="Classifying Text Similarities", 
+                unit="headline", 
+                total=len(context.headlines)
             )
         ]
-
         return context

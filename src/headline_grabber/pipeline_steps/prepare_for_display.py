@@ -1,12 +1,12 @@
 from typing import List, Dict
 from collections import Counter
 from statistics import mean
-
-from src.headline_grabber.models.display_document import DisplayDocument
-from src.headline_grabber.models.headline import Classification
-from src.headline_grabber.models.pipeline_context import PipelineContext
-from src.headline_grabber.pipeline_steps.pipeline_step import PipelineStep
-from src.headline_grabber.pipeline_steps import (
+from tqdm import tqdm
+from headline_grabber.models.display_document import DisplayDocument
+from headline_grabber.models.headline import Classification
+from headline_grabber.models.pipeline_context import PipelineContext
+from headline_grabber.pipeline_steps.pipeline_step import PipelineStep
+from headline_grabber.pipeline_steps import (
     text_summarization_tokenizer,
     text_summarization_model,
     headline_tokenizer,
@@ -17,7 +17,7 @@ from src.headline_grabber.pipeline_steps import (
 class PrepareForDisplay(PipelineStep):
     def run(self, context: PipelineContext):
         documents_for_display: Dict[str, List[DisplayDocument]] = {}
-        for label, headlines in context.grouped_headlines.items():
+        for label, headlines in tqdm(context.grouped_headlines.items(), desc="Preparing documents for display", unit="group"):
             links = sorted(list(set([headline.link for headline in headlines])))
             summarized_title = self._generate_headline(
                 [
@@ -101,11 +101,9 @@ class PrepareForDisplay(PipelineStep):
 
     def _generate_headline(self, texts: List[str]) -> str:
         text = "headline: " + " ".join(texts)
-
         encoding = headline_tokenizer.encode_plus(text, return_tensors="pt")
         input_ids = encoding["input_ids"]
         attention_masks = encoding["attention_mask"]
-
         beam_outputs = headline_model.generate(
             input_ids=input_ids,
             attention_mask=attention_masks,
@@ -113,7 +111,6 @@ class PrepareForDisplay(PipelineStep):
             num_beams=3,
             early_stopping=True,
         )
-
         result = headline_tokenizer.decode(beam_outputs[0])
         result = result.replace("<pad> ", "").replace("</s>", "")
         return result
