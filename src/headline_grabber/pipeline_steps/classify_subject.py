@@ -1,5 +1,5 @@
 from transformers import pipeline
-
+from tqdm import tqdm
 from headline_grabber.models.headline import Classification
 from headline_grabber.models.pipeline_context import PipelineContext
 from headline_grabber.pipeline_steps import (
@@ -35,6 +35,6 @@ class ClassifySubject(PipelineStep):
                     self.subject_class_label_mapping[result["label"]], result["score"]
                 )
             )
-            for headline, result in zip(context.headlines, results)
+            for headline, result in tqdm(zip(context.headlines, results), desc="Classifying subjects", unit="headline", total=len(context.headlines))  
         ]
         return context

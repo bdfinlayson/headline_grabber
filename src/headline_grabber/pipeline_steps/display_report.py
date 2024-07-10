@@ -1,13 +1,11 @@
 import os
 import webbrowser
 from datetime import datetime
-
 from headline_grabber.models.pipeline_context import PipelineContext
 from headline_grabber.pipeline_steps.pipeline_step import PipelineStep
-
 import dominate
 from dominate.tags import *
-
+from tqdm import tqdm
 
 class DisplayReport(PipelineStep):
 
@@ -75,7 +73,7 @@ class DisplayReport(PipelineStep):
                             p(
                                 f'This report contains content from the following news sources: {", ".join(news_sources)}'
                             )
-                for subject in subjects:
+                for subject in tqdm(subjects, desc="Generating report"):
                     with div(cls="row"):
                         h2(subject)
                         for headline in context.documents_for_display[subject]:
@@ -91,6 +89,19 @@ class DisplayReport(PipelineStep):
                                     for lnk in headline.links:
                                         li(a(lnk, href=lnk))
                         hr()
+        self._display_report(str(doc), html_file_path)
 
+    def _display_report(self, html_content: str, file_path: str):
+        try:
+            #specified encoding (RM)
+            with open(file_path, "w", encoding='utf-8') as file:
+                file.write(html_content)
+        except Exception as e:
+            print(f"Failed to write HTML file: {e}")
+            exit(1)
+
+        try:
+            webbrowser.open("file://" + os.path.realpath(file_path))
+        except Exception as e:
+            print(f"Failed to open HTML file in web browser: {e}")
         return str(doc)
-    
