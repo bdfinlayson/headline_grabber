@@ -1,6 +1,6 @@
-from src.headline_grabber.models.pipeline_context import PipelineContext
-from src.headline_grabber.pipeline_steps.pipeline_step import PipelineStep
-from src.headline_grabber.models.headline import Headline
+from headline_grabber.models.pipeline_context import PipelineContext
+from headline_grabber.pipeline_steps.pipeline_step import PipelineStep
+from headline_grabber.models.headline import Headline
 from typing import List
 from collections import defaultdict
 
