@@ -1,0 +1,236 @@
+5ea42b19 (mralderman         2024-07-03 21:10:54 -0400 42) @click.option(
+6ad8bea8 (mralderman         2024-07-05 16:31:43 -0400 43)     "--limit",
+6ad8bea8 (mralderman         2024-07-05 16:31:43 -0400 44)     "-l",
+5ea42b19 (mralderman         2024-07-03 21:10:54 -0400 45)     type=str,
+5ea42b19 (mralderman         2024-07-03 21:10:54 -0400 46)     default=None,
+5ea42b19 (mralderman         2024-07-03 21:10:54 -0400 47)     required=False,
+29a5bbb0 (mralderman         2024-07-10 18:41:08 -0400 48)     callback=OptionValidator.validate_max_entries,
+6ad8bea8 (mralderman         2024-07-05 16:31:43 -0400 49)     help="Number specifying the maximum number of entries per topic in a report",
+5ea42b19 (mralderman         2024-07-03 21:10:54 -0400 50) )
+48111a21 (mralderman         2024-07-10 18:25:19 -0400 51) def main(include: str, exclude: str, target_dir: str, limit: int):
+6ad8bea8 (mralderman         2024-07-05 16:31:43 -0400 62)             limit=(limit if limit else None),
+9347ef0e (mralderman 2024-07-07 15:50:03 -0400  1) abbreviation: tol
+9347ef0e (mralderman 2024-07-07 15:50:03 -0400  2) name: The Times of London
+9347ef0e (mralderman 2024-07-07 15:50:03 -0400  3) url: https://www.thetimes.com
+9347ef0e (mralderman 2024-07-07 15:50:03 -0400  4) engine: beautifulsoup
+9347ef0e (mralderman 2024-07-07 15:50:03 -0400  5) selectors:
+9347ef0e (mralderman 2024-07-07 15:50:03 -0400  6)     headline:
+9347ef0e (mralderman 2024-07-07 15:50:03 -0400  7)       tag: div
+9347ef0e (mralderman 2024-07-07 15:50:03 -0400  8)       identifier: Item-content
+9347ef0e (mralderman 2024-07-07 15:50:03 -0400  9)     link:
+9347ef0e (mralderman 2024-07-07 15:50:03 -0400 10)       tag: a
+9347ef0e (mralderman 2024-07-07 15:50:03 -0400 11)       identifier: href
+9347ef0e (mralderman 2024-07-07 15:50:03 -0400 12)     title:
+9347ef0e (mralderman 2024-07-07 15:50:03 -0400 13)       tag: h3
+9347ef0e (mralderman 2024-07-07 15:50:03 -0400 14)       identifier: Item-headline
+9347ef0e (mralderman 2024-07-07 15:50:03 -0400 15)     description:
+9347ef0e (mralderman 2024-07-07 15:50:03 -0400 16)       tag: p
+9347ef0e (mralderman 2024-07-07 15:50:03 -0400 17)       identifier: Dip Item-dip
+48111a21 (mralderman         2024-07-10 18:25:19 -0400  7)     def __init__(self, include: List[str] = None, exclude: List[str] = None, target_dir: str = None, limit : int = None, **kwargs):
+6ad8bea8 (mralderman         2024-07-05 16:31:43 -0400 11)         self.limit = limit
+5ea42b19 (mralderman        2024-07-03 21:10:54 -0400  4) from typing import List
+6ad8bea8 (mralderman        2024-07-05 16:31:43 -0400  5) from collections import defaultdict
+5ea42b19 (mralderman        2024-07-03 21:10:54 -0400  6) 
+5ea42b19 (mralderman        2024-07-03 21:10:54 -0400  7) class FilterMaxResults(PipelineStep):
+5ea42b19 (mralderman        2024-07-03 21:10:54 -0400  8)     def run(self, context: PipelineContext):
+6ad8bea8 (mralderman        2024-07-05 16:31:43 -0400  9)         if context.user_input.limit is not None:
+6ad8bea8 (mralderman        2024-07-05 16:31:43 -0400 10)             
+6ad8bea8 (mralderman        2024-07-05 16:31:43 -0400 11)             subject_count = defaultdict(int)
+6ad8bea8 (mralderman        2024-07-05 16:31:43 -0400 12)             filtered_headline_list: List[Headline] = []
+6ad8bea8 (mralderman        2024-07-05 16:31:43 -0400 13)             for headline in context.headlines:    
+6ad8bea8 (mralderman        2024-07-05 16:31:43 -0400 14)                 if subject_count[headline.subject.label] < context.user_input.limit:
+6ad8bea8 (mralderman        2024-07-05 16:31:43 -0400 15)                     filtered_headline_list.append(headline)
+5ea42b19 (mralderman        2024-07-03 21:10:54 -0400 16)                     subject_count[headline.subject.label] += 1
+5ea42b19 (mralderman        2024-07-03 21:10:54 -0400 17)             
+6ad8bea8 (mralderman        2024-07-05 16:31:43 -0400 18)             context.headlines = filtered_headline_list
+6ad8bea8 (mralderman        2024-07-05 16:31:43 -0400 19) 
+5ea42b19 (mralderman        2024-07-03 21:10:54 -0400 20)         return context
+29a5bbb0 (mralderman         2024-07-10 18:41:08 -0400 10) from headline_grabber.pipeline_steps.filter_max_results import FilterMaxResults
+5ea42b19 (mralderman         2024-07-03 21:10:54 -0400 17)         FilterMaxResults(),
+6ad8bea8 (mralderman         2024-07-05 16:31:43 -0400 18)         ScoreSentiment(),
+29a5bbb0 (mralderman         2024-07-10 18:41:08 -0400 34)     
+29a5bbb0 (mralderman         2024-07-10 18:41:08 -0400 35)     @staticmethod
+29a5bbb0 (mralderman         2024-07-10 18:41:08 -0400 36)     def validate_max_entries(ctx, param, value):
+29a5bbb0 (mralderman         2024-07-10 18:41:08 -0400 37)         if value is None:
+29a5bbb0 (mralderman         2024-07-10 18:41:08 -0400 38)             return value
+29a5bbb0 (mralderman         2024-07-10 18:41:08 -0400 39)         
+29a5bbb0 (mralderman         2024-07-10 18:41:08 -0400 40)         if isinstance(value, str):
+29a5bbb0 (mralderman         2024-07-10 18:41:08 -0400 41)             value = value.replace(",", " ").split()[0]
+29a5bbb0 (mralderman         2024-07-10 18:41:08 -0400 42) 
+29a5bbb0 (mralderman         2024-07-10 18:41:08 -0400 43)         try:
+29a5bbb0 (mralderman         2024-07-10 18:41:08 -0400 44)             value = int(value)
+29a5bbb0 (mralderman         2024-07-10 18:41:08 -0400 45)         except ValueError:
+29a5bbb0 (mralderman         2024-07-10 18:41:08 -0400 46)             raise click.BadParameter(f'{value} must be a number')
+29a5bbb0 (mralderman         2024-07-10 18:41:08 -0400 47)         
+29a5bbb0 (mralderman         2024-07-10 18:41:08 -0400 48)         return value
+44587273 (mralderman         2024-07-09 13:44:51 -0400  16) def test_get_headlines_tol_beautifulsoup():
+44587273 (mralderman         2024-07-09 13:44:51 -0400  17)     scrape_text = ScrapeText()
+44587273 (mralderman         2024-07-09 13:44:51 -0400  18)     config = ScrapeTextData.TOL_CONFIG
+44587273 (mralderman         2024-07-09 13:44:51 -0400  19)     assert scrape_text._get_headlines(config) != []
+44587273 (mralderman         2024-07-09 13:44:51 -0400  20) 
+44587273 (mralderman         2024-07-09 13:44:51 -0400  21) def test_parse_headline_tol():
+44587273 (mralderman         2024-07-09 13:44:51 -0400  22)     scrape_text = ScrapeText()
+44587273 (mralderman         2024-07-09 13:44:51 -0400  23)     config = ScrapeTextData.TOL_CONFIG
+44587273 (mralderman         2024-07-09 13:44:51 -0400  24)     with open("tests/headline_grabber/pipeline_steps/test_data/tol.html", "r") as file:
+44587273 (mralderman         2024-07-09 13:44:51 -0400  25)         html = file.read()
+44587273 (mralderman         2024-07-09 13:44:51 -0400  26)     soup = BeautifulSoup(html, "html.parser")
+44587273 (mralderman         2024-07-09 13:44:51 -0400  27)     headline = soup.find_all(config.selectors.headline.tag, class_=config.selectors.headline.identifier)[0]
+44587273 (mralderman         2024-07-09 13:44:51 -0400  28)     actualResult = scrape_text._parse_headline(headline, config.selectors, config.url)
+44587273 (mralderman         2024-07-09 13:44:51 -0400  29)     assert actualResult.title.strip() == "Braverman claims leadership rival Jenrick is from left of Tory party"
+44587273 (mralderman         2024-07-09 13:44:51 -0400  30)     assert actualResult.description.strip() == 'Suella Braverman has accused Robert Jenrick of being a “centrist Rishi supporter” who is “from the left of the party”, after one of her key supporters switched to backing the former immigration minister. Jenrick and Braverman, the former home secretary, are among seven of the remaining 121 Tory MPs preparing to stand for the leadership...'
+44587273 (mralderman         2024-07-09 13:44:51 -0400  31)     assert actualResult.link.strip() == "https://www.thetimes.com/uk/politics/article/suella-braverman-tory-leadership-race-robert-jenrick-rivals-mnghlk9fn"
+44587273 (mralderman         2024-07-09 13:44:51 -0400  32) 
+44587273 (mralderman         2024-07-09 13:44:51 -0400  33) def test_run_TOL_Success():
+44587273 (mralderman         2024-07-09 13:44:51 -0400  34)     scrape_text = ScrapeText()
+44587273 (mralderman         2024-07-09 13:44:51 -0400  35)     config = ScrapeTextData.TOL_CONFIG
+44587273 (mralderman         2024-07-09 13:44:51 -0400  36)     pipeline_context = PipelineContext(
+44587273 (mralderman         2024-07-09 13:44:51 -0400  37)         site_configs=[config],
+44587273 (mralderman         2024-07-09 13:44:51 -0400  38)         headlines=[],
+44587273 (mralderman         2024-07-09 13:44:51 -0400  39)         grouped_headlines={},
+44587273 (mralderman         2024-07-09 13:44:51 -0400  40)         documents_for_display={},
+44587273 (mralderman         2024-07-09 13:44:51 -0400  41)         user_input=UserPreferences(
+44587273 (mralderman         2024-07-09 13:44:51 -0400  42)             include=['tol'],
+44587273 (mralderman         2024-07-09 13:44:51 -0400  43)             exclude=None,
+44587273 (mralderman         2024-07-09 13:44:51 -0400  44)         ),
+44587273 (mralderman         2024-07-09 13:44:51 -0400  45)     )
+44587273 (mralderman         2024-07-09 13:44:51 -0400  46)     actualResult = scrape_text.run(pipeline_context)
+44587273 (mralderman         2024-07-09 13:44:51 -0400  47)     assert len(actualResult.headlines) > 0
+44587273 (mralderman         2024-07-09 13:44:51 -0400  9)     TOL_CONFIG = load_site_config("tol.yaml")
+44587273 (mralderman         2024-07-09 13:44:51 -0400 10) 
+44587273 (mralderman 2024-07-09 13:44:51 -0400  1) <div class="Item P-3 Theme--news">
+44587273 (mralderman 2024-07-09 13:44:51 -0400  2)     <div class="Item-content">
+44587273 (mralderman 2024-07-09 13:44:51 -0400  3)         <h3 class="Item-headline Headline--m">
+44587273 (mralderman 2024-07-09 13:44:51 -0400  4)             <a data-tracking="{&quot;teaser_lead_text&quot;:&quot;&quot;,&quot;article_flag&quot;:&quot;no flag&quot;,&quot;event_navigation_name&quot;:&quot;widget:article&quot;,&quot;article_parent_name&quot;:&quot;article:braverman claims leadership rival jenrick is from left of tory party&quot;,&quot;section_details&quot;:&quot;section:news&quot;}" href="/uk/politics/article/suella-braverman-tory-leadership-race-robert-jenrick-rivals-mnghlk9fn" class="js-tracking">
+44587273 (mralderman 2024-07-09 13:44:51 -0400  5)                 Braverman claims leadership rival Jenrick is from left of Tory party
+44587273 (mralderman 2024-07-09 13:44:51 -0400  6)             </a>
+44587273 (mralderman 2024-07-09 13:44:51 -0400  7)         </h3>
+44587273 (mralderman 2024-07-09 13:44:51 -0400  8)         <span class="ArticleFlag ArticleFlag--new ArticleFlag--stacked">
+44587273 (mralderman 2024-07-09 13:44:51 -0400  9)             <span>new
+44587273 (mralderman 2024-07-09 13:44:51 -0400 10) 
+44587273 (mralderman 2024-07-09 13:44:51 -0400 11)             </span>
+44587273 (mralderman 2024-07-09 13:44:51 -0400 12)         </span>
+44587273 (mralderman 2024-07-09 13:44:51 -0400 13)         <a data-tracking="{&quot;teaser_lead_text&quot;:&quot;&quot;,&quot;article_flag&quot;:&quot;no flag&quot;,&quot;event_navigation_name&quot;:&quot;widget:article&quot;,&quot;article_parent_name&quot;:&quot;article:braverman claims leadership rival jenrick is from left of tory party&quot;,&quot;section_details&quot;:&quot;section:news&quot;}" href="/uk/politics/article/suella-braverman-tory-leadership-race-robert-jenrick-rivals-mnghlk9fn" class="js-tracking">
+44587273 (mralderman 2024-07-09 13:44:51 -0400 14)             <p class="Dip Item-dip">
+44587273 (mralderman 2024-07-09 13:44:51 -0400 15)                 <span class="u-showOnWide">
+44587273 (mralderman 2024-07-09 13:44:51 -0400 16)                     Suella Braverman has accused Robert Jenrick of being a “centrist Rishi supporter” who is “from the left of the party”, after one of her key supporters switched to backing the former immigration minister. Jenrick and Braverman, the former home secretary, are among seven of the remaining 121 Tory MPs preparing to stand for the leadership...
+44587273 (mralderman 2024-07-09 13:44:51 -0400 17)                 </span>
+44587273 (mralderman 2024-07-09 13:44:51 -0400 18)             </p>
+44587273 (mralderman 2024-07-09 13:44:51 -0400 19)         </a>
+44587273 (mralderman 2024-07-09 13:44:51 -0400 20)     </div>
+44587273 (mralderman 2024-07-09 13:44:51 -0400 21) </div>
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400  1) import pytest
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400  2) from headline_grabber.models.pipeline_context import PipelineContext
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400  3) from headline_grabber.pipeline_steps.pipeline_step import PipelineStep
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400  4) from headline_grabber.pipeline_steps.filter_max_results import FilterMaxResults
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400  5) from src.headline_grabber.pipelines.pipeline import Pipeline
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400  6) from src.headline_grabber.models.user_preferences import UserPreferences
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400  7) from src.headline_grabber.models.headline import Classification
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400  8) from src.headline_grabber.models.headline import Headline
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400  9) 
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 10) test_pipline = Pipeline([FilterMaxResults()])
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 11) def test_user_input_none():
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 12)     
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 13)     context = PipelineContext(
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 14)         site_configs=[],
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 15)         headlines=[],
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 16)         grouped_headlines={},
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 17)         documents_for_display={},
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 18)         user_input=UserPreferences(
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 19)             include=None,
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 20)             exclude=None,
+29a5bbb0 (mralderman 2024-07-10 18:41:08 -0400 21)             target_dir=None,
+29a5bbb0 (mralderman 2024-07-10 18:41:08 -0400 22)             limit=None,
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 23)         ),
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 24)     )
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 25)     context.headlines.append(Classification("sports", 0.1))
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 26)     context.headlines.append(Classification("sports", 0.1))
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 27)     context.headlines.append(Classification("sports", 0.1))
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 28)     context = test_pipline.run(context)
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 29)     assert len(context.headlines) == 3
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 30) 
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 31) 
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 32) def test_user_input_two_clips_results():
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 33)     context = PipelineContext(
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 34)         site_configs=[],
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 35)         headlines=[],
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 36)         grouped_headlines={},
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 37)         documents_for_display={},
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 38)         user_input=UserPreferences(
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 39)             include=None,
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 40)             exclude=None,
+29a5bbb0 (mralderman 2024-07-10 18:41:08 -0400 41)             target_dir=None,
+29a5bbb0 (mralderman 2024-07-10 18:41:08 -0400 42)             limit=2,
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 43)         ),
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 44)     )
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 45)     context.headlines.append(Headline("a", "b", "c", Classification("sports", 0.1)))
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 46)     context.headlines.append(Headline("a", "b", "c", Classification("sports", 0.1)))
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 47)     context.headlines.append(Headline("a", "b", "c", Classification("sports", 0.1)))
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 48)     context = test_pipline.run(context)
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 49)     
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 50)     assert len(context.headlines) == 2
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 51) 
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 52) def test_user_input_two_does_not_clip_results():
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 53)     context = PipelineContext(
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 54)         site_configs=[],
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 55)         headlines=[],
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 56)         grouped_headlines={},
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 57)         documents_for_display={},
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 58)         user_input=UserPreferences(
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 59)             include=None,
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 60)             exclude=None,
+29a5bbb0 (mralderman 2024-07-10 18:41:08 -0400 61)             target_dir=None,
+29a5bbb0 (mralderman 2024-07-10 18:41:08 -0400 62)             limit=3,
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 63)         ),
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 64)     )
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 65)     context.headlines.append(Headline("a", "b", "c", Classification("sports", 0.1)))
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 66)     context.headlines.append(Headline("a", "b", "c", Classification("sports", 0.1)))
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 67)     context.headlines.append(Headline("a", "b", "c", Classification("World", 0.1)))
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 68)     context = test_pipline.run(context)
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 69)     
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 70)     assert len(context.headlines) == 3
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 71) 
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 72) def test_user_input_two_clips_3_but_not_one():
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 73)     context = PipelineContext(
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 74)         site_configs=[],
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 75)         headlines=[],
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 76)         grouped_headlines={},
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 77)         documents_for_display={},
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 78)         user_input=UserPreferences(
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 79)             include=None,
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 80)             exclude=None,
+29a5bbb0 (mralderman 2024-07-10 18:41:08 -0400 81)             target_dir=None,
+29a5bbb0 (mralderman 2024-07-10 18:41:08 -0400 82)             limit=2,
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 83)         ),
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 84)     )
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 85)     context.headlines.append(Headline("a", "b", "c", Classification("sports", 0.1)))
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 86)     context.headlines.append(Headline("a", "b", "c", Classification("sports", 0.1)))
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 87)     context.headlines.append(Headline("a", "b", "c", Classification("sports", 0.1)))
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 88)     context.headlines.append(Headline("a", "b", "c", Classification("World", 0.1)))
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 89)     context = test_pipline.run(context)
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 90)         
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 91)     assert len(context.headlines) == 3
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 92) 
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 93) 
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400  1) import pytest
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400  2) import click
+29a5bbb0 (mralderman 2024-07-10 18:41:08 -0400  3) from headline_grabber.validators.click.option_validator import OptionValidator
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400  4) 
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400  5) def test_validate_number_single_value():
+29a5bbb0 (mralderman 2024-07-10 18:41:08 -0400  6)     result = OptionValidator.validate_max_entries(None, None, '5')
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400  7)     assert result == 5
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400  8) 
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400  9) def test_validate_number_comma_separated():
+29a5bbb0 (mralderman 2024-07-10 18:41:08 -0400 10)     result = OptionValidator.validate_max_entries(None, None, '5, 10, 15')
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 11)     assert result == 5
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 12) 
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 13) def test_validate_number_space_separated():
+29a5bbb0 (mralderman 2024-07-10 18:41:08 -0400 14)     result = OptionValidator.validate_max_entries(None, None, '5 10 15')
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 15)     assert result == 5
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 16) 
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 17) def test_validate_number_invalid_value():
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 18)     with pytest.raises(click.BadParameter):
+29a5bbb0 (mralderman 2024-07-10 18:41:08 -0400 19)         OptionValidator.validate_max_entries(None, None, 'abc, 10, 15')
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 20) 
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 21) def test_validate_number_default_value():
+29a5bbb0 (mralderman 2024-07-10 18:41:08 -0400 22)     result = OptionValidator.validate_max_entries(None, None, None)
+5ea42b19 (mralderman 2024-07-03 21:10:54 -0400 23)     assert result == None
