@@ -89,7 +89,7 @@ class DisplayReport(PipelineStep):
                                     for lnk in headline.links:
                                         li(a(lnk, href=lnk))
                         hr()
-        self._display_report(str(doc), html_file_path)
+        return str(doc)
 
     def _display_report(self, html_content: str, file_path: str):
         try:
@@ -104,4 +104,4 @@ class DisplayReport(PipelineStep):
             webbrowser.open("file://" + os.path.realpath(file_path))
         except Exception as e:
             print(f"Failed to open HTML file in web browser: {e}")
-        return str(doc)
+        
