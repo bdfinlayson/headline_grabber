@@ -1,0 +1,93 @@
+d4fdd49f (Sheena309 2024-07-06 12:33:02 -0500  1) import pytest
+d4fdd49f (Sheena309 2024-07-06 12:33:02 -0500  2) import click
+2d1b3375 (Sheena309 2024-07-08 22:05:03 -0500  3) import copy
+d4fdd49f (Sheena309 2024-07-06 12:33:02 -0500  4) from src.headline_grabber.models.pipeline_context import PipelineContext
+d4fdd49f (Sheena309 2024-07-06 12:33:02 -0500  5) from src.headline_grabber.models.user_preferences import UserPreferences
+d4fdd49f (Sheena309 2024-07-06 12:33:02 -0500  6) from src.headline_grabber.pipeline_steps.filter_sites import FilterSites
+d4fdd49f (Sheena309 2024-07-06 12:33:02 -0500  7) from src.headline_grabber.configurations.sites import sites
+d4fdd49f (Sheena309 2024-07-06 12:33:02 -0500  8) from src.headline_grabber.models.news_site import NewsSite
+d4fdd49f (Sheena309 2024-07-06 12:33:02 -0500  9) 
+d4fdd49f (Sheena309 2024-07-06 12:33:02 -0500 10) @pytest.fixture
+d4fdd49f (Sheena309 2024-07-06 12:33:02 -0500 11) def sample_sites():
+2d1b3375 (Sheena309 2024-07-08 22:05:03 -0500 12)     return copy.copy(sites)
+d4fdd49f (Sheena309 2024-07-06 12:33:02 -0500 13) 
+d4fdd49f (Sheena309 2024-07-06 12:33:02 -0500 14) def test_include_option(sample_sites):
+d4fdd49f (Sheena309 2024-07-06 12:33:02 -0500 15)     total_sites = len(sample_sites)
+d4fdd49f (Sheena309 2024-07-06 12:33:02 -0500 16)     user_input = UserPreferences(include=["nyt", "wsj"])
+d4fdd49f (Sheena309 2024-07-06 12:33:02 -0500 17)     context = PipelineContext(
+d4fdd49f (Sheena309 2024-07-06 12:33:02 -0500 18)         site_configs=sample_sites,
+d4fdd49f (Sheena309 2024-07-06 12:33:02 -0500 19)         user_input=user_input,
+d4fdd49f (Sheena309 2024-07-06 12:33:02 -0500 20)         headlines=[],
+d4fdd49f (Sheena309 2024-07-06 12:33:02 -0500 21)         grouped_headlines={},
+d4fdd49f (Sheena309 2024-07-06 12:33:02 -0500 22)         documents_for_display={}
+d4fdd49f (Sheena309 2024-07-06 12:33:02 -0500 23)     )
+d4fdd49f (Sheena309 2024-07-06 12:33:02 -0500 24)     filter_sites = FilterSites()
+d4fdd49f (Sheena309 2024-07-06 12:33:02 -0500 25)     result_context = filter_sites.run(context)
+d4fdd49f (Sheena309 2024-07-06 12:33:02 -0500 26)     expected_abbreviations = {"nyt", "wsj"}
+d4fdd49f (Sheena309 2024-07-06 12:33:02 -0500 27)     result_abbreviations = {site.abbreviation for site in result_c
+
+4c2a2505 (Sheena309 2024-07-08 21:39:40 -0500  1) from bs4 import BeautifulSoup
+d2100197 (Sheena309 2024-07-10 18:59:45 -0500  2) import pytest
+d2100197 (Sheena309 2024-07-10 18:59:45 -0500  3) from headline_grabber.models.news_site import ElementSelector, NewsSite, PageSelectors
+4c2a2505 (Sheena309 2024-07-08 21:39:40 -0500  4) from headline_grabber.models.pipeline_context import PipelineContext
+4c2a2505 (Sheena309 2024-07-08 21:39:40 -0500  5) from headline_grabber.models.user_preferences import UserPreferences
+d2100197 (Sheena309 2024-07-10 18:59:45 -0500  6) from headline_grabber.pipeline_steps.scrape_text import ScrapeText
+d2100197 (Sheena309 2024-07-10 18:59:45 -0500  7) 
+d2100197 (Sheena309 2024-07-10 18:59:45 -0500  8) STUB_HTML = """
+d2100197 (Sheena309 2024-07-10 18:59:45 -0500  9) <div class="card-left card-text next-to-art no-bottom">
+d2100197 (Sheena309 2024-07-10 18:59:45 -0500 10)     <div class="headline relative gray-darkest pb-xs">
+d2100197 (Sheena309 2024-07-10 18:59:45 -0500 11)         <h2 class="wpds-c-iiQaMf wpds-c-iiQaMf-ikZTsyd-css">
+d2100197 (Sheena309 2024-07-10 18:59:45 -0500 12)             <a data-pb-local-content-field="web_headline" href="https://www.washingtonpost.com/business/2024/07/10/three-mile-island-nuclear-artificial-intelligence/">
+d2100197 (Sheena309 2024-07-10 18:59:45 -0500 13)                 <span>Surging AI energy needs could bring Three Mile Island back online</span>
+d2100197 (Sheena309 2024-07-10 18:59:45 -0500 14)             </a>
+d2100197 (Sheena309 2024-07-10 18:59:45 -0500 15)         </h2>
+d2100197 (Sheena309 2024-07-10 18:59:45 -0500 16)     </div>    
+d2100197 (Sheena309 2024-07-10 18:59:45 -0500 17)     <div class="pb-xs font-size-blurb lh-fronts-tiny font-light gray-dark" style="font-size: 0.9375rem;">
+d2100197 (Sheena309 2024-07-10 18:59:45 -0500 18)         <a href="https://www.washingtonpost.com/business/2024/07/10/three-mile-island-nuclear-artificial-intelligence/">
+d2100197 (Sheena309 2024-07-10 18:59:45 -0500 19)             <span>The Pennsylvania plant, site of a partial meltdown in 1979, is part of a burst of fresh activity at mothballed plants as tech companies, manufacturers and energy regulators scramble to find enough zero emissions electricity.
+d2100197 (Sheena309 2024-07-10 18:59:45 -0500 20)             </span>
+d2100197 (Sheena309 2024-07-10 18:59:45 -0500 21)         </a>
+
+dc200de9 (Sheena309          2024-07-07 13:41:01 -0500  7) from tqdm import tqdm
+d2100de9 (Sheena309 	     2024-07-10 18:59:45 -0500		16)   for headline, similarity_group, similarity_scores in tqdm(
+                						zip(context.headlines, similarity_groups, similarity_matrix)
+dc200de9 (Sheena309          2024-07-07 13:41:01 -0500   6) from tqdm import tqdm
+dc200de9 (Sheena309          2024-07-07 13:41:01 -0500  19)         num_sites = len(context.site_configs)
+dc200de9 (Sheena309          2024-07-07 13:41:01 -0500  20)         with tqdm(total=num_sites, desc="Scraping headlines", unit="site") as pbar:
+dc200de9 (Sheena309          2024-07-07 13:41:01 -0500  21)             for site_config in context.site_configs:
+dc200de9 (Sheena309          2024-07-07 13:41:01 -0500  22)                 h = self._get_headlines(site_config)
+dc200de9 (Sheena309          2024-07-07 13:41:01 -0500  23)                 headlines = headlines + h
+dc200de9 (Sheena309          2024-07-07 13:41:01 -0500  24)                 pbar.update(1)
+
+dc200de9 (Sheena309          2024-07-07 13:41:01 -0500  4) from tqdm import tqdm
+dc200de9 (Sheena309          2024-07-07 13:41:01 -0500 15)             for headline, sentiment_score in tqdm(zip(context.headlines, sentiment_scores), desc="Setting sentiment scores", unit="headline", total=len(context.headlines))
+36626501 (Sheena309          2024-07-09 14:49:46 -0500 17)         return context
+
+dc200de9 (Sheena309          2024-07-07 13:41:01 -0500   4) from tqdm import tqdm
+dc200de9 (Sheena309          2024-07-07 13:41:01 -0500  20)         for label, headlines in tqdm(context.grouped_headlines.items(), desc="Preparing documents for display", unit="group"):
+
+dc200de9 (Sheena309          2024-07-07 13:41:01 -0500  3) from tqdm import tqdm
+dc200de9 (Sheena309          2024-07-07 13:41:01 -0500  8)         for headline in tqdm(context.headlines, desc="Grouping by similarity", unit="headline"):
+36626501 (Sheena309          2024-07-09 14:49:46 -0500 16)         return context
+
+b75d4051 (Sheena309          2024-07-09 13:56:54 -0500  5) from tqdm import tqdm
+b75d4051 (Sheena309          2024-07-09 13:56:54 -0500 14)             filtered_sites = [
+b75d4051 (Sheena309          2024-07-09 13:56:54 -0500 15)                 site_config
+b75d4051 (Sheena309          2024-07-09 13:56:54 -0500 16)                 for site_config in tqdm(context.site_configs, desc="FilterSites - Excluding")
+b75d4051 (Sheena309          2024-07-09 13:56:54 -0500 17)                 if site_config.abbreviation not in context.user_input.exclude
+b75d4051 (Sheena309          2024-07-09 13:56:54 -0500 18)             ]
+b75d4051 (Sheena309          2024-07-09 13:56:54 -0500 20)             filtered_sites = [
+b75d4051 (Sheena309          2024-07-09 13:56:54 -0500 21)                 site_config
+b75d4051 (Sheena309          2024-07-09 13:56:54 -0500 22)                 for site_config in tqdm(context.site_conf
+
+
+
+
+
+
+
+
+
+
+
+
