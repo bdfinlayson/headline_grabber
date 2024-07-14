@@ -8,6 +8,9 @@ import requests
 from bs4 import BeautifulSoup, Tag
 from selenium import webdriver
 
+class ScrapeTextException(Exception):
+    pass
+
 class ScrapeText(PipelineStep):
     def run(self, context: PipelineContext) -> PipelineContext:
         headlines: List[Headline] = []
