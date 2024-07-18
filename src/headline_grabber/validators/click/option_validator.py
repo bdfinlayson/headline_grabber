@@ -47,3 +47,15 @@ class OptionValidator:
         
         return value
     
+    @staticmethod
+    def validate_filter_sentiment(ctx, param, value):
+        if value is None or value =="":
+            return None
+        value = str(value)
+        value = value.upper()
+        if value != 'POS' and value != 'POSITIVE' and value != 'NEG' and value != 'NEGATIVE':
+            raise click.BadParameter(f'{value} must be either negative/positive/neg/pos')
+        value = 'POSITIVE' if 'POS' in value else 'NEGATIVE'
+
+        return value
+    
