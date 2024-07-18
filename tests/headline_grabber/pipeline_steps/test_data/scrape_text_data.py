@@ -8,6 +8,8 @@ class ScrapeTextData:
 
     TOL_CONFIG = load_site_config("tol.yaml")
 
+    REU_CONFIG = load_site_config("reu.yaml")
+
     NO_ENGING_CONFIG = NewsSite(
         abbreviation="nyt",
         name="The New York Times",

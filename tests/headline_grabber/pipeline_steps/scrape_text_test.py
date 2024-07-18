@@ -18,6 +18,24 @@ def test_get_headlines_tol_beautifulsoup():
     config = ScrapeTextData.TOL_CONFIG
     assert scrape_text._get_headlines(config) != []
 
+def test_get_headlines_reu_beautifulsoup():
+    scrape_text = ScrapeText()
+    config = ScrapeTextData.REU_CONFIG
+    assert scrape_text._get_headlines(config) != []
+
+def test_parse_headline_reu():
+    scrape_text = ScrapeText()
+    config = ScrapeTextData.REU_CONFIG
+    with open("tests/headline_grabber/pipeline_steps/test_data/reu.html", "r") as file:
+        html = file.read()
+    soup = BeautifulSoup(html, "html.parser")
+    headline = soup.find_all(config.selectors.headline.tag, class_=config.selectors.headline.identifier)[0]
+    actualResult = scrape_text._parse_headline(headline, config.selectors, config.url)
+    assert actualResult.title.strip() == "Trump's running mate J.D. Vance to take spotlight, as Biden contracts COVID"
+    assert actualResult.description.strip() == "Donald Trump's vice presidential running mate, U.S. Senator J.D. Vance, addresses the Republican National Convention on Wednesday in a speech that could illustrate how Trump's \"Make America Great Again\" movement may dominate the party for years to come."
+    assert actualResult.link.strip() == "https://www.reuters.com/world/us/trump-lauded-by-former-rivals-haley-desantis-show-unity-republican-convention-2024-07-17/"
+
+
 def test_parse_headline_tol():
     scrape_text = ScrapeText()
     config = ScrapeTextData.TOL_CONFIG
@@ -45,6 +63,24 @@ def test_run_TOL_Success():
     )
     actualResult = scrape_text.run(pipeline_context)
     assert len(actualResult.headlines) > 0
+
+
+def test_run_REU_Success():
+    scrape_text = ScrapeText()
+    config = ScrapeTextData.REU_CONFIG
+    pipeline_context = PipelineContext(
+        site_configs=[config],
+        headlines=[],
+        grouped_headlines={},
+        documents_for_display={},
+        user_input=UserPreferences(
+            include=['reu'],
+            exclude=None,
+        ),
+    )
+    actualResult = scrape_text.run(pipeline_context)
+    assert len(actualResult.headlines) > 0
+
 
 def test_get_headlines_no_engine():
     scrape_text = ScrapeText()
