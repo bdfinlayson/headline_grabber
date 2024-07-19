@@ -17,7 +17,11 @@ from headline_grabber.pipeline_steps import (
 class PrepareForDisplay(PipelineStep):
     def run(self, context: PipelineContext):
         documents_for_display: Dict[str, List[DisplayDocument]] = {}
-        for label, headlines in tqdm(context.grouped_headlines.items(), desc="Preparing documents for display", unit="group"):
+        for label, headlines in tqdm(
+            context.grouped_headlines.items(),
+            desc="Preparing documents for display",
+            unit="group",
+        ):
             links = sorted(list(set([headline.link for headline in headlines])))
             summarized_title = self._generate_headline(
                 [

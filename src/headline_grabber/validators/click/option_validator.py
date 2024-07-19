@@ -20,30 +20,28 @@ class OptionValidator:
                         f"""'{site_abbr}' is not a valid site. Valid sites are:\n\t{result}"""
                     )
         return value
-    
 
     @staticmethod
     def validate_target_dir(ctx, param, value):
         if value is None or value == "":
             return None
         win_regex = r'^(([a-zA-Z]\:)|(\\))(\\{1}|((\\{1})[^\\]([^/:*?<>"|]*))+)$'
-        nonwin_regex = r'^(/?)((?:[a-zA-Z0-9]+/)*)([a-zA-Z0-9]+?)(\*?)(/?)$'
-        if not re.match(win_regex if platform == 'win32' else nonwin_regex, value):
+        nonwin_regex = r"^(/?)((?:[a-zA-Z0-9]+/)*)([a-zA-Z0-9]+?)(\*?)(/?)$"
+        if not re.match(win_regex if platform == "win32" else nonwin_regex, value):
             raise click.BadParameter(f"'{value}' is not a valid directory")
         return value
-    
+
     @staticmethod
     def validate_max_entries(ctx, param, value):
         if value is None:
             return value
-        
+
         if isinstance(value, str):
             value = value.replace(",", " ").split()[0]
 
         try:
             value = int(value)
         except ValueError:
-            raise click.BadParameter(f'{value} must be a number')
-        
+            raise click.BadParameter(f"{value} must be a number")
+
         return value
-    

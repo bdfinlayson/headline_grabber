@@ -13,6 +13,7 @@ from selenium import webdriver
 class ScrapeTextException(Exception):
     pass
 
+
 class ScrapeText(PipelineStep):
     def run(self, context: PipelineContext) -> PipelineContext:
         headlines: List[Headline] = []
@@ -21,7 +22,9 @@ class ScrapeText(PipelineStep):
             headlines = headlines + h
         context.headlines = headlines
         if not context.headlines:
-            self.throw_error("No headlines found. Please check the site configurations and try again.")
+            self.throw_error(
+                "No headlines found. Please check the site configurations and try again."
+            )
             exit()
         return context
 
@@ -32,15 +35,19 @@ class ScrapeText(PipelineStep):
             and len(" ".join([x.title, x.description])) > min_content_length
         )
 
-    def _parse_headline(self, tag: Tag, page_selectors: PageSelectors, url: str) -> Headline:
+    def _parse_headline(
+        self, tag: Tag, page_selectors: PageSelectors, url: str
+    ) -> Headline:
         link_selector = page_selectors.link
         title_selector = page_selectors.title
         description_selector = page_selectors.description
-        raw_link = tag.find(link_selector.tag)[link_selector.identifier] if tag.find(link_selector.tag) else ""
+        raw_link = (
+            tag.find(link_selector.tag)[link_selector.identifier]
+            if tag.find(link_selector.tag)
+            else ""
+        )
         return Headline(
-            link=(
-                raw_link if "http" in raw_link else url + raw_link
-            ),
+            link=(raw_link if "http" in raw_link else url + raw_link),
             title=(
                 tag.find(title_selector.tag, class_=title_selector.identifier).text
                 if tag.find(title_selector.tag, class_=title_selector.identifier)
@@ -78,8 +85,8 @@ class ScrapeText(PipelineStep):
 
     def _get_headlines_selenium(self, config: NewsSite):
         firefoxOptions = webdriver.FirefoxOptions()
-        firefoxOptions.add_argument('--headless')
-        firefoxOptions.add_argument('--disable-gpu')
+        firefoxOptions.add_argument("--headless")
+        firefoxOptions.add_argument("--disable-gpu")
         driver = webdriver.Firefox(options=firefoxOptions)
         driver.get(config.url)
         html = driver.page_source
@@ -93,7 +100,7 @@ class ScrapeText(PipelineStep):
             return self._get_headlines_selenium(config)
         else:
             self.throw_error("No defined or unsupported engine!")
-    
+
     def throw_error(self, message: str):
         print(message)
         raise ScrapeTextException(message)
