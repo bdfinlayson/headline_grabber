@@ -65,7 +65,6 @@ def main(include: str, exclude: str, target_dir: str, limit: int, interactive: b
             target_dir=target_dir if target_dir else None,
             limit=limit if limit else None,
         )
-
     pipeline_context = PipelineContext(
         site_configs=sites,
         headlines=[],
@@ -81,35 +80,50 @@ def run_interactive_menu() -> UserPreferences:
         'Do you prefer to include certain sites or exclude certain sites?',
         type=click.Choice(['Include', 'Exclude'], case_sensitive=False)
     )
+    while True:
+        click.echo("Available sites:")
+        for site in site_abbreviation:
+            click.echo(f" - {site}")
+        if include_exclude_answer.lower() == 'include':
+            choice_message = 'Which sites would you like to include? (comma-separated)'
+        else:
+            choice_message = 'Which sites would you like to exclude? (comma-separated)'
+        sites_answer = click.prompt(
+            choice_message,
+            type=str,
+            default='',
+            show_default=False
+        )
+        selected_sites = [site.strip() for site in sites_answer.split(',')]
+        unique_sites = list(set(selected_sites))
+        valid_sites = [site for site in unique_sites if site in site_abbreviation]
+        invalid_sites = [site for site in unique_sites if site not in site_abbreviation]
+        if invalid_sites:
+            click.echo(f"Warning: The following sites are not valid: {', '.join(invalid_sites)}")
+        else:
+            break
     if include_exclude_answer.lower() == 'include':
-        choice_message = 'Which sites would you like to include?'
+        include_sites = valid_sites
+        exclude_sites = None
     else:
-        choice_message = 'Which sites would you like to exclude?'
-
-    sites_answer = click.prompt(
-        choice_message,
-        type=click.Choice(site_abbreviation, case_sensitive=False),
-        show_choices=True
-    )
-
+        include_sites = None
+        exclude_sites = valid_sites
     max_results_answer = click.prompt(
-        'What is the maximum number of results you\'d like to see?',
+        'What is the maximum number of results per subject you\'d like to see?',
         type=int,
         default=None
     )
-
     custom_directory_answer = click.prompt(
         'Do you have a custom directory you\'d like your HTML reports exported to?',
         type=str,
         default=None
     )
-
     if include_exclude_answer.lower() == 'include':
-        include_sites = sites_answer
+        include_sites = valid_sites
         exclude_sites = None
     else:
         include_sites = None
-        exclude_sites = sites_answer
+        exclude_sites = valid_sites
 
     return UserPreferences(
         include=include_sites,
