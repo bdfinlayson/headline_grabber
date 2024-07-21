@@ -1,4 +1,5 @@
 import click
+from simple_term_menu import TerminalMenu
 
 from headline_grabber.configurations.sites import sites
 from headline_grabber.models.pipeline_context import PipelineContext
@@ -75,50 +76,44 @@ def main(include: str, exclude: str, target_dir: str, limit: int, interactive: b
     pipeline_context = news_pipeline.run(pipeline_context)
 
 def run_interactive_menu() -> UserPreferences:
-    site_abbreviation = [site.abbreviation for site in sites]
-    include_exclude_answer = click.prompt(
-        'Do you prefer to include certain sites or exclude certain sites?',
-        type=click.Choice(['Include', 'Exclude'], case_sensitive=False)
-    )
+    site_abbreviations = [site.abbreviation for site in sites]
+
+    # include_exclude_answer = click.prompt(
+    #     'Do you prefer to include certain sites or exclude certain sites?',
+    #     type=click.Choice(['Include', 'Exclude'], case_sensitive=False)
+    # ).lower()
+    include_exclude_menu_options = ['Include', 'Exclude']
+    include_exclude_menu = TerminalMenu(include_exclude_menu_options, multi_select=False)
+    incl_excl_idx = include_exclude_menu.show()
+    include_exclude_answer = include_exclude_menu_options[incl_excl_idx].lower()
+    print(include_exclude_answer)
+
     while True:
-        click.echo("Available sites:")
-        for site in site_abbreviation:
-            click.echo(f" - {site}")
-        if include_exclude_answer.lower() == 'include':
-            choice_message = 'Which sites would you like to include? (comma-separated)'
-        else:
-            choice_message = 'Which sites would you like to exclude? (comma-separated)'
-        sites_answer = click.prompt(
-            choice_message,
-            type=str,
-            default='',
-            show_default=False
-        )
-        selected_sites = [site.strip() for site in sites_answer.split(',')]
-        unique_sites = list(set(selected_sites))
-        valid_sites = [site for site in unique_sites if site in site_abbreviation]
-        invalid_sites = [site for site in unique_sites if site not in site_abbreviation]
-        if invalid_sites:
-            click.echo(f"Warning: The following sites are not valid: {', '.join(invalid_sites)}")
-        else:
-            break
-    if include_exclude_answer.lower() == 'include':
-        include_sites = valid_sites
-        exclude_sites = None
-    else:
-        include_sites = None
-        exclude_sites = valid_sites
-    max_results_answer = click.prompt(
-        'What is the maximum number of results per subject you\'d like to see?',
-        type=int,
-        default=None
-    )
-    custom_directory_answer = click.prompt(
-        'Do you have a custom directory you\'d like your HTML reports exported to?',
-        type=str,
-        default=None
-    )
-    if include_exclude_answer.lower() == 'include':
+        print("Available sites:")
+        terminal_menu = TerminalMenu(site_abbreviations, multi_select=True, show_multi_select_hint=True)
+        selected_indices = terminal_menu.show()
+
+        if selected_indices is None:
+            click.echo("No sites selected. Please select at least one site.")
+            continue
+
+        valid_sites = [site_abbreviations[i] for i in selected_indices]
+        print(valid_sites)
+        break
+
+    max_results_options = [str(i) for i in range(1, 11)]
+    terminal_menu_max_results = TerminalMenu(max_results_options, title="Select the maximum number of results per subject")
+    max_results_index = terminal_menu_max_results.show()
+    max_results_answer = int(max_results_options[max_results_index]) if max_results_index is not None else None
+    print(max_results_answer)
+
+    # Using input for custom_directory_answer but allowing empty input
+    custom_directory_answer = input(
+        'Do you have a custom directory you\'d like your HTML reports exported to? (press Enter to skip): '
+    ).strip()
+    custom_directory_answer = custom_directory_answer or None
+
+    if include_exclude_answer == 'include':
         include_sites = valid_sites
         exclude_sites = None
     else:
@@ -128,7 +123,7 @@ def run_interactive_menu() -> UserPreferences:
     return UserPreferences(
         include=include_sites,
         exclude=exclude_sites,
-        target_dir=custom_directory_answer if custom_directory_answer else None,
+        target_dir=custom_directory_answer,
         limit=max_results_answer if max_results_answer else None
     )
 
