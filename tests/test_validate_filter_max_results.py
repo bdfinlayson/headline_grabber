@@ -8,8 +8,10 @@ from src.headline_grabber.models.headline import Classification
 from src.headline_grabber.models.headline import Headline
 
 test_pipline = Pipeline([FilterMaxResults()])
+
+
 def test_user_input_none():
-    
+
     context = PipelineContext(
         site_configs=[],
         headlines=[],
@@ -46,8 +48,9 @@ def test_user_input_two_clips_results():
     context.headlines.append(Headline("a", "b", "c", Classification("sports", 0.1)))
     context.headlines.append(Headline("a", "b", "c", Classification("sports", 0.1)))
     context = test_pipline.run(context)
-    
+
     assert len(context.headlines) == 2
+
 
 def test_user_input_two_does_not_clip_results():
     context = PipelineContext(
@@ -66,8 +69,9 @@ def test_user_input_two_does_not_clip_results():
     context.headlines.append(Headline("a", "b", "c", Classification("sports", 0.1)))
     context.headlines.append(Headline("a", "b", "c", Classification("World", 0.1)))
     context = test_pipline.run(context)
-    
+
     assert len(context.headlines) == 3
+
 
 def test_user_input_two_clips_3_but_not_one():
     context = PipelineContext(
@@ -87,7 +91,5 @@ def test_user_input_two_clips_3_but_not_one():
     context.headlines.append(Headline("a", "b", "c", Classification("sports", 0.1)))
     context.headlines.append(Headline("a", "b", "c", Classification("World", 0.1)))
     context = test_pipline.run(context)
-        
+
     assert len(context.headlines) == 3
-
-
