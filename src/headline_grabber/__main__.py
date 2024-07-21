@@ -131,3 +131,4 @@ def run_interactive_menu() -> UserPreferences:
         target_dir=custom_directory_answer if custom_directory_answer else None,
         limit=max_results_answer if max_results_answer else None
     )
+

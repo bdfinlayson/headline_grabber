@@ -6,6 +6,7 @@ from sklearn.cluster import AgglomerativeClustering
 import numpy as np
 from tqdm import tqdm
 
+
 class TextSimilarity(PipelineStep):
     # hyperparameter that limits the distance one document can be from another to be marked as sharing the same subject
     threshold = 0.4
@@ -31,10 +32,10 @@ class TextSimilarity(PipelineStep):
         context.headlines = [
             headline.set_similarity_classification(similarity_group, similarity_scores)
             for headline, similarity_group, similarity_scores in tqdm(
-                zip(context.headlines, similarity_groups, similarity_matrix), 
-                desc="Classifying Text Similarities", 
-                unit="headline", 
-                total=len(context.headlines)
+                zip(context.headlines, similarity_groups, similarity_matrix),
+                desc="Classifying Text Similarities",
+                unit="headline",
+                total=len(context.headlines),
             )
         ]
         return context
