@@ -1,6 +1,5 @@
 import click
-from simple_term_menu import TerminalMenu
-
+from PyInquirer import prompt, Separator
 from headline_grabber.configurations.sites import sites
 from headline_grabber.models.pipeline_context import PipelineContext
 from headline_grabber.models.user_preferences import UserPreferences
@@ -15,7 +14,7 @@ from headline_grabber.validators.click.option_validator import OptionValidator
 )
 @click.option(
     "--include",
-    "-i",
+    "-inc",
     type=click.STRING,
     default=None,
     required=False,
@@ -24,7 +23,7 @@ from headline_grabber.validators.click.option_validator import OptionValidator
 )
 @click.option(
     "--exclude",
-    "-e",
+    "-exc",
     type=click.STRING,
     default=None,
     required=False,
@@ -51,6 +50,7 @@ from headline_grabber.validators.click.option_validator import OptionValidator
 )
 @click.option(
     "--interactive",
+    "-i",
     is_flag=True,
     default=False,
     help="Launch interactive menu for preference selection",
@@ -78,51 +78,57 @@ def main(include: str, exclude: str, target_dir: str, limit: int, interactive: b
 def run_interactive_menu() -> UserPreferences:
     site_abbreviations = [site.abbreviation for site in sites]
 
-    # include_exclude_answer = click.prompt(
-    #     'Do you prefer to include certain sites or exclude certain sites?',
-    #     type=click.Choice(['Include', 'Exclude'], case_sensitive=False)
-    # ).lower()
-    include_exclude_menu_options = ['Include', 'Exclude']
-    include_exclude_menu = TerminalMenu(include_exclude_menu_options, multi_select=False)
-    incl_excl_idx = include_exclude_menu.show()
-    include_exclude_answer = include_exclude_menu_options[incl_excl_idx].lower()
-    print(include_exclude_answer)
+    # Prompt for include/exclude choice
+    include_exclude_answer = prompt({
+        'type': 'list',
+        'name': 'include_exclude',
+        'message': 'Do you prefer to include or exclude certain sites?',
+        'choices': ['Include', 'Exclude']
+    })['include_exclude']
 
-    while True:
-        print("Available sites:")
-        terminal_menu = TerminalMenu(site_abbreviations, multi_select=True, show_multi_select_hint=True)
-        selected_indices = terminal_menu.show()
+    # Prompt for site selection
+    site_answers = prompt({
+        'type': 'checkbox',
+        'name': 'sites',
+        'message': 'Select sites (use space to select/deselect):',
+        'choices': [{'name': site} for site in site_abbreviations],
+        'validate': lambda answer: 'You must choose at least one site.' if len(answer) == 0 else True
+    })['sites']
+    click.echo(f"Selected sites: {', '.join(site_answers)}")
+    # Prompt for additional details
+    max_results = prompt({
+        'type': 'input',
+        'name': 'max_results',
+        'message': 'What is the maximum number of results per subject you\'d like to see?',
+        'default': '',
+        'validate': lambda val: val.isdigit() or 'Please enter a valid number'
+    })['max_results']
 
-        if selected_indices is None:
-            click.echo("No sites selected. Please select at least one site.")
-            continue
+    target_dir = prompt({
+        'type': 'input',
+        'name': 'target_dir',
+        'message': 'Do you have a custom directory you\'d like your HTML reports exported to?',
+        'default': '',
+    })['target_dir']
 
-        valid_sites = [site_abbreviations[i] for i in selected_indices]
-        print(valid_sites)
-        break
+    # Determine if sites should be included or excluded
+    include_sites = site_answers if include_exclude_answer == 'Include' else None
+    exclude_sites = site_answers if include_exclude_answer == 'Exclude' else None
 
-    max_results_options = [str(i) for i in range(1, 11)]
-    terminal_menu_max_results = TerminalMenu(max_results_options, title="Select the maximum number of results per subject")
-    max_results_index = terminal_menu_max_results.show()
-    max_results_answer = int(max_results_options[max_results_index]) if max_results_index is not None else None
-    print(max_results_answer)
+    # Ensure at least one site is selected
+    if not include_sites and not exclude_sites:
+        click.echo("Error: You must select at least one site.")
+        return run_interactive_menu()  # Re-prompt if no sites selected
 
-    # Using input for custom_directory_answer but allowing empty input
-    custom_directory_answer = input(
-        'Do you have a custom directory you\'d like your HTML reports exported to? (press Enter to skip): '
-    ).strip()
-    custom_directory_answer = custom_directory_answer or None
-
-    if include_exclude_answer == 'include':
-        include_sites = valid_sites
-        exclude_sites = None
-    else:
-        include_sites = None
-        exclude_sites = valid_sites
+    # Check for duplicate sites
+    unique_sites = list(set(site_answers))
+    if len(unique_sites) != len(site_answers):
+        click.echo("Error: Duplicate sites selected. Please select unique sites.")
+        return run_interactive_menu()  # Re-prompt if duplicates found
 
     return UserPreferences(
         include=include_sites,
         exclude=exclude_sites,
-        target_dir=custom_directory_answer,
-        limit=max_results_answer if max_results_answer else None
+        target_dir=target_dir if target_dir else None,
+        limit=int(max_results) if max_results else None
     )
