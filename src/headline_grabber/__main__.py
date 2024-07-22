@@ -77,8 +77,6 @@ def main(include: str, exclude: str, target_dir: str, limit: int, interactive: b
 
 def run_interactive_menu() -> UserPreferences:
     site_abbreviations = [site.abbreviation for site in sites]
-
-    # Prompt for include/exclude choice
     include_exclude_answer = prompt({
         'type': 'list',
         'name': 'include_exclude',
@@ -86,7 +84,6 @@ def run_interactive_menu() -> UserPreferences:
         'choices': ['Include', 'Exclude']
     })['include_exclude']
 
-    # Prompt for site selection
     site_answers = prompt({
         'type': 'checkbox',
         'name': 'sites',
@@ -95,7 +92,7 @@ def run_interactive_menu() -> UserPreferences:
         'validate': lambda answer: 'You must choose at least one site.' if len(answer) == 0 else True
     })['sites']
     click.echo(f"Selected sites: {', '.join(site_answers)}")
-    # Prompt for additional details
+    
     max_results = prompt({
         'type': 'input',
         'name': 'max_results',
@@ -111,21 +108,15 @@ def run_interactive_menu() -> UserPreferences:
         'default': '',
     })['target_dir']
 
-    # Determine if sites should be included or excluded
     include_sites = site_answers if include_exclude_answer == 'Include' else None
     exclude_sites = site_answers if include_exclude_answer == 'Exclude' else None
-
-    # Ensure at least one site is selected
     if not include_sites and not exclude_sites:
         click.echo("Error: You must select at least one site.")
-        return run_interactive_menu()  # Re-prompt if no sites selected
-
-    # Check for duplicate sites
+        return run_interactive_menu()
     unique_sites = list(set(site_answers))
     if len(unique_sites) != len(site_answers):
         click.echo("Error: Duplicate sites selected. Please select unique sites.")
-        return run_interactive_menu()  # Re-prompt if duplicates found
-
+        return run_interactive_menu()
     return UserPreferences(
         include=include_sites,
         exclude=exclude_sites,

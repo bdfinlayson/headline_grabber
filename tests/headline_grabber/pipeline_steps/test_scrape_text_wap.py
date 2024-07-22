@@ -25,9 +25,11 @@ STUB_HTML = """
 </div>
 """
 
+
 @pytest.fixture
 def scrape_text_instance():
     return ScrapeText()
+
 
 def test_get_headlines_beautifulsoup_with_stub_html(scrape_text_instance):
     config = NewsSite(
@@ -43,19 +45,22 @@ def test_get_headlines_beautifulsoup_with_stub_html(scrape_text_instance):
         ),
     )
     pipeline_context = PipelineContext(
-            site_configs=[config],
-            headlines=[],
-            grouped_headlines={},
-            documents_for_display={},
-            user_input=UserPreferences(
-                include=['wap'],
-                exclude=None,
-            ),
-        )
-    headlines = scrape_text_instance._get_headlines_beautifulsoup(config, html=STUB_HTML)
+        site_configs=[config],
+        headlines=[],
+        grouped_headlines={},
+        documents_for_display={},
+        user_input=UserPreferences(
+            include=["wap"],
+            exclude=None,
+        ),
+    )
+    headlines = scrape_text_instance._get_headlines_beautifulsoup(
+        config, html=STUB_HTML
+    )
     assert len(headlines) > 0
     pipeline_context.headlines.extend(headlines)
     assert len(pipeline_context.headlines) > 0
+
 
 def test_parse_headline(scrape_text_instance):
     dummy_tag = BeautifulSoup(STUB_HTML, "html.parser").find("div", class_="card-text")
@@ -66,17 +71,23 @@ def test_parse_headline(scrape_text_instance):
         title=ElementSelector(tag="div", identifier="headline"),
     )
     stub_url = "https://www.washingtonpost.com/business/2024/07/10/three-mile-island-nuclear-artificial-intelligence/"
-    parsed_headline = scrape_text_instance._parse_headline(dummy_tag, selectors, stub_url)
-    parsed_headline_title_cleaned = ' '.join(parsed_headline.title.split())
-    parsed_headline_description_cleaned = ' '.join(parsed_headline.description.split())
+    parsed_headline = scrape_text_instance._parse_headline(
+        dummy_tag, selectors, stub_url
+    )
+    parsed_headline_title_cleaned = " ".join(parsed_headline.title.split())
+    parsed_headline_description_cleaned = " ".join(parsed_headline.description.split())
     parsed_headline_link_cleaned = parsed_headline.link.replace(" ", "")
     stub_url_cleaned = stub_url.replace(" ", "")
 
-    assert parsed_headline_title_cleaned == "Surging AI energy needs could bring Three Mile Island back online"
+    assert (
+        parsed_headline_title_cleaned
+        == "Surging AI energy needs could bring Three Mile Island back online"
+    )
     assert parsed_headline_description_cleaned == (
         "The Pennsylvania plant, site of a partial meltdown in 1979, is part of a burst of fresh activity at mothballed plants as tech companies, manufacturers and energy regulators scramble to find enough zero emissions electricity."
     )
     assert parsed_headline_link_cleaned == stub_url_cleaned
-    
+
+
 if __name__ == "__main__":
     pytest.main()
