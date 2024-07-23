@@ -73,4 +73,3 @@ def main(include: str, exclude: str, target_dir: str, limit: int, filter_sentime
         ),
     )
     pipeline_context = news_pipeline.run(pipeline_context)
-

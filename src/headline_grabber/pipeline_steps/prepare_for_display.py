@@ -17,7 +17,11 @@ from headline_grabber.pipeline_steps import (
 class PrepareForDisplay(PipelineStep):
     def run(self, context: PipelineContext):
         documents_for_display: Dict[str, List[DisplayDocument]] = {}
-        for label, headlines in tqdm(context.grouped_headlines.items(), desc="Preparing documents for display", unit="group"):
+        for label, headlines in tqdm(
+            context.grouped_headlines.items(),
+            desc="Preparing documents for display",
+            unit="group",
+        ):
             links = sorted(list(set([headline.link for headline in headlines])))
             summarized_title = self._generate_headline(
                 [
@@ -30,8 +34,8 @@ class PrepareForDisplay(PipelineStep):
                     " ".join([headline.title, headline.description])
                     for headline in headlines
                 ],
-                min_length=150,
-                max_length=250,
+                min_length=50,
+                max_length=200,
             )
             subjects = sorted(
                 list(set([headline.subject.label for headline in headlines]))
@@ -82,17 +86,17 @@ class PrepareForDisplay(PipelineStep):
         inputs = text_summarization_tokenizer(
             texts,
             return_tensors="pt",
-            max_length=1024,
+            max_length=256,
             truncation=True,
             padding="max_length",
         )
         summary_ids = text_summarization_model.generate(
             inputs["input_ids"],
-            num_beams=4,
-            length_penalty=2.0,
+            num_beams=2,
             max_length=max_length,
             min_length=min_length,
             early_stopping=True,
+            length_penalty=10.0
         )
         summary = text_summarization_tokenizer.decode(
             summary_ids[0], skip_special_tokens=True
@@ -108,8 +112,9 @@ class PrepareForDisplay(PipelineStep):
             input_ids=input_ids,
             attention_mask=attention_masks,
             max_length=64,
-            num_beams=3,
-            early_stopping=True,
+            num_beams=1,
+            early_stopping=False,
+            length_penalty=None
         )
         result = headline_tokenizer.decode(beam_outputs[0])
         result = result.replace("<pad> ", "").replace("</s>", "")
