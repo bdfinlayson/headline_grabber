@@ -18,3 +18,4 @@ class UserPreferences:
         self.target_dir = target_dir
         self.limit = limit
         self.filter_sentiment = filter_sentiment
+
