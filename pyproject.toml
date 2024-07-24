@@ -22,7 +22,6 @@ black = "^24.4.2"
 pytest = "^8.2.2"
 pytest-html = "^4.1.1"
 pytest-cov = "^5.0.0"
-simple-term-menu = "^1.6.4"
 
 
 [build-system]
