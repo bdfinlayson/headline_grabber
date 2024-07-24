@@ -48,7 +48,16 @@ from headline_grabber.validators.click.option_validator import OptionValidator
     callback=OptionValidator.validate_max_entries,
     help="Number specifying the maximum number of entries per topic in a report",
 )
-def main(include: str, exclude: str, target_dir: str, limit: int):
+@click.option(
+    "--filter-sentiment",
+    "-f",
+    type=str,
+    default=None,
+    required=False,
+    callback=OptionValidator.validate_filter_sentiment,
+    help="Filters out news headlines ranked positive or negative based on entered value of positive or negative",
+)
+def main(include: str, exclude: str, target_dir: str, limit: int, filter_sentiment: str):
     """Simple program to collect headlines from various news sources and summarize them in a helpful way"""
     pipeline_context = PipelineContext(
         site_configs=sites,
@@ -60,6 +69,7 @@ def main(include: str, exclude: str, target_dir: str, limit: int):
             exclude=(exclude.split(",") if exclude else None),
             target_dir=(target_dir if target_dir else None),
             limit=(limit if limit else None),
+            filter_sentiment=(filter_sentiment if filter_sentiment else None),
         ),
     )
     pipeline_context = news_pipeline.run(pipeline_context)
