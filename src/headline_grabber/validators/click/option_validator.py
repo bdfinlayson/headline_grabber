@@ -58,3 +58,13 @@ class OptionValidator:
 
         return value
     
+    @staticmethod
+    def validate_keywords(ctx, param, value):
+        if value is None or value == "":
+            return None
+        list_regex = r"^[a-zA-Z0-9 ,]+$"
+        matches = re.finditer(list_regex, value)
+        if len(list(matches)) > 1:
+            raise click.BadParameter(f"'{value}' is not a comma separated list format")
+        return value
+    
