@@ -68,7 +68,7 @@ class DisplayReport(PipelineStep):
             )
             script(
                 type="text/javascript",
-                src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js",
+                src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js",
             )
 
         with doc:
@@ -81,20 +81,37 @@ class DisplayReport(PipelineStep):
                             p(
                                 f'This report contains content from the following news sources: {", ".join(news_sources)}'
                             )
-                for subject in tqdm(subjects, desc="Generating report"):
-                    with div(cls="row"):
-                        h2(subject)
-                        for headline in context.documents_for_display[subject]:
-                            with div(cls="col-6"):
-                                h4(headline.summarized_title)
-                                p(headline.summarized_description)
-                                with b("Sentiment:"):
-                                    span(
-                                        f"{headline.average_sentiment.label} ({headline.average_sentiment.score})"
-                                    )
-                                p(b("Sources:"))
-                                with ol():
-                                    for lnk in headline.links:
-                                        li(a(lnk, href=lnk))
-                        hr()
+                with div(cls="accordion", id="accordionExample"):
+                    for idx, subject in enumerate(tqdm(subjects, desc="Generating report")):
+                        with div(cls="accordion-item"):
+                            with h2(cls="accordion-header", id=f"heading{idx}"):
+                                button(
+                                    subject,
+                                    cls="accordion-button",
+                                    type="button",
+                                    data_bs_toggle="collapse",
+                                    data_bs_target=f"#collapse{idx}",
+                                    aria_expanded= "true" if idx==0 else "false",
+                                    aria_controls=f"collapse{idx}"
+                                )
+                            with div(
+                                cls=f"accordion-collapse collapse{' show' if idx==0 else ''}",
+                                id=f"collapse{idx}",
+                                aria_labelledby=f"heading{idx}",
+                                data_bs_parent="#accordionExample"
+                            ):
+                                with div(cls="accordion-body"):
+                                    for headline in context.documents_for_display[subject]:
+                                        with div(cls="col-6"):
+                                            h4(headline.summarized_title)
+                                            p(headline.summarized_description)
+                                            with b("Sentiment:"):
+                                                span(
+                                                    f"{headline.average_sentiment.label} ({headline.average_sentiment.score})"
+                                                    )
+                                            p(b("Sources:"))
+                                            with ol():
+                                                for lnk in headline.links:
+                                                    li(a(lnk, href=lnk))
+                                    hr()
         return str(doc)

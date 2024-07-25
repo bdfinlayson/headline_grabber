@@ -1,5 +1,5 @@
 import click
-from PyInquirer import prompt, Separator
+from PyInquirer import prompt
 from headline_grabber.configurations.sites import sites
 from headline_grabber.models.pipeline_context import PipelineContext
 from headline_grabber.models.user_preferences import UserPreferences
@@ -76,7 +76,24 @@ from headline_grabber.validators.click.option_validator import OptionValidator
 def main(include: str, exclude: str, target_dir: str, limit: int, filter_sentiment: str, interactive: bool, keywords: str):
     """Simple program to collect headlines from various news sources and summarize them in a helpful way"""
     if interactive:
-        user_preferences = run_interactive_menu()
+        while True:
+            user_preferences = run_interactive_menu()
+            if user_preferences:
+                run_pipeline(user_preferences)
+                
+                rerun_choice = prompt({
+                    'type': 'list',
+                    'name': 'rerun',
+                    'message': 'Do you want to rerun the pipeline with new options or exit?',
+                    'choices': ['Rerun with new options', 'Exit']
+                })['rerun']
+
+                if rerun_choice == 'Exit':
+                    click.echo("Exiting interactive mode.")
+                    break
+            else:
+                click.echo("Error: No user preferences selected. Exiting interactive mode.")
+                break
     else:
         user_preferences = UserPreferences(
             include=(include.split(",") if include else None),
@@ -86,6 +103,11 @@ def main(include: str, exclude: str, target_dir: str, limit: int, filter_sentime
             keywords=(keywords.split(",") if keywords else None),
             filter_sentiment=(filter_sentiment if filter_sentiment else None),
         )
+        run_pipeline(user_preferences)
+
+
+def run_pipeline(user_preferences: UserPreferences):
+    """Runs the news pipeline with the given user preferences"""
     pipeline_context = PipelineContext(
         site_configs=sites,
         headlines=[],
@@ -93,8 +115,9 @@ def main(include: str, exclude: str, target_dir: str, limit: int, filter_sentime
         documents_for_display={},
         user_input=user_preferences,
     )
-
     pipeline_context = news_pipeline.run(pipeline_context)
+    click.echo("Report generated successfully.")
+
 
 
 def run_interactive_menu() -> UserPreferences:
@@ -141,12 +164,11 @@ def run_interactive_menu() -> UserPreferences:
     exclude_sites = site_answers if include_exclude_answer == 'Exclude' else None
     if not include_sites and not exclude_sites:
         click.echo("Error: You must select at least one site.")
-        return run_interactive_menu()
+        return None
     unique_sites = list(set(site_answers))
     if len(unique_sites) != len(site_answers):
         click.echo("Error: Duplicate sites selected. Please select unique sites.")
-        return run_interactive_menu()
-    print(keywords)
+        return None
     return UserPreferences(
         include=include_sites,
         exclude=exclude_sites,
