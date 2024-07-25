@@ -1,0 +1,17 @@
+abbreviation: npr
+name: National Public Radio
+url: https://www.npr.org
+engine: selenium
+selectors:
+    headline:
+      tag: div
+      identifier: story-wrap
+    link:
+      tag: a
+      identifier: href
+    title:
+      tag: h3
+      identifier: title
+    description:
+      tag: p
+      identifier: teaser

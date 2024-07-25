@@ -26,3 +26,7 @@ def test_validate_number_invalid_value():
 def test_validate_number_default_value():
     result = OptionValidator.validate_max_entries(None, None, None)
     assert result == None
+
+def test_validate_number_int():
+    result = OptionValidator.validate_max_entries(None, None, 5)
+    assert result == 5

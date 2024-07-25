@@ -10,9 +10,12 @@ class UserPreferences:
         exclude: List[str] = None,
         target_dir: str = None,
         limit: int = None,
+        filter_sentiment: str = None, 
         **kwargs
     ):
         self.include = include
         self.exclude = exclude
         self.target_dir = target_dir
         self.limit = limit
+        self.filter_sentiment = filter_sentiment
+

@@ -16,21 +16,30 @@ class DisplayReport(PipelineStep):
         html_content = self.build_html_content(context)
         self._display_report(html_content, html_file_path)
 
-    def _display_report(self, html_content: str, file_path: str):
+    @staticmethod
+    def _display_report(html_content: str, file_path: str) -> bool:
         try:
-            sanitized_content = self.sanitize_html_content(html_content)
-            with open(file_path, "w", encoding="utf-8") as file:
-                file.write(sanitized_content)
-        except Exception as e:
-            print(f"Failed to write HTML file: {e}")
-            exit(1)
-
-        try:
+            with open(file_path, "w", encoding='utf-8') as file:
+                file.write(DisplayReport.sanitize_html_content(html_content))
             webbrowser.open("file://" + os.path.realpath(file_path))
+            return True
         except Exception as e:
-            print(f"Failed to open HTML file in web browser: {e}")
+            print(f"Failed to write/open HTML file in web browser: {e}")
+            return False
 
-    def sanitize_html_content(self, html_content):
+    @staticmethod
+    def build_export_path(target_dir: str) -> str:
+        if target_dir:
+            # ensure reports directory exists
+            os.makedirs(target_dir, exist_ok=True)
+            return target_dir
+        else:
+            default_dir = os.path.join(os.getcwd(), "reports")
+            os.makedirs(default_dir, exist_ok=True)
+            return default_dir
+
+    @staticmethod
+    def sanitize_html_content(html_content):
         text = (
             html_content.replace("“", '"')
             .replace("”", '"')
@@ -42,17 +51,10 @@ class DisplayReport(PipelineStep):
 
         return text
 
-    def build_export_path(self, target_dir: str) -> str:
-        if target_dir:
-            # ensure reports directory exists
-            os.makedirs(target_dir, exist_ok=True)
-            return target_dir
-        else:
-            return os.path.join(os.getcwd(), "reports")
-
-    def build_html_file_path(self, target_dir: str) -> str:
-        reports_dir = self.build_export_path(target_dir)
-        return os.path.join(reports_dir, f"news_report_{self.formatted_datetime}.html")
+    @staticmethod
+    def build_html_file_path(target_dir: str) -> str:
+        reports_dir = DisplayReport.build_export_path(target_dir)
+        return os.path.join(reports_dir, f"news_report_{DisplayReport.formatted_datetime}.html")
 
     def build_html_content(self, context: PipelineContext) -> str:
         doc = dominate.document(title="Dominate your HTML")
