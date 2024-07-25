@@ -9,17 +9,22 @@ from headline_grabber.pipeline_steps.text_similarity import TextSimilarity
 from headline_grabber.pipelines.pipeline import Pipeline
 from headline_grabber.pipeline_steps.filter_max_results import FilterMaxResults
 from headline_grabber.pipeline_steps.filter_sentiment import FilterSentiment
+from headline_grabber.pipeline_steps.filter_topic import FilterTopic
+
 
 news_pipeline = Pipeline(
     [
         FilterSites(),
         ScrapeText(),
         ClassifySubject(),
+        
         FilterMaxResults(),
         ScoreSentiment(),
-        FilterSentiment(),
+        FilterTopic(),
+        
         TextSimilarity(),
         GroupBySimilarity(),
+        FilterSentiment(),
         PrepareForDisplay(),
         DisplayReport(),
     ]

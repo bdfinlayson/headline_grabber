@@ -1,5 +1,5 @@
 import click
-from PyInquirer import prompt, Separator
+#from PyInquirer import prompt, Separator
 from headline_grabber.configurations.sites import sites
 from headline_grabber.models.pipeline_context import PipelineContext
 from headline_grabber.models.user_preferences import UserPreferences
@@ -64,8 +64,17 @@ from headline_grabber.validators.click.option_validator import OptionValidator
     callback=OptionValidator.validate_filter_sentiment,
     help="Filters out news headlines ranked positive or negative based on entered value of positive or negative",
 )
+@click.option(
+    "--filter-topic",
+    "-ft",
+    type=str,
+    default=None,
+    required=False,
+    callback=OptionValidator.validate_filter_topic,
+    help="Provides desired headlines based on entered value of world, sports, business, or science/technology",
+)
   
-def main(include: str, exclude: str, target_dir: str, limit: int, filter_sentiment: str, interactive: bool):
+def main(include: str, exclude: str, target_dir: str, limit: int, filter_sentiment: str, interactive: bool, filter_topic: str):
     """Simple program to collect headlines from various news sources and summarize them in a helpful way"""
     if interactive:
         user_preferences = run_interactive_menu()
@@ -76,6 +85,7 @@ def main(include: str, exclude: str, target_dir: str, limit: int, filter_sentime
             target_dir=target_dir if target_dir else None,
             limit=limit if limit else None,
             filter_sentiment=(filter_sentiment if filter_sentiment else None),
+            filter_topic=(filter_topic if filter_topic else None),
         )
     pipeline_context = PipelineContext(
         site_configs=sites,

@@ -58,3 +58,13 @@ class OptionValidator:
 
         return value
     
+    @staticmethod
+    def validate_filter_topic(ctx, param, value):
+        if value is None or value =="":
+            return None
+        value = str(value)
+        value = value.upper()
+        if value != 'WORLD' and value != 'SPORTS' and value != 'BUSINESS' and value != 'SCIENCE/TECHNOLOGY':
+            raise click.BadParameter(f'{value} must be either World, Sports, Business, Science/Technology')
+        return value
+    
