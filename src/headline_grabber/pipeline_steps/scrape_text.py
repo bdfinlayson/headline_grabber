@@ -15,29 +15,34 @@ class ScrapeTextException(Exception):
 
 
 class ScrapeText(PipelineStep):
+
+    keyword_list = None
+
     def run(self, context: PipelineContext) -> PipelineContext:
         headlines: List[Headline] = []
+        self.keyword_list = context.user_input.keywords
         for site_config in context.site_configs:
             h = self._get_headlines(site_config)
             headlines = headlines + h
         context.headlines = headlines
         if not context.headlines:
-            self.throw_error(
-                "No headlines found. Please check the site configurations and try again."
-            )
+            self.throw_error("No headlines found. Please check the site configurations and try again.")
             exit()
         return context
 
     def _filter_results(self, x: Headline) -> bool:
-        min_content_length = 150
-        return (
-            len(x.link) > 0
-            and len(" ".join([x.title, x.description])) > min_content_length
-        )
+        return  self.is_headline_content_greater_than(150, x) and \
+                self.does_headline_have_keywords(self.keyword_list, x)
 
-    def _parse_headline(
-        self, tag: Tag, page_selectors: PageSelectors, url: str
-    ) -> Headline:
+    def is_headline_content_greater_than(self, min_content_length: int, headline: Headline) -> bool:
+        return len(" ".join([headline.title, headline.description])) > min_content_length
+
+    def does_headline_have_keywords(self, keywords: List[str], headline: Headline) -> bool:
+        return  keywords is None or \
+                any(keyword in headline.title for keyword in keywords) or \
+                any(keyword in headline.description for keyword in keywords)
+
+    def _parse_headline(self, tag: Tag, page_selectors: PageSelectors, url: str) -> Headline:
         link_selector = page_selectors.link
         title_selector = page_selectors.title
         description_selector = page_selectors.description

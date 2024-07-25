@@ -64,7 +64,16 @@ from headline_grabber.validators.click.option_validator import OptionValidator
     callback=OptionValidator.validate_filter_sentiment,
     help="Filters out news headlines ranked positive or negative based on entered value of positive or negative",
 )
-def main(include: str, exclude: str, target_dir: str, limit: int, filter_sentiment: str, interactive: bool):
+@click.option(
+    "--keywords",
+    "-k",
+    type=str,
+    default=None,
+    required=False,
+    callback=OptionValidator.validate_keywords,
+    help="Comma-separated list of keywords to search for in news headlines",
+)
+def main(include: str, exclude: str, target_dir: str, limit: int, filter_sentiment: str, interactive: bool, keywords: str):
     """Simple program to collect headlines from various news sources and summarize them in a helpful way"""
     if interactive:
         while True:
@@ -91,6 +100,7 @@ def main(include: str, exclude: str, target_dir: str, limit: int, filter_sentime
             exclude=(exclude.split(",") if exclude else None),
             target_dir=target_dir if target_dir else None,
             limit=limit if limit else None,
+            keywords=(keywords.split(",") if keywords else None),
             filter_sentiment=(filter_sentiment if filter_sentiment else None),
         )
         run_pipeline(user_preferences)
@@ -107,6 +117,7 @@ def run_pipeline(user_preferences: UserPreferences):
     )
     pipeline_context = news_pipeline.run(pipeline_context)
     click.echo("Report generated successfully.")
+
 
 
 def run_interactive_menu() -> UserPreferences:
@@ -126,7 +137,7 @@ def run_interactive_menu() -> UserPreferences:
         'validate': lambda answer: 'You must choose at least one site.' if len(answer) == 0 else True
     })['sites']
     click.echo(f"Selected sites: {', '.join(site_answers)}")
-    
+
     max_results = prompt({
         'type': 'input',
         'name': 'max_results',
@@ -142,6 +153,13 @@ def run_interactive_menu() -> UserPreferences:
         'default': '',
     })['target_dir']
 
+    keywords = prompt({
+        'type': 'input',
+        'name': 'keywords',
+        'message': 'Please enter a comma-separated list of keywords to search for in news headlines.',
+        'default': '',
+    })['keywords']
+
     include_sites = site_answers if include_exclude_answer == 'Include' else None
     exclude_sites = site_answers if include_exclude_answer == 'Exclude' else None
     if not include_sites and not exclude_sites:
@@ -155,5 +173,6 @@ def run_interactive_menu() -> UserPreferences:
         include=include_sites,
         exclude=exclude_sites,
         target_dir=target_dir if target_dir else None,
-        limit=int(max_results) if max_results else None
+        limit=int(max_results) if max_results else None,
+        keywords=keywords.split(",") if keywords else None
     )
