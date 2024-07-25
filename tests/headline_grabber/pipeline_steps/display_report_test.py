@@ -28,7 +28,7 @@ def test_build_html_content():
     html_report = DisplayReport().build_html_content(context)
     assert "<title>Dominate your HTML</title>" in html_report
     assert "<h1>Headline Grabber Report</h1>" in html_report
-    assert "<h2>World</h2>" in html_report
+    assert '<button aria-controls="collapse0" aria-expanded="true" class="accordion-button" data-bs-target="#collapse0" data-bs-toggle="collapse" type="button">World</button>' in html_report
     assert "<h4>Braverman claims leadership rival Jenrick is from left of Tory party</h4>" in html_report
     assert "<span>Positive (0.1)</span>" in html_report
     assert '<a href="https://www.thetimes.com/uk/politics/article/suella-braverman-tory-leadership-race-robert-jenrick-rivals-mnghlk9fn">https://www.thetimes.com/uk/politics/article/suella-braverman-tory-leadership-race-robert-jenrick-rivals-mnghlk9fn</a>' in html_report
