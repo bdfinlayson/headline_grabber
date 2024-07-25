@@ -73,8 +73,7 @@ from headline_grabber.validators.click.option_validator import OptionValidator
     callback=OptionValidator.validate_keywords,
     help="Comma-separated list of keywords to search for in news headlines",
 )
-def main(include: str, exclude: str, target_dir: str, limit: int, filter_sentiment: str, interactive: bool,
-         keywords: str):
+def main(include: str, exclude: str, target_dir: str, limit: int, filter_sentiment: str, interactive: bool, keywords: str):
     """Simple program to collect headlines from various news sources and summarize them in a helpful way"""
     if interactive:
         user_preferences = run_interactive_menu()
@@ -153,5 +152,5 @@ def run_interactive_menu() -> UserPreferences:
         exclude=exclude_sites,
         target_dir=target_dir if target_dir else None,
         limit=int(max_results) if max_results else None,
-        keywords=keywords if keywords else None
+        keywords=keywords.split(",") if keywords else None
     )
