@@ -21,6 +21,5 @@ Ryan McFarland, OrionSkywalker, HeadlineGrabber
 * src/headline_grabber/configurations/sites/npr.yaml
 * src/headline_grabber/configurations/sites/apn.yaml
 ### What you accomplished
-(Give a description of the features you added or tasks you accomplished. Provide some detail here. This section will be a little longer than the bulleted lists above)
 * I added configuration files to support scraping data from Associated Press and National Public Radio websites.
 * I worked on supporting filtering news by topic, which is incomplete as of this date.
