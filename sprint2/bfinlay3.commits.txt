@@ -1,0 +1,980 @@
+1161d352 (bdfinlayson 2024-06-14 15:14:37 -0500  1) name: Enforce Branch Naming Convention
+1161d352 (bdfinlayson 2024-06-14 15:14:37 -0500  2) 
+1161d352 (bdfinlayson 2024-06-14 15:14:37 -0500  3) on:
+1161d352 (bdfinlayson 2024-06-14 15:14:37 -0500  4)   push:
+1161d352 (bdfinlayson 2024-06-14 15:14:37 -0500  5)     branches:
+1161d352 (bdfinlayson 2024-06-14 15:14:37 -0500  6)       - "*"
+1161d352 (bdfinlayson 2024-06-14 15:14:37 -0500  7)   pull_request:
+1161d352 (bdfinlayson 2024-06-14 15:14:37 -0500  8)     branches:
+1161d352 (bdfinlayson 2024-06-14 15:14:37 -0500  9)       - "*"
+1161d352 (bdfinlayson 2024-06-14 15:14:37 -0500 10) 
+1161d352 (bdfinlayson 2024-06-14 15:14:37 -0500 11) jobs:
+1161d352 (bdfinlayson 2024-06-14 15:14:37 -0500 12)   branch-name-check:
+1161d352 (bdfinlayson 2024-06-14 15:14:37 -0500 13)     runs-on: ubuntu-latest
+1161d352 (bdfinlayson 2024-06-14 15:14:37 -0500 14) 
+1161d352 (bdfinlayson 2024-06-14 15:14:37 -0500 15)     steps:
+1161d352 (bdfinlayson 2024-06-14 15:14:37 -0500 16)       - name: Checkout code
+1161d352 (bdfinlayson 2024-06-14 15:14:37 -0500 17)         uses: actions/checkout@v2
+1161d352 (bdfinlayson 2024-06-14 15:14:37 -0500 18) 
+1161d352 (bdfinlayson 2024-06-14 15:14:37 -0500 19)       - name: Check branch name
+1161d352 (bdfinlayson 2024-06-14 15:14:37 -0500 20)         run: |
+a296f6b6 (bdfinlayson 2024-06-14 15:18:52 -0500 21)           if [[ "$GITHUB_REF" == refs/heads/* ]]; then
+a296f6b6 (bdfinlayson 2024-06-14 15:18:52 -0500 22)             BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/})
+a296f6b6 (bdfinlayson 2024-06-14 15:18:52 -0500 23)             # Define the branch naming pattern
+a296f6b6 (bdfinlayson 2024-06-14 15:18:52 -0500 24)             BRANCH_PATTERN="^(feature|bugfix|hotfix|release)/HG[0-9]+-[a-zA-Z0-9._-]+$"
+1161d352 (bdfinlayson 2024-06-14 15:14:37 -0500 25) 
+a296f6b6 (bdfinlayson 2024-06-14 15:18:52 -0500 26)             # Check if the branch name matches the pattern
+a296f6b6 (bdfinlayson 2024-06-14 15:18:52 -0500 27)             if ! [[ $BRANCH_NAME =~ $BRANCH_PATTERN ]]; then
+a296f6b6 (bdfinlayson 2024-06-14 15:18:52 -0500 28)               echo "Error: Branch name '$BRANCH_NAME' does not match the required pattern '$BRANCH_PATTERN'"
+a296f6b6 (bdfinlayson 2024-06-14 15:18:52 -0500 29)               echo "Branch names must be in the format: <type>/HG<ticket-number>-<title>"
+a296f6b6 (bdfinlayson 2024-06-14 15:18:52 -0500 30)               echo "Examples: feature/HG100-name-of-the-ticket, bugfix/HG101-fix-bug"
+a296f6b6 (bdfinlayson 2024-06-14 15:18:52 -0500 31)               exit 1
+a296f6b6 (bdfinlayson 2024-06-14 15:18:52 -0500 32)             fi
+a296f6b6 (bdfinlayson 2024-06-14 15:18:52 -0500 33)           else
+a296f6b6 (bdfinlayson 2024-06-14 15:18:52 -0500 34)             echo "Skipping branch name check for ref: $GITHUB_REF"
+1161d352 (bdfinlayson 2024-06-14 15:14:37 -0500 35)           fi
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500   1) .idea
+598a8b65 (bdfinlayson        2024-06-24 22:30:50 -0500   3) .DS_Store
+7f3cb804 (bdfinlayson        2024-06-25 13:33:38 -0500   4) reports
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500   5) 
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500   6) # Byte-compiled / optimized / DLL files
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500   7) __pycache__/
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500   8) *.py[cod]
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500   9) *$py.class
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  10) 
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  11) # Distribution / packaging
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  12) .Python
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  13) build/
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  14) develop-eggs/
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  15) dist/
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  16) downloads/
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  17) eggs/
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  18) .eggs/
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  19) lib/
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  20) lib64/
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  21) parts/
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  22) sdist/
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  23) var/
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  24) wheels/
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  25) *.egg-info/
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  26) .installed.cfg
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  27) *.egg
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  28) 
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  29) # PyInstaller
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  30) # Usually these files are written by a python script from a template
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  31) # before PyInstaller builds the exe, so as to inject date/other infos into it.
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  32) *.manifest
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  33) *.spec
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  34) 
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  35) # Installer logs
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  36) pip-log.txt
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  37) pip-delete-this-directory.txt
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  38) 
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  39) # Unit test / coverage reports
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  40) htmlcov/
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  41) .tox/
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  42) .nox/
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  43) .coverage
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  44) .coverage.*
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  45) .cache
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  46) nosetests.xml
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  47) coverage.xml
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  48) *.cover
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  49) *.py,cover
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  50) .hypothesis/
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  51) 
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  52) # Translations
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  53) *.mo
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  54) *.pot
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  55) 
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  56) # Django stuff:
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  57) *.log
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  58) local_settings.py
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  59) db.sqlite3
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  60) db.sqlite3-journal
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  61) 
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  62) # Flask stuff:
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  63) instance/
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  64) .webassets-cache
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  65) 
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  66) # Scrapy stuff:
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  67) .scrapy
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  68) 
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  69) # Sphinx documentation
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  70) docs/_build/
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  71) 
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  72) # PyBuilder
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  73) target/
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  74) 
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  75) # Jupyter Notebook
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  76) .ipynb_checkpoints
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  77) 
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  78) # IPython
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  79) profile_default/
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  80) ipython_config.py
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  81) 
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  82) # pyenv
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  83) .python-version
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  84) 
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  85) # celery beat schedule file
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  86) celerybeat-schedule
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  87) 
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  88) # dotenv
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  89) .env
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  90) .env.*
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  91) 
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  92) # virtualenv
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  93) venv/
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  94) ENV/
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  95) env/
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  96) env.bak/
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  97) venv.bak/
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  98) 
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  99) # Spyder project settings
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 100) .spyderproject
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 101) .spyproject
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 102) 
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 103) # Rope project settings
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 104) .ropeproject
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 105) 
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 106) # mkdocs documentation
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 107) /site
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 108) 
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 109) # mypy
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 110) .mypy_cache/
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 111) .dmypy.json
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 112) dmypy.json
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 113) 
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 114) # Pyre type checker
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 115) .pyre/
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 116) 
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 117) # pytype static type analyzer
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 118) .pytype/
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 119) 
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 120) # Cython debug symbols
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 121) cython_debug/
+1161d352 (bdfinlayson        2024-06-14 15:14:37 -0500  1) # Developer Quick Start
+1161d352 (bdfinlayson        2024-06-14 15:14:37 -0500  2) This project uses Poetry for dependency management, so ensure you've added poetry to your Python environment. 
+1161d352 (bdfinlayson        2024-06-14 15:14:37 -0500  3) 
+1161d352 (bdfinlayson        2024-06-14 15:14:37 -0500  4) `python -m pip install poetry`
+1161d352 (bdfinlayson        2024-06-14 15:14:37 -0500  5) 
+1161d352 (bdfinlayson        2024-06-14 15:14:37 -0500  6) To install project dependencies, cd into the project's root directory and call `poetry install`. 
+1161d352 (bdfinlayson        2024-06-14 15:14:37 -0500  7) To add dependencies, use `poetry add [name-of-package]`. 
+^d475ca4 (bdfinlayson        2024-06-14 14:28:19 -0500  1) [tool.poetry]
+^d475ca4 (bdfinlayson        2024-06-14 14:28:19 -0500  2) name = "headline-grabber"
+^d475ca4 (bdfinlayson        2024-06-14 14:28:19 -0500  3) version = "0.1.0"
+^d475ca4 (bdfinlayson        2024-06-14 14:28:19 -0500  4) description = ""
+^d475ca4 (bdfinlayson        2024-06-14 14:28:19 -0500  5) authors = ["bfinlayson-utk <bfinlayson@hbu.co>"]
+^d475ca4 (bdfinlayson        2024-06-14 14:28:19 -0500  6) readme = "README.md"
+^d475ca4 (bdfinlayson        2024-06-14 14:28:19 -0500  7) packages = [{include = "headline_grabber", from = "src"}]
+^d475ca4 (bdfinlayson        2024-06-14 14:28:19 -0500  8) 
+^d475ca4 (bdfinlayson        2024-06-14 14:28:19 -0500  9) [tool.poetry.dependencies]
+690ea18a (bdfinlayson        2024-06-14 14:31:44 -0500 10) python = ">3.9,<4.0"
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500 11) click = "^8.1.7"
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500 12) pyyaml = "^6.0.1"
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 13) beautifulsoup4 = "^4.12.3"
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 14) selenium = "^4.22.0"
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 15) requests = "^2.32.3"
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 16) transformers = "^4.41.2"
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 17) sentence-transformers = "^3.0.1"
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 18) typing-extensions = "^4.12.2"
+7f3cb804 (bdfinlayson        2024-06-25 13:33:38 -0500 19) sentencepiece = "^0.2.0"
+7f3cb804 (bdfinlayson        2024-06-25 13:33:38 -0500 20) dominate = "^2.9.1"
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500 21) black = "^24.4.2"
+^d475ca4 (bdfinlayson        2024-06-14 14:28:19 -0500 26) 
+^d475ca4 (bdfinlayson        2024-06-14 14:28:19 -0500 27) 
+^d475ca4 (bdfinlayson        2024-06-14 14:28:19 -0500 28) [build-system]
+^d475ca4 (bdfinlayson        2024-06-14 14:28:19 -0500 29) requires = ["poetry-core"]
+^d475ca4 (bdfinlayson        2024-06-14 14:28:19 -0500 30) build-backend = "poetry.core.masonry.api"
+db2df793 (Ton That Tu Nguyen 2024-07-25 23:47:21 -0400 21) - GitHub repository: [Link](https://github.com/bdfinlayson/headline_grabber)
+db2df793 (Ton That Tu Nguyen 2024-07-25 23:47:21 -0400 46) - [HG32 - Add some unit test for Reu scrapping](https://github.com/bdfinlayson/headline_grabber/pull/24)
+db2df793 (Ton That Tu Nguyen 2024-07-25 23:47:21 -0400 47) - [HG31 - Add display report unit test cases](https://github.com/bdfinlayson/headline_grabber/pull/28)
+db2df793 (Ton That Tu Nguyen 2024-07-25 23:47:21 -0400 48) - [HG38 - Add keywords option](https://github.com/bdfinlayson/headline_grabber/pull/33)
+db2df793 (Ton That Tu Nguyen 2024-07-25 23:47:21 -0400 52) - [HG32 - Add some unit test for Reu scrapping](https://github.com/bdfinlayson/headline_grabber/pull/24)
+db2df793 (Ton That Tu Nguyen 2024-07-25 23:47:21 -0400 60) - [HG31 - Add display report unit test cases](https://github.com/bdfinlayson/headline_grabber/pull/28)
+db2df793 (Ton That Tu Nguyen 2024-07-25 23:47:21 -0400 68) - [HG38 - Add keywords option](https://github.com/bdfinlayson/headline_grabber/pull/33)
+db2df793 (Ton That Tu Nguyen 2024-07-25 23:47:21 -0400   31) /URI (https://github.com/bdfinlayson/headline_grabber)>>>>
+db2df793 (Ton That Tu Nguyen 2024-07-25 23:47:21 -0400   51) /URI (https://github.com/bdfinlayson/headline_grabber/pull/24)>>>>
+db2df793 (Ton That Tu Nguyen 2024-07-25 23:47:21 -0400   61) /URI (https://github.com/bdfinlayson/headline_grabber/pull/28)>>>>
+db2df793 (Ton That Tu Nguyen 2024-07-25 23:47:21 -0400   71) /URI (https://github.com/bdfinlayson/headline_grabber/pull/33)>>>>
+db2df793 (Ton That Tu Nguyen 2024-07-25 23:47:21 -0400  219) /URI (https://github.com/bdfinlayson/headline_grabber/pull/24)>>>>
+db2df793 (Ton That Tu Nguyen 2024-07-25 23:47:21 -0400  229) /URI (https://github.com/bdfinlayson/headline_grabber/pull/28)>>>>
+db2df793 (Ton That Tu Nguyen 2024-07-25 23:47:21 -0400  239) /URI (https://github.com/bdfinlayson/headline_grabber/pull/33)>>>>
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500 2) 
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500 3) if __name__ == "__main__":
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500 4)     main()
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500   1) import click
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500   8) 
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500   9) 
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  10) @click.command(
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  11)     context_settings=dict(
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  12)         ignore_unknown_options=True,
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  13)     )
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  14) )
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500  15) @click.option(
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  16)     "--include",
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500  18)     type=click.STRING,
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500  19)     default=None,
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500  20)     required=False,
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  22)     help="Comma-separated list of news sources to include in the search",
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500  23) )
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500  24) @click.option(
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  25)     "--exclude",
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500  27)     type=click.STRING,
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500  28)     default=None,
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  29)     required=False,
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  31)     help="Comma-separated list of news sources to exclude from the search",
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500  32) )
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  77)     """Simple program to collect headlines from various news sources and summarize them in a helpful way"""
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 111)     pipeline_context = PipelineContext(
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 112)         site_configs=sites,
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 113)         headlines=[],
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 114)         grouped_headlines={},
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 115)         documents_for_display={},
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 118)     pipeline_context = news_pipeline.run(pipeline_context)
+755a05e9 (bdfinlayson        2024-07-19 13:59:14 -0500 124)     site_abbreviations = [site.abbreviation for site in sites]
+755a05e9 (bdfinlayson        2024-07-19 13:59:14 -0500 131) 
+755a05e9 (bdfinlayson        2024-07-19 13:59:14 -0500 148) 
+755a05e9 (bdfinlayson        2024-07-19 13:59:14 -0500 155) 
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 2) 
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 3) 
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 4) class ScraperEngine(StrEnum):
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500 5)     BEAUTIFULSOUP = ("beautifulsoup",)
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500 6)     SELENIUM = "selenium"
+94d79c91 (bdfinlayson 2024-06-24 22:24:05 -0500 1) from enum import Enum
+94d79c91 (bdfinlayson 2024-06-24 22:24:05 -0500 2) 
+94d79c91 (bdfinlayson 2024-06-24 22:24:05 -0500 3) 
+94d79c91 (bdfinlayson 2024-06-24 22:24:05 -0500 4) class StrEnum(str, Enum):
+94d79c91 (bdfinlayson 2024-06-24 22:24:05 -0500 5)     def __str__(self) -> str:
+94d79c91 (bdfinlayson 2024-06-24 22:24:05 -0500 6)         return str(self.value)
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500  1) from pathlib import Path
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  2) from typing import Dict
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  3) from typing import Type, TypeVar
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  4) 
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500  5) import yaml
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500  6) import os
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500  7) 
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500  9) 
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500 10) T = TypeVar("T")
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500 11) path = Path(__file__).parent
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500 12) 
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500 13) file_names = os.listdir(path)
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500 14) 
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500 15) sites: [NewsSite] = []  # type: ignore
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 16) site_names: Dict[str, str] = {}
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 17) 
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 18) 
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 19) def from_dict(data_class: Type[T], data: dict) -> T:
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500 20)     if hasattr(data_class, "__annotations__"):
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 21)         field_types = data_class.__annotations__
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500 22)         return data_class(
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500 23)             **{
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500 24)                 key: (
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500 25)                     from_dict(field_types[key], value)
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500 26)                     if isinstance(value, dict)
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500 27)                     else value
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500 28)                 )
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500 29)                 for key, value in data.items()
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500 30)             }
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500 31)         )
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 32)     else:
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 33)         return data
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 34) 
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500 35) 
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500 37)     if file_name.endswith(".yaml"):
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500 38)         with open(f"{path}/{file_name}", "r") as file:
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500 39)             yml = yaml.safe_load(file)
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500 40)             site_config = from_dict(NewsSite, yml)
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500 41)             return site_config
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500 50)             sites.append(site_config)
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 51)             site_names[site_config.abbreviation] = site_config.name
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500  1) abbreviation: 'bgb'
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500  2) name: 'The Boston Globe'
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500  3) url: 'https://www.bostonglobe.com'
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500  5) selectors:
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500  6)   headline:
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500  7)     tag: 'div'
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500  8)     identifier: 'card'
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500  9)   link:
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500 10)     tag: 'a'
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500 11)     identifier: 'href'
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500 12)   title:
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500 13)     tag: 'h2'
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500 14)     identifier: 'headline'
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500 15)   description:
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500 16)     tag: 'div'
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500 17)     identifier: 'deck'
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500  1) abbreviation: nyt
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500  2) name: The New York Times
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500  3) url: https://www.nytimes.com
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500  5) selectors:
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500  6)     headline:
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500  7)       tag: section
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500  8)       identifier: story-wrapper
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500  9)     link:
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500 10)       tag: a
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500 11)       identifier: href
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500 12)     title:
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500 13)       tag: p
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500 14)       identifier: indicate-hover
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500 15)     description:
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500 16)       tag: p
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500 17)       identifier: summary-class
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500  1) abbreviation: 'wap'
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500  2) name: 'The Washington Post'
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500  3) url: 'https://www.washingtonpost.com'
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500  5) selectors:
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500  6)   headline:
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500  7)     tag: 'div'
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500  8)     identifier: 'card-text'
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500  9)   link:
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500 10)     tag: 'a'
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500 11)     identifier: 'href'
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500 12)   title:
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500 13)     tag: 'div'
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500 14)     identifier: 'headline'
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500 15)   description:
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500 16)     tag: 'div'
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500 17)     identifier: 'font-size-blurb'
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500  1) abbreviation: 'wsj'
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500  2) name: 'The Wall Street Journal'
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500  3) url: 'https://www.wsj.com'
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500  5) selectors:
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500  6)   headline:
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500  7)     tag: 'article'
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500  8)     identifier: ''
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500  9)   link:
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500 10)     tag: 'a'
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500 11)     identifier: 'href'
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500 12)   title:
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500 13)     tag: 'div'
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500 14)     identifier: ''
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500 15)   description:
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500 16)     tag: 'p'
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500 17)     identifier: ''
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  1) from dataclasses import dataclass
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  2) from typing import List
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  3) 
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  5) 
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  6) 
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  7) @dataclass
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  8) class DisplayDocument:
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  9)     links: List[str]
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 10)     summarized_title: str
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 11)     summarized_description: str
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 12)     average_sentiment: Classification
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 13)     subjects: List[str]
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 14)     most_common_subject: str
+94d79c91 (bdfinlayson 2024-06-24 22:24:05 -0500  1) from dataclasses import dataclass
+94d79c91 (bdfinlayson 2024-06-24 22:24:05 -0500  2) from typing import List, Optional, Union, Dict
+94d79c91 (bdfinlayson 2024-06-24 22:24:05 -0500  3) from typing_extensions import Self
+94d79c91 (bdfinlayson 2024-06-24 22:24:05 -0500  4) 
+94d79c91 (bdfinlayson 2024-06-24 22:24:05 -0500  5) 
+94d79c91 (bdfinlayson 2024-06-24 22:24:05 -0500  6) @dataclass
+94d79c91 (bdfinlayson 2024-06-24 22:24:05 -0500  7) class Classification:
+94d79c91 (bdfinlayson 2024-06-24 22:24:05 -0500  8)     label: str
+94d79c91 (bdfinlayson 2024-06-24 22:24:05 -0500  9)     score: float
+94d79c91 (bdfinlayson 2024-06-24 22:24:05 -0500 10) 
+94d79c91 (bdfinlayson 2024-06-24 22:24:05 -0500 11) 
+94d79c91 (bdfinlayson 2024-06-24 22:24:05 -0500 12) @dataclass
+94d79c91 (bdfinlayson 2024-06-24 22:24:05 -0500 13) class Headline:
+94d79c91 (bdfinlayson 2024-06-24 22:24:05 -0500 14)     link: str
+94d79c91 (bdfinlayson 2024-06-24 22:24:05 -0500 15)     title: str
+94d79c91 (bdfinlayson 2024-06-24 22:24:05 -0500 16)     description: str
+94d79c91 (bdfinlayson 2024-06-24 22:24:05 -0500 17)     subject: Optional[Classification] = None
+94d79c91 (bdfinlayson 2024-06-24 22:24:05 -0500 18)     similarity_scores: Optional[List[float]] = None
+94d79c91 (bdfinlayson 2024-06-24 22:24:05 -0500 19)     similarity_grouping: Optional[Classification] = None
+94d79c91 (bdfinlayson 2024-06-24 22:24:05 -0500 20)     sentiment: Optional[Classification] = None
+94d79c91 (bdfinlayson 2024-06-24 22:24:05 -0500 21) 
+94d79c91 (bdfinlayson 2024-06-24 22:24:05 -0500 22)     def set_sentiment_score(self, sentiment: Dict[str, Union[str, float]]) -> Self:
+94d79c91 (bdfinlayson 2024-06-24 22:24:05 -0500 23)         self.sentiment = Classification(**sentiment)
+94d79c91 (bdfinlayson 2024-06-24 22:24:05 -0500 24)         return self
+94d79c91 (bdfinlayson 2024-06-24 22:24:05 -0500 25) 
+94d79c91 (bdfinlayson 2024-06-24 22:24:05 -0500 26)     def set_subject_classification(self, subject: Classification) -> Self:
+94d79c91 (bdfinlayson 2024-06-24 22:24:05 -0500 27)         self.subject = subject
+94d79c91 (bdfinlayson 2024-06-24 22:24:05 -0500 28)         return self
+94d79c91 (bdfinlayson 2024-06-24 22:24:05 -0500 29) 
+4361c949 (bdfinlayson 2024-06-26 14:57:35 -0500 30)     def set_similarity_classification(
+4361c949 (bdfinlayson 2024-06-26 14:57:35 -0500 31)         self, similarity_group: int, similarity_scores: List[float]
+4361c949 (bdfinlayson 2024-06-26 14:57:35 -0500 32)     ) -> Self:
+94d79c91 (bdfinlayson 2024-06-24 22:24:05 -0500 33)         self.similarity_scores = similarity_scores
+4361c949 (bdfinlayson 2024-06-26 14:57:35 -0500 34)         self.similarity_grouping = Classification(
+4361c949 (bdfinlayson 2024-06-26 14:57:35 -0500 35)             label=str(similarity_group),
+4361c949 (bdfinlayson 2024-06-26 14:57:35 -0500 36)             score=max(filter(lambda x: x != 1.0, similarity_scores)),
+4361c949 (bdfinlayson 2024-06-26 14:57:35 -0500 37)         )
+94d79c91 (bdfinlayson 2024-06-24 22:24:05 -0500 38)         return self
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500  1) from dataclasses import dataclass
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500  2) 
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500  3) 
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500  4) @dataclass
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500  5) class ElementSelector:
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500  6)     tag: str
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500  7)     identifier: str
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500  8) 
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500  9) 
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500 10) @dataclass
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500 11) class PageSelectors:
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500 12)     headline: ElementSelector
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500 13)     link: ElementSelector
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500 14)     title: ElementSelector
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500 15)     description: ElementSelector
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500 16) 
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500 17) 
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500 18) @dataclass
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500 19) class NewsSite:
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500 20)     abbreviation: str
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500 21)     name: str
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500 22)     url: str
+5f854015 (bdfinlayson        2024-06-21 16:49:51 -0500 23)     selectors: PageSelectors
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  1) from dataclasses import dataclass
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  2) from typing import List, Dict
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  3) 
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  8) 
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  9) 
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 10) @dataclass
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 11) class PipelineContext:
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 12)     site_configs: List[NewsSite]
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 13)     user_input: UserPreferences
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 14)     headlines: List[Headline]
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 15)     grouped_headlines: Dict[str, List[Headline]]
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 16)     documents_for_display: Dict[str, List[DisplayDocument]]
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  1) from dataclasses import dataclass
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  2) from typing import List
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  3) 
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  4) 
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  5) @dataclass
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  6) class UserPreferences:
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500  7)     def __init__(
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500  8)         self,
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500  9)         include: List[str] = None,
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500 10)         exclude: List[str] = None,
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500 11)         target_dir: str = None,
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500 12)         limit: int = None,
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500 15)         **kwargs
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500 16)     ):
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 17)         self.include = include
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 18)         self.exclude = exclude
+4361c949 (bdfinlayson 2024-06-26 14:57:35 -0500  1) from transformers import (
+4361c949 (bdfinlayson 2024-06-26 14:57:35 -0500  2)     AutoModelForSequenceClassification,
+4361c949 (bdfinlayson 2024-06-26 14:57:35 -0500  3)     pipeline,
+4361c949 (bdfinlayson 2024-06-26 14:57:35 -0500  4)     AutoModelForSeq2SeqLM,
+4361c949 (bdfinlayson 2024-06-26 14:57:35 -0500  5)     AutoTokenizer,
+4361c949 (bdfinlayson 2024-06-26 14:57:35 -0500  6)     T5ForConditionalGeneration,
+4361c949 (bdfinlayson 2024-06-26 14:57:35 -0500  7)     T5Tokenizer,
+4361c949 (bdfinlayson 2024-06-26 14:57:35 -0500  8) )
+94d79c91 (bdfinlayson 2024-06-24 22:24:05 -0500  9) from sentence_transformers import SentenceTransformer
+94d79c91 (bdfinlayson 2024-06-24 22:24:05 -0500 10) 
+94d79c91 (bdfinlayson 2024-06-24 22:24:05 -0500 11) # Load the tokenizer and model for subject classification
+4361c949 (bdfinlayson 2024-06-26 14:57:35 -0500 12) subject_classification_tokenizer = AutoTokenizer.from_pretrained(
+4361c949 (bdfinlayson 2024-06-26 14:57:35 -0500 13)     "textattack/bert-base-uncased-ag-news"
+4361c949 (bdfinlayson 2024-06-26 14:57:35 -0500 14) )
+4361c949 (bdfinlayson 2024-06-26 14:57:35 -0500 15) subject_classification_model = AutoModelForSequenceClassification.from_pretrained(
+4361c949 (bdfinlayson 2024-06-26 14:57:35 -0500 16)     "textattack/bert-base-uncased-ag-news"
+4361c949 (bdfinlayson 2024-06-26 14:57:35 -0500 17) )
+94d79c91 (bdfinlayson 2024-06-24 22:24:05 -0500 18) 
+94d79c91 (bdfinlayson 2024-06-24 22:24:05 -0500 19) 
+94d79c91 (bdfinlayson 2024-06-24 22:24:05 -0500 20) # Load the pipeline for sentiment analysis
+4361c949 (bdfinlayson 2024-06-26 14:57:35 -0500 21) sentiment_analysis_classifier = pipeline(
+4361c949 (bdfinlayson 2024-06-26 14:57:35 -0500 22)     "text-classification", model="distilbert-base-uncased-finetuned-sst-2-english"
+4361c949 (bdfinlayson 2024-06-26 14:57:35 -0500 23) )
+94d79c91 (bdfinlayson 2024-06-24 22:24:05 -0500 24) 
+94d79c91 (bdfinlayson 2024-06-24 22:24:05 -0500 25) # Load the pre-trained Sentence-BERT model for text similarity analysis
+4361c949 (bdfinlayson 2024-06-26 14:57:35 -0500 26) text_similarity_model = SentenceTransformer("paraphrase-MiniLM-L6-v2")
+94d79c91 (bdfinlayson 2024-06-24 22:24:05 -0500 27) 
+94d79c91 (bdfinlayson 2024-06-24 22:24:05 -0500 28) # Load the tokenizer and model
+94d79c91 (bdfinlayson 2024-06-24 22:24:05 -0500 29) text_summarization_tokenizer = AutoTokenizer.from_pretrained("facebook/bart-large-cnn")
+4361c949 (bdfinlayson 2024-06-26 14:57:35 -0500 30) text_summarization_model = AutoModelForSeq2SeqLM.from_pretrained(
+4361c949 (bdfinlayson 2024-06-26 14:57:35 -0500 31)     "facebook/bart-large-cnn"
+4361c949 (bdfinlayson 2024-06-26 14:57:35 -0500 32) )
+7f3cb804 (bdfinlayson 2024-06-25 13:33:38 -0500 33) 
+7f3cb804 (bdfinlayson 2024-06-25 13:33:38 -0500 34) # Load the headline generator model and tokenizer
+4361c949 (bdfinlayson 2024-06-26 14:57:35 -0500 35) headline_model = T5ForConditionalGeneration.from_pretrained(
+4361c949 (bdfinlayson 2024-06-26 14:57:35 -0500 36)     "Michau/t5-base-en-generate-headline"
+4361c949 (bdfinlayson 2024-06-26 14:57:35 -0500 37) )
+7f3cb804 (bdfinlayson 2024-06-25 13:33:38 -0500 38) headline_tokenizer = T5Tokenizer.from_pretrained("Michau/t5-base-en-generate-headline")
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  1) from transformers import pipeline
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  6)     subject_classification_model,
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  7)     subject_classification_tokenizer,
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  8) )
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 10) 
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 11) 
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 12) class ClassifySubject(PipelineStep):
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 13)     # the model's subject classes are listed here: https://paperswithcode.com/dataset/ag-news
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 14)     subject_class_label_mapping = {
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 15)         "LABEL_0": "World",
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 16)         "LABEL_1": "Sports",
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 17)         "LABEL_2": "Business",
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500 18)         "LABEL_3": "Science/Technology",
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 19)     }
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 20) 
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 21)     def run(self, context: PipelineContext):
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500 22)         classifier = pipeline(
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500 23)             "text-classification",
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500 24)             model=subject_classification_model,
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500 25)             tokenizer=subject_classification_tokenizer,
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500 26)         )
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500 27)         texts = [
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500 28)             " ".join([headline.title, headline.description])
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500 29)             for headline in context.headlines
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500 30)         ]
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 31)         results = classifier(texts)
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500 32)         context.headlines = [
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500 33)             headline.set_subject_classification(
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500 34)                 Classification(
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500 35)                     self.subject_class_label_mapping[result["label"]], result["score"]
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500 36)                 )
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500 37)             )
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500 38)             for headline, result in tqdm(
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500 39)                 zip(context.headlines, results),
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500 40)                 desc="Classifying subjects",
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500 41)                 unit="headline",
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500 42)                 total=len(context.headlines),
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500 43)             )
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500 44)         ]
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500 45)         return context
+7f3cb804 (bdfinlayson        2024-06-25 13:33:38 -0500   1) import os
+7f3cb804 (bdfinlayson        2024-06-25 13:33:38 -0500   2) import webbrowser
+7f3cb804 (bdfinlayson        2024-06-25 13:33:38 -0500   3) from datetime import datetime
+7f3cb804 (bdfinlayson        2024-06-25 13:33:38 -0500   6) import dominate
+7f3cb804 (bdfinlayson        2024-06-25 13:33:38 -0500   7) from dominate.tags import *
+7f3cb804 (bdfinlayson        2024-06-25 13:33:38 -0500   9) 
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500  11) class DisplayReport(PipelineStep):
+7f3cb804 (bdfinlayson        2024-06-25 13:33:38 -0500  14)     def run(self, context: PipelineContext):
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500  43)         text = (
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500  44)             html_content.replace("“", '"')
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500  45)             .replace("”", '"')
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500  46)             .replace("‘", "'")
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500  47)             .replace("’", "'")
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500  48)             .replace("’", "'")
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500  49)             .replace("—", "-")
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500  50)         )
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500  51) 
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500  52)         return text
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500  53) 
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  60)         doc = dominate.document(title="Dominate your HTML")
+7f3cb804 (bdfinlayson        2024-06-25 13:33:38 -0500  61)         subjects = context.documents_for_display.keys()
+7f3cb804 (bdfinlayson        2024-06-25 13:33:38 -0500  62)         news_sources = [config.name for config in context.site_configs]
+7f3cb804 (bdfinlayson        2024-06-25 13:33:38 -0500  63) 
+7f3cb804 (bdfinlayson        2024-06-25 13:33:38 -0500  64)         with doc.head:
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  65)             link(
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  66)                 rel="stylesheet",
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  67)                 href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css",
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  68)             )
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  69)             script(
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  70)                 type="text/javascript",
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  72)             )
+7f3cb804 (bdfinlayson        2024-06-25 13:33:38 -0500  73) 
+7f3cb804 (bdfinlayson        2024-06-25 13:33:38 -0500  74)         with doc:
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  75)             with div(cls="container"):
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  76)                 with div(cls="row"):
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  77)                     with div(cls="col-12"):
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  78)                         h1("Headline Grabber Report")
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  79)                         with div(cls="fst-italic"):
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  81)                             p(
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  82)                                 f'This report contains content from the following news sources: {", ".join(news_sources)}'
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  83)                             )
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500  7) 
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500 11) 
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500 14)             for headline in context.headlines:
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500 18) 
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500 21)         return context
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  1) from typing import List
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  2) import click
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500  5) from tqdm import tqdm
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500  6) 
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  7) 
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  8) class FilterSites(PipelineStep):
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  9)     def run(self, context: PipelineContext) -> PipelineContext:
+7f3cb804 (bdfinlayson        2024-06-25 13:33:38 -0500 10)         if context.user_input.include and context.user_input.exclude:
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 11)             raise click.BadParameter(
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500 12)                 f"--include and --exclude are mutually exclusive. Use --include or --exclude to specify the sources to include or exclude."
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500 13)             )
+7f3cb804 (bdfinlayson        2024-06-25 13:33:38 -0500 14)         if context.user_input.exclude:
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500 17)                 for site_config in tqdm(
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500 18)                     context.site_configs, desc="FilterSites - Excluding"
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500 19)                 )
+7f3cb804 (bdfinlayson        2024-06-25 13:33:38 -0500 22)         elif context.user_input.include:
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500 25)                 for site_config in tqdm(
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500 26)                     context.site_configs, desc="FilterSites - Including"
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500 27)                 )
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 30)         else:
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 31)             filtered_sites = context.site_configs.copy()
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 32)         context.site_configs = filtered_sites
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500 33)         return context
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  4) 
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500  5) 
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  6) class GroupBySimilarity(PipelineStep):
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  7)     def run(self, context: PipelineContext):
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  8)         groups = {}
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500  9)         for headline in tqdm(
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500 10)             context.headlines, desc="Grouping by similarity", unit="headline"
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500 11)         ):
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 12)             if headline.similarity_grouping.label not in groups:
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 13)                 groups[headline.similarity_grouping.label] = [headline]
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 14)             else:
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500 15)                 groups[headline.similarity_grouping.label] = groups[
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500 16)                     headline.similarity_grouping.label
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500 17)                 ] + [headline]
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 18)         context.grouped_headlines = groups
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500 19)         return context
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 1) from abc import ABC, abstractmethod
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 2) 
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 4) 
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 5) 
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 6) class PipelineStep(ABC):
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 7)     @abstractmethod
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 8)     def run(self, context: PipelineContext):
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 9)         raise NotImplementedError
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500   1) from typing import List, Dict
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500   2) from collections import Counter
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500   3) from statistics import mean
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  10)     text_summarization_tokenizer,
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  11)     text_summarization_model,
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  12)     headline_tokenizer,
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  13)     headline_model,
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  14) )
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  15) 
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  16) 
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  17) class PrepareForDisplay(PipelineStep):
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  18)     def run(self, context: PipelineContext):
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  19)         documents_for_display: Dict[str, List[DisplayDocument]] = {}
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500  20)         for label, headlines in tqdm(
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500  21)             context.grouped_headlines.items(),
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500  22)             desc="Preparing documents for display",
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500  23)             unit="group",
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500  24)         ):
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  25)             links = sorted(list(set([headline.link for headline in headlines])))
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  26)             summarized_title = self._generate_headline(
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  27)                 [
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  28)                     " ".join([headline.title, headline.description])
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  29)                     for headline in headlines
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  30)                 ]
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  31)             )
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  32)             summarized_description = self._summarize_text(
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  33)                 [
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  34)                     " ".join([headline.title, headline.description])
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  35)                     for headline in headlines
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  36)                 ],
+a3b26367 (bdfinlayson        2024-07-19 16:02:54 -0500  37)                 min_length=50,
+a3b26367 (bdfinlayson        2024-07-19 16:02:54 -0500  38)                 max_length=200,
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  39)             )
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  40)             subjects = sorted(
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  41)                 list(set([headline.subject.label for headline in headlines]))
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  42)             )
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  43)             most_common_subject = Counter(
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  44)                 [headline.subject.label for headline in headlines]
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  45)             ).most_common()[0][0]
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  46)             most_common_sentiment = Counter(
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  47)                 [headline.sentiment.label for headline in headlines]
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  48)             ).most_common()[0][0]
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  49)             average_sentiment_score = round(
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  50)                 mean(
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  51)                     [
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  52)                         i.sentiment.score
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  53)                         for i in list(
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  54)                             filter(
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  55)                                 lambda x: x.sentiment.label == most_common_sentiment,
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  56)                                 [headline for headline in headlines],
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  57)                             )
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  58)                         )
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  59)                     ]
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  60)                 ),
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  61)                 3,
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  62)             )
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  63)             display_document = DisplayDocument(
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  64)                 links=links,
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  65)                 summarized_title=summarized_title,
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  66)                 summarized_description=summarized_description,
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  67)                 average_sentiment=Classification(
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  68)                     label=most_common_sentiment, score=average_sentiment_score
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  69)                 ),
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  70)                 subjects=subjects,
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  71)                 most_common_subject=most_common_subject,
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  72)             )
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  73)             if most_common_subject not in documents_for_display:
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  74)                 documents_for_display[most_common_subject] = [display_document]
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  75)             else:
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  76)                 documents_for_display[most_common_subject] = documents_for_display[
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  77)                     most_common_subject
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  78)                 ] + [display_document]
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  79) 
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  80)         context.documents_for_display = documents_for_display
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  81)         return context
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  82) 
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  83)     def _summarize_text(
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  84)         self, texts: List[str], min_length: int, max_length: int
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  85)     ) -> str:
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  86)         inputs = text_summarization_tokenizer(
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  87)             texts,
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  88)             return_tensors="pt",
+a3b26367 (bdfinlayson        2024-07-19 16:02:54 -0500  89)             max_length=256,
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  90)             truncation=True,
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  91)             padding="max_length",
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  92)         )
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  93)         summary_ids = text_summarization_model.generate(
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  94)             inputs["input_ids"],
+a3b26367 (bdfinlayson        2024-07-19 16:02:54 -0500  95)             num_beams=2,
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  96)             max_length=max_length,
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  97)             min_length=min_length,
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  98)             early_stopping=True,
+a3b26367 (bdfinlayson        2024-07-19 16:02:54 -0500  99)             length_penalty=10.0
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500 100)         )
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500 101)         summary = text_summarization_tokenizer.decode(
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500 102)             summary_ids[0], skip_special_tokens=True
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500 103)         )
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 104)         return summary
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 105) 
+7f3cb804 (bdfinlayson        2024-06-25 13:33:38 -0500 106)     def _generate_headline(self, texts: List[str]) -> str:
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500 107)         text = "headline: " + " ".join(texts)
+7f3cb804 (bdfinlayson        2024-06-25 13:33:38 -0500 108)         encoding = headline_tokenizer.encode_plus(text, return_tensors="pt")
+7f3cb804 (bdfinlayson        2024-06-25 13:33:38 -0500 109)         input_ids = encoding["input_ids"]
+7f3cb804 (bdfinlayson        2024-06-25 13:33:38 -0500 110)         attention_masks = encoding["attention_mask"]
+7f3cb804 (bdfinlayson        2024-06-25 13:33:38 -0500 111)         beam_outputs = headline_model.generate(
+7f3cb804 (bdfinlayson        2024-06-25 13:33:38 -0500 112)             input_ids=input_ids,
+7f3cb804 (bdfinlayson        2024-06-25 13:33:38 -0500 113)             attention_mask=attention_masks,
+7f3cb804 (bdfinlayson        2024-06-25 13:33:38 -0500 114)             max_length=64,
+a3b26367 (bdfinlayson        2024-07-19 16:02:54 -0500 115)             num_beams=1,
+a3b26367 (bdfinlayson        2024-07-19 16:02:54 -0500 116)             early_stopping=False,
+a3b26367 (bdfinlayson        2024-07-19 16:02:54 -0500 117)             length_penalty=None
+7f3cb804 (bdfinlayson        2024-06-25 13:33:38 -0500 118)         )
+7f3cb804 (bdfinlayson        2024-06-25 13:33:38 -0500 119)         result = headline_tokenizer.decode(beam_outputs[0])
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500 120)         result = result.replace("<pad> ", "").replace("</s>", "")
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500 121)         return result
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  5) 
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500  6) 
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  7) class ScoreSentiment(PipelineStep):
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  8)     def run(self, context: PipelineContext):
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  9)         texts = [
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500 10)             " ".join([headline.title, headline.description])
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500 11)             for headline in context.headlines
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500 12)         ]
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 13)         sentiment_scores = sentiment_analysis_classifier(texts)
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500 14)         context.headlines = [
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500 15)             headline.set_sentiment_score(sentiment_score)
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500 16)             for headline, sentiment_score in tqdm(
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500 17)                 zip(context.headlines, sentiment_scores),
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500 18)                 desc="Setting sentiment scores",
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500 19)                 unit="headline",
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500 20)                 total=len(context.headlines),
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500 21)             )
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500 22)         ]
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500 23)         return context
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500   7) from typing import List
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500   8) import requests
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500   9) from bs4 import BeautifulSoup, Tag
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  10) from selenium import webdriver
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  11) 
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500  16) 
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  17) class ScrapeText(PipelineStep):
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  21)     def run(self, context: PipelineContext) -> PipelineContext:
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  22)         headlines: List[Headline] = []
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  27)         context.headlines = headlines
+7f3cb804 (bdfinlayson        2024-06-25 13:33:38 -0500  28)         if not context.headlines:
+7f3cb804 (bdfinlayson        2024-06-25 13:33:38 -0500  30)             exit()
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  31)         return context
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  32) 
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  33)     def _filter_results(self, x: Headline) -> bool:
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  44) 
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  46)         link_selector = page_selectors.link
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  47)         title_selector = page_selectors.title
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  48)         description_selector = page_selectors.description
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500  49)         raw_link = (
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500  50)             tag.find(link_selector.tag)[link_selector.identifier]
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500  51)             if tag.find(link_selector.tag)
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500  52)             else ""
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500  53)         )
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  54)         return Headline(
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500  55)             link=(raw_link if "http" in raw_link else url + raw_link),
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  56)             title=(
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  57)                 tag.find(title_selector.tag, class_=title_selector.identifier).text
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  58)                 if tag.find(title_selector.tag, class_=title_selector.identifier)
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  59)                 else ""
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  60)             ),
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  61)             description=(
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  62)                 tag.find(
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  63)                     description_selector.tag, class_=description_selector.identifier
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  64)                 ).text
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  65)                 if tag.find(
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  66)                     description_selector.tag, class_=description_selector.identifier
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  67)                 )
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  68)                 else ""
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  69)             ),
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  70)         )
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  71) 
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  72)     def _get_headlines_beautifulsoup(self, config: NewsSite, html: str = None):
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  73)         if html is None:
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  74)             html = requests.get(config.url).text
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  75)         soup = BeautifulSoup(html, "html.parser")
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  76)         page_selectors = config.selectors
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  77)         headlines = list(
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  78)             filter(
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  79)                 self._filter_results,
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  80)                 [
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  82)                     for tag in soup.find_all(
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  83)                         page_selectors.headline.tag,
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  84)                         class_=page_selectors.headline.identifier,
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  85)                     )
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  86)                 ],
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  87)             )
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500  88)         )
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  89)         return headlines
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  90) 
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  91)     def _get_headlines_selenium(self, config: NewsSite):
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500  93)         firefoxOptions.add_argument("--headless")
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500  94)         firefoxOptions.add_argument("--disable-gpu")
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  96)         driver.get(config.url)
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  97)         html = driver.page_source
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  98)         headlines = self._get_headlines_beautifulsoup(config, html)
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  99)         return headlines
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 100) 
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 101)     def _get_headlines(self, config: NewsSite):
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 102)         if config.engine == ScraperEngine.BEAUTIFULSOUP.value:
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 103)             return self._get_headlines_beautifulsoup(config)
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 104)         elif config.engine == ScraperEngine.SELENIUM.value:
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 105)             return self._get_headlines_selenium(config)
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 106)         else:
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500 108) 
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500 111)         raise ScrapeTextException(message)
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  5) from sklearn.cluster import AgglomerativeClustering
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  6) import numpy as np
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  8) 
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500  9) 
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 10) class TextSimilarity(PipelineStep):
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 11)     # hyperparameter that limits the distance one document can be from another to be marked as sharing the same subject
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 12)     threshold = 0.4
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 13) 
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 14)     def run(self, context: PipelineContext):
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500 15)         texts = [
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500 16)             " ".join([headline.title, headline.description])
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500 17)             for headline in context.headlines
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500 18)         ]
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 19)         embeddings = text_similarity_model.encode(texts)
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 20) 
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 21)         # first calculate the similarities between the texts
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 22)         # under the hood, this method computes the cosine similarity
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 23)         # looks like: np.array([[1.0, 0.4, 0.8], [0.2, 1.0, 0.5], [0.9, 0.3, 1.0]])
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 24)         similarity_matrix = text_similarity_model.similarity(embeddings, embeddings)
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 25) 
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 26)         # then use the similarity matrix numbers to discover which texts are likely about the same topic
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 27)         clustering = AgglomerativeClustering(
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500 28)             n_clusters=None, linkage="average", distance_threshold=1 - self.threshold
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 29)         )
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 30)         clustering.fit(1 - similarity_matrix)
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 31)         similarity_groups = clustering.labels_
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500 32)         context.headlines = [
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500 33)             headline.set_similarity_classification(similarity_group, similarity_scores)
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500 35)                 zip(context.headlines, similarity_groups, similarity_matrix),
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500 36)                 desc="Classifying Text Similarities",
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500 37)                 unit="headline",
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500 38)                 total=len(context.headlines),
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500 39)             )
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500 40)         ]
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500 41)         return context
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 12) 
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500 13) news_pipeline = Pipeline(
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500 14)     [
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500 15)         FilterSites(),
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500 16)         ScrapeText(),
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500 17)         ClassifySubject(),
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500 21)         TextSimilarity(),
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500 22)         GroupBySimilarity(),
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500 23)         PrepareForDisplay(),
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500 24)         DisplayReport(),
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500 25)     ]
+4361c949 (bdfinlayson        2024-06-26 14:57:35 -0500 26) )
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  1) from typing import List
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  2) 
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  5) 
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  6) 
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  7) class Pipeline:
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  8)     def __init__(self, steps: List[PipelineStep]):
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500  9)         self.steps = steps
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 10) 
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 11)     def add_step(self, step):
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 12)         self.steps.append(step)
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 13)         return self
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 14) 
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 15)     def run(self, context: PipelineContext) -> PipelineContext:
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 16)         for step in self.steps:
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 17)             context = step.run(context)
+94d79c91 (bdfinlayson        2024-06-24 22:24:05 -0500 18)         return context
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500 29)         nonwin_regex = r"^(/?)((?:[a-zA-Z0-9]+/)*)([a-zA-Z0-9]+?)(\*?)(/?)$"
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500 30)         if not re.match(win_regex if platform == "win32" else nonwin_regex, value):
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500 33) 
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500 38) 
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500 45)             raise click.BadParameter(f"{value} must be a number")
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500 46) 
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500  10) 
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500  17) 
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500  23) 
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500  29) 
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500  36)     headline = soup.find_all(
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500  37)         config.selectors.headline.tag, class_=config.selectors.headline.identifier
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500  38)     )[0]
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500  51)     headline = soup.find_all(
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500  52)         config.selectors.headline.tag, class_=config.selectors.headline.identifier
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500  53)     )[0]
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500  58) 
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500  69)             include=["tol"],
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500  86)             include=["reu"],
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500 168)             include=["bgb"],
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500 176) 
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500 186)             include=["nyt"],
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500  5) 
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500 23)             title=ElementSelector(tag="h1", identifier="summary-class"),
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500 24)         ),
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500 36)             title=ElementSelector(tag="h1", identifier="summary-class"),
+ef426809 (bdfinlayson        2024-07-19 15:39:22 -0500 37)         ),
+ef426809 (bdfinlayson 2024-07-19 15:39:22 -0500 28) 
+ef426809 (bdfinlayson 2024-07-19 15:39:22 -0500 33) 
+ef426809 (bdfinlayson 2024-07-19 15:39:22 -0500 48)         site_configs=[config],
+ef426809 (bdfinlayson 2024-07-19 15:39:22 -0500 49)         headlines=[],
+ef426809 (bdfinlayson 2024-07-19 15:39:22 -0500 50)         grouped_headlines={},
+ef426809 (bdfinlayson 2024-07-19 15:39:22 -0500 51)         documents_for_display={},
+ef426809 (bdfinlayson 2024-07-19 15:39:22 -0500 52)         user_input=UserPreferences(
+ef426809 (bdfinlayson 2024-07-19 15:39:22 -0500 53)             include=["wap"],
+ef426809 (bdfinlayson 2024-07-19 15:39:22 -0500 54)             exclude=None,
+ef426809 (bdfinlayson 2024-07-19 15:39:22 -0500 55)         ),
+ef426809 (bdfinlayson 2024-07-19 15:39:22 -0500 56)     )
+ef426809 (bdfinlayson 2024-07-19 15:39:22 -0500 57)     headlines = scrape_text_instance._get_headlines_beautifulsoup(
+ef426809 (bdfinlayson 2024-07-19 15:39:22 -0500 58)         config, html=STUB_HTML
+ef426809 (bdfinlayson 2024-07-19 15:39:22 -0500 59)     )
+ef426809 (bdfinlayson 2024-07-19 15:39:22 -0500 64) 
+ef426809 (bdfinlayson 2024-07-19 15:39:22 -0500 74)     parsed_headline = scrape_text_instance._parse_headline(
+ef426809 (bdfinlayson 2024-07-19 15:39:22 -0500 75)         dummy_tag, selectors, stub_url
+ef426809 (bdfinlayson 2024-07-19 15:39:22 -0500 76)     )
+ef426809 (bdfinlayson 2024-07-19 15:39:22 -0500 77)     parsed_headline_title_cleaned = " ".join(parsed_headline.title.split())
+ef426809 (bdfinlayson 2024-07-19 15:39:22 -0500 78)     parsed_headline_description_cleaned = " ".join(parsed_headline.description.split())
+ef426809 (bdfinlayson 2024-07-19 15:39:22 -0500 82)     assert (
+ef426809 (bdfinlayson 2024-07-19 15:39:22 -0500 83)         parsed_headline_title_cleaned
+ef426809 (bdfinlayson 2024-07-19 15:39:22 -0500 84)         == "Surging AI energy needs could bring Three Mile Island back online"
+ef426809 (bdfinlayson 2024-07-19 15:39:22 -0500 85)     )
+ef426809 (bdfinlayson 2024-07-19 15:39:22 -0500 90) 
+ef426809 (bdfinlayson 2024-07-19 15:39:22 -0500 91) 
+ef426809 (bdfinlayson 2024-07-19 15:39:22 -0500 93)     pytest.main()
+ef426809 (bdfinlayson 2024-07-19 15:39:22 -0500 10) 
+ef426809 (bdfinlayson 2024-07-19 15:39:22 -0500 15) 
+ef426809 (bdfinlayson 2024-07-19 15:39:22 -0500 24)         documents_for_display={},
+ef426809 (bdfinlayson 2024-07-19 15:39:22 -0500 32) 
+ef426809 (bdfinlayson 2024-07-19 15:39:22 -0500 33) 
+ef426809 (bdfinlayson 2024-07-19 15:39:22 -0500 42)         documents_for_display={},
+ef426809 (bdfinlayson 2024-07-19 15:39:22 -0500 49) 
+ef426809 (bdfinlayson 2024-07-19 15:39:22 -0500 58)         documents_for_display={},
+ef426809 (bdfinlayson 2024-07-19 15:39:22 -0500 62)         filter_sites.run(context)
+ef426809 (bdfinlayson 2024-07-19 15:39:22 -0500 11) 
+ef426809 (bdfinlayson 2024-07-19 15:39:22 -0500 12) 
+ef426809 (bdfinlayson 2024-07-19 15:39:22 -0500 14) 
+ef426809 (bdfinlayson 2024-07-19 15:39:22 -0500 51) 
+ef426809 (bdfinlayson 2024-07-19 15:39:22 -0500 54) 
+ef426809 (bdfinlayson 2024-07-19 15:39:22 -0500 72) 
+ef426809 (bdfinlayson 2024-07-19 15:39:22 -0500 75) 
+ef426809 (bdfinlayson 2024-07-19 15:39:22 -0500 95)     assert len(context.headlines) == 3
+ef426809 (bdfinlayson 2024-07-19 15:39:22 -0500  5) 
+ef426809 (bdfinlayson 2024-07-19 15:39:22 -0500  7)     result = OptionValidator.validate_max_entries(None, None, "5")
+ef426809 (bdfinlayson 2024-07-19 15:39:22 -0500 10) 
+ef426809 (bdfinlayson 2024-07-19 15:39:22 -0500 12)     result = OptionValidator.validate_max_entries(None, None, "5, 10, 15")
+ef426809 (bdfinlayson 2024-07-19 15:39:22 -0500 15) 
+ef426809 (bdfinlayson 2024-07-19 15:39:22 -0500 17)     result = OptionValidator.validate_max_entries(None, None, "5 10 15")
+ef426809 (bdfinlayson 2024-07-19 15:39:22 -0500 20) 
+ef426809 (bdfinlayson 2024-07-19 15:39:22 -0500 23)         OptionValidator.validate_max_entries(None, None, "abc, 10, 15")
+ef426809 (bdfinlayson 2024-07-19 15:39:22 -0500 24) 
