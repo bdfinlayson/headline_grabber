@@ -1,0 +1,64 @@
+0738fc06 (Ryan McFarland 2024-07-24 16:55:41 -0700  1) abbreviation: npr
+0738fc06 (Ryan McFarland 2024-07-24 16:55:41 -0700  2) name: National Public Radio
+0738fc06 (Ryan McFarland 2024-07-24 16:55:41 -0700  3) url: https://www.npr.org
+0738fc06 (Ryan McFarland 2024-07-24 16:55:41 -0700  4) engine: selenium
+0738fc06 (Ryan McFarland 2024-07-24 16:55:41 -0700  5) selectors:
+0738fc06 (Ryan McFarland 2024-07-24 16:55:41 -0700  6)     headline:
+0738fc06 (Ryan McFarland 2024-07-24 16:55:41 -0700  7)       tag: div
+0738fc06 (Ryan McFarland 2024-07-24 16:55:41 -0700  8)       identifier: story-wrap
+0738fc06 (Ryan McFarland 2024-07-24 16:55:41 -0700  9)     link:
+0738fc06 (Ryan McFarland 2024-07-24 16:55:41 -0700 10)       tag: a
+0738fc06 (Ryan McFarland 2024-07-24 16:55:41 -0700 11)       identifier: href
+0738fc06 (Ryan McFarland 2024-07-24 16:55:41 -0700 12)     title:
+0738fc06 (Ryan McFarland 2024-07-24 16:55:41 -0700 13)       tag: h3
+0738fc06 (Ryan McFarland 2024-07-24 16:55:41 -0700 14)       identifier: title
+0738fc06 (Ryan McFarland 2024-07-24 16:55:41 -0700 15)     description:
+0738fc06 (Ryan McFarland 2024-07-24 16:55:41 -0700 16)       tag: p
+0738fc06 (Ryan McFarland 2024-07-24 16:55:41 -0700 17)       identifier: teaser
+165db229 (Ryan McFarland 2024-07-02 19:44:34 -0700  1) abbreviation: apn
+165db229 (Ryan McFarland 2024-07-02 19:44:34 -0700  2) name: AP News
+165db229 (Ryan McFarland 2024-07-02 19:44:34 -0700  3) url: https://www.apnews.com
+165db229 (Ryan McFarland 2024-07-02 19:44:34 -0700  4) engine: beautifulsoup
+165db229 (Ryan McFarland 2024-07-02 19:44:34 -0700  5) selectors:
+165db229 (Ryan McFarland 2024-07-02 19:44:34 -0700  6)     headline:
+165db229 (Ryan McFarland 2024-07-02 19:44:34 -0700  7)       tag: div
+165db229 (Ryan McFarland 2024-07-02 19:44:34 -0700  8)       identifier: PagePromo-content
+165db229 (Ryan McFarland 2024-07-02 19:44:34 -0700  9)     link:
+165db229 (Ryan McFarland 2024-07-02 19:44:34 -0700 10)       tag: a
+165db229 (Ryan McFarland 2024-07-02 19:44:34 -0700 11)       identifier: href
+165db229 (Ryan McFarland 2024-07-02 19:44:34 -0700 12)     title:
+165db229 (Ryan McFarland 2024-07-02 19:44:34 -0700 13)       tag: bsp-custom-headline
+165db229 (Ryan McFarland 2024-07-02 19:44:34 -0700 14)       identifier: custom-headline
+165db229 (Ryan McFarland 2024-07-02 19:44:34 -0700 15)     description:
+165db229 (Ryan McFarland 2024-07-02 19:44:34 -0700 16)       tag: div
+165db229 (Ryan McFarland 2024-07-02 19:44:34 -0700 17)       identifier: PagePromo-description
+d8315fdf (Ryan McFarland 2024-07-24 21:01:52 -0700  1) from headline_grabber.models.pipeline_context import PipelineContext
+d8315fdf (Ryan McFarland 2024-07-24 21:01:52 -0700  2) from headline_grabber.pipeline_steps.pipeline_step import PipelineStep
+d8315fdf (Ryan McFarland 2024-07-24 21:01:52 -0700  3) from headline_grabber.models.headline import Headline
+d8315fdf (Ryan McFarland 2024-07-24 21:01:52 -0700  4) from typing import List
+92475a05 (Ryan McFarland 2024-07-25 15:34:00 -0700  5) 
+d8315fdf (Ryan McFarland 2024-07-24 21:01:52 -0700  6) 
+d8315fdf (Ryan McFarland 2024-07-24 21:01:52 -0700  7) class FilterTopic(PipelineStep):
+d8315fdf (Ryan McFarland 2024-07-24 21:01:52 -0700  8)     def run(self, context: PipelineContext):
+d8315fdf (Ryan McFarland 2024-07-24 21:01:52 -0700  9)         if context.user_input.filter_topic is not None:
+d8315fdf (Ryan McFarland 2024-07-24 21:01:52 -0700 10)             
+d8315fdf (Ryan McFarland 2024-07-24 21:01:52 -0700 11)             filtered_headline_list: List[Headline] = []
+d8315fdf (Ryan McFarland 2024-07-24 21:01:52 -0700 12)             for headline in context.headlines:
+d8315fdf (Ryan McFarland 2024-07-24 21:01:52 -0700 13)                 if headline.subject.label == context.user_input.filter_topic:
+d8315fdf (Ryan McFarland 2024-07-24 21:01:52 -0700 14)                     filtered_headline_list.append(headline)
+d8315fdf (Ryan McFarland 2024-07-24 21:01:52 -0700 15)             
+d8315fdf (Ryan McFarland 2024-07-24 21:01:52 -0700 16)             context.headlines = filtered_headline_list
+d8315fdf (Ryan McFarland 2024-07-24 21:01:52 -0700 17)         return context
+d8315fdf (Ryan McFarland     2024-07-24 21:01:52 -0700 60)     
+d8315fdf (Ryan McFarland     2024-07-24 21:01:52 -0700 61)     @staticmethod
+d8315fdf (Ryan McFarland     2024-07-24 21:01:52 -0700 62)     def validate_filter_topic(ctx, param, value):
+d8315fdf (Ryan McFarland     2024-07-24 21:01:52 -0700 63)         if value is None or value =="":
+d8315fdf (Ryan McFarland     2024-07-24 21:01:52 -0700 64)             return None
+d8315fdf (Ryan McFarland     2024-07-24 21:01:52 -0700 65)         value = str(value)
+d8315fdf (Ryan McFarland     2024-07-24 21:01:52 -0700 66)         value = value.upper()
+d8315fdf (Ryan McFarland     2024-07-24 21:01:52 -0700 67)         if value != 'WORLD' and value != 'SPORTS' and value != 'BUSINESS' and value != 'SCIENCE/TECHNOLOGY':
+d8315fdf (Ryan McFarland     2024-07-24 21:01:52 -0700 68)             raise click.BadParameter(f'{value} must be either World, Sports, Business, Science/Technology')
+d8315fdf (Ryan McFarland     2024-07-24 21:01:52 -0700 69)         return value
+d8315fdf (Ryan McFarland     2024-07-24 21:01:52 -0700 13)         filter_sentiment: str = None,
+d8315fdf (Ryan McFarland     2024-07-24 21:01:52 -0700 14)         filter_topic: str = None,
+d8315fdf (Ryan McFarland     2024-07-24 21:01:52 -0700 22)         self.filter_topic = filter_topic
