@@ -5,6 +5,7 @@
 - [HEADLINE GRABBER](#headline-grabber)
   - [Table of Contents](#table-of-contents)
   - [Project Name: Headline Grabber](#project-name-headline-grabber)
+  - [Project License](#project-license)
   - [Project Description](#project-description)
   - [Group Basic Information](#group-basic-information)
   - [Usage](#usage)
@@ -12,6 +13,10 @@
   - [Unit Testing Report](#unit-testing-report)
 
 ## Project Name: Headline Grabber
+
+## Project License
+
+Distributed under the MIT License. See [LICENSE.txt](LICENSE.txt) for more information.
 
 ## Project Description
 
