@@ -1,0 +1,306 @@
+Commit Number	Author	Date	Line	Content
+3fdff06e	Ton That Tu Nguyen	7/25/24 0:03	25	PyInquirer = "^1.0.3"
+3fdff06e	Ton That Tu Nguyen	7/25/24 0:03	1	numpy==1.26.4
+3fdff06e	Ton That Tu Nguyen	7/25/24 0:03	13	pytest==8.2.2
+3fdff06e	Ton That Tu Nguyen	7/25/24 0:03	14	pytest-html==4.1.1
+3fdff06e	Ton That Tu Nguyen	7/25/24 0:03	15	PyInquirer
+b4f90658	Ton That Tu Nguyen	7/24/24 21:47	67	@click.option(
+b4f90658	Ton That Tu Nguyen	7/24/24 21:47	68	    "--keywords",
+b4f90658	Ton That Tu Nguyen	7/24/24 21:47	69	    "-k",
+b4f90658	Ton That Tu Nguyen	7/24/24 21:47	70	    type=str,
+b4f90658	Ton That Tu Nguyen	7/24/24 21:47	71	    default=None,
+b4f90658	Ton That Tu Nguyen	7/24/24 21:47	72	    required=False,
+b4f90658	Ton That Tu Nguyen	7/24/24 21:47	73	    callback=OptionValidator.validate_keywords,
+b4f90658	Ton That Tu Nguyen	7/24/24 21:47	74	    help="Comma-separated list of keywords to search for in news headlines",
+b4f90658	Ton That Tu Nguyen	7/24/24 21:47	75	)
+3fdff06e	Ton That Tu Nguyen	7/25/24 0:03	76	def main(include: str, exclude: str, target_dir: str, limit: int, filter_sentiment: str, interactive: bool, keywords: str):
+b4f90658	Ton That Tu Nguyen	7/24/24 21:47	103	            keywords=(keywords.split(","
+b4f90658	Ton That Tu Nguyen	7/24/24 21:47	117	    )
+b4f90658	Ton That Tu Nguyen	7/24/24 21:47	156	    keywords = prompt({
+b4f90658	Ton That Tu Nguyen	7/24/24 21:47	157	        'type': 'input',
+b4f90658	Ton That Tu Nguyen	7/24/24 21:47	158	        'name': 'keywords',
+b4f90658	Ton That Tu Nguyen	7/24/24 21:47	159	        'message': 'Please enter a comma-separated list of keywords to search for in news headlines.',
+b4f90658	Ton That Tu Nguyen	7/24/24 21:47	160	        'default': '',
+b4f90658	Ton That Tu Nguyen	7/24/24 21:47	161	    })['keywords']
+b4f90658	Ton That Tu Nguyen	7/24/24 21:47	176	        limit=int(max_results
+3fdff06e	Ton That Tu Nguyen	7/25/24 0:03	177	        keywords=keywords.split(","
+b4f90658	Ton That Tu Nguyen	7/24/24 21:47	178	    )
+b4f90658	Ton That Tu Nguyen	7/24/24 21:47	13	        filter_sentiment: str = None,
+b4f90658	Ton That Tu Nguyen	7/24/24 21:47	14	        keywords: List[str] = None,
+b4f90658	Ton That Tu Nguyen	7/24/24 21:47	22	        self.keywords = keywords
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	19	    @staticmethod
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	20	    def _display_report(html_content: str, file_path: str
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	22	            with open(file_path, "w", encoding='utf-8'
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	23	                file.write(DisplayReport.sanitize_html_content(html_content))
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	25	            return True
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	27	            print(f"Failed to write/open HTML file in web browser: {e}")
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	28	            return False
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	30	    @staticmethod
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	31	    def build_export_path(target_dir: str
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	32	        if target_dir:
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	33	            # ensure reports directory exists
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	34	            os.makedirs(target_dir, exist_ok=True)
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	35	            return target_dir
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	36	        else:
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	37	            default_dir = os.path.join(os.getcwd(), "reports")
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	38	            os.makedirs(default_dir, exist_ok=True)
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	39	            return default_dir
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	41	    @staticmethod
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	42	    def sanitize_html_content(html_content):
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	54	    @staticmethod
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	55	    def build_html_file_path(target_dir: str
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	56	        reports_dir = DisplayReport.build_export_path(target_dir)
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	57	        return os.path.join(reports_dir, f"news_report_{DisplayReport.formatted_datetime}.html")
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	13	class ScrapeTextException(Exception):
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	14	    pass
+b4f90658	Ton That Tu Nguyen	7/24/24 21:47	19	    keyword_list = None
+b4f90658	Ton That Tu Nguyen	7/24/24 21:47	23	        self.keyword_list = context.user_input.keywords
+b4f90658	Ton That Tu Nguyen	7/24/24 21:47	29	            self.throw_error("No headlines found. Please check the site configurations and try again.")
+b4f90658	Ton That Tu Nguyen	7/24/24 21:47	34	        return  self.is_headline_content_greater_than(150, x
+b4f90658	Ton That Tu Nguyen	7/24/24 21:47	35	                self.does_headline_have_keywords(self.keyword_list, x)
+b4f90658	Ton That Tu Nguyen	7/24/24 21:47	37	    def is_headline_content_greater_than(self, min_content_length: int, headline: Headline
+b4f90658	Ton That Tu Nguyen	7/24/24 21:47	38	        return len(" ".join([headline.title, headline.description])
+b4f90658	Ton That Tu Nguyen	7/24/24 21:47	40	    def does_headline_have_keywords(self, keywords: List[str], headline: Headline
+b4f90658	Ton That Tu Nguyen	7/24/24 21:47	41	        return  keywords is None or \
+b4f90658	Ton That Tu Nguyen	7/24/24 21:47	42	                any(keyword in headline.title for keyword in keywords
+b4f90658	Ton That Tu Nguyen	7/24/24 21:47	43	                any(keyword in headline.description for keyword in keywords)
+b4f90658	Ton That Tu Nguyen	7/24/24 21:47	45	    def _parse_headline(self, tag: Tag, page_selectors: PageSelectors, url: str
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	107	            self.throw_error("No defined or unsupported engine!")
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	109	    def throw_error(self, message: str):
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	110	        print(message)
+b4f90658	Ton That Tu Nguyen	7/24/24 21:47	61	    @staticmethod
+b4f90658	Ton That Tu Nguyen	7/24/24 21:47	62	    def validate_keywords(ctx, param, value):
+b4f90658	Ton That Tu Nguyen	7/24/24 21:47	63	        if value is None or value == "":
+b4f90658	Ton That Tu Nguyen	7/24/24 21:47	64	            return None
+b4f90658	Ton That Tu Nguyen	7/24/24 21:47	65	        list_regex = r"^[a-zA-Z0-9 ,]+$"
+b4f90658	Ton That Tu Nguyen	7/24/24 21:47	66	        matches = re.finditer(list_regex, value)
+b4f90658	Ton That Tu Nguyen	7/24/24 21:47	67	        if len(list(matches)
+b4f90658	Ton That Tu Nguyen	7/24/24 21:47	68	            raise click.BadParameter(f"'{value}' is not a comma separated list format")
+b4f90658	Ton That Tu Nguyen	7/24/24 21:47	69	        return value
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	1	import os
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	2	import shutil
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	4	from datetime import datetime
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	5	from headline_grabber.pipeline_steps.display_report import DisplayReport
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	6	from tests.headline_grabber.pipeline_steps.test_data.display_report_data import DisplayReportData
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	8	def test_build_export_path():
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	9	    target_dir = None
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	10	    result = DisplayReport.build_export_path(target_dir)
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	11	    assert result == os.path.join(os.getcwd(), "reports")
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	12	    shutil.rmtree(result, ignore_errors=True)
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	14	    target_dir = "/Users/n3t/Documents/COSC540/report0720"
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	15	    result = DisplayReport.build_export_path(target_dir)
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	16	    assert result == target_dir
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	17	    shutil.rmtree(result, ignore_errors=True)
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	19	def test_build_html_file_path():
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	20	    target_dir = None
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	21	    assert "news_report_" in DisplayReport.build_html_file_path(target_dir)
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	23	    target_dir = "/Users/n3t/Documents/COSC540/report0720"
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	24	    assert "/Users/n3t/Documents/COSC540/report0720/news_report_" in DisplayReport.build_html_file_path(target_dir)
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	26	def test_build_html_content():
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	27	    context = DisplayReportData.GOOD_CONTEXT
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	28	    html_report = DisplayReport().build_html_content(context)
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	29	    assert "<title>Dominate your HTML</title>" in html_report
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	30	    assert "<h1>Headline Grabber Report</h1>" in html_report
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	32	    assert "<h4>Braverman claims leadership rival Jenrick is from left of Tory party</h4>" in html_report
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	33	    assert "<span>Positive
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	34	    assert '<a href="https://www.thetimes.com/uk/politics/article/suella-braverman-tory-leadership-race-robert-jenrick-rivals-mnghlk9fn">https://www.thetimes.com/uk/politics/article/suella-braverman-tory-leadership-race-robert-jenrick-rivals-mnghlk9fn</a>' in html_report
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	36	def test_display_report_fail():
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	37	    target_dir = "/Users/n3t/Documents/COSC540/report0720"
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	38	    os.makedirs(target_dir, exist_ok=True)
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	39	    assert DisplayReport._display_report(DisplayReportData.HTML_CONTENT, target_dir
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	40	    shutil.rmtree(target_dir, ignore_errors=True)
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	42	def test_display_report_success():
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	43	    formatted_datetime = datetime.now().strftime("%Y-%m-%d_%H_%M")
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	44	    report_path = "/Users/n3t/Documents/COSC540/report0720"
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	45	    os.makedirs(report_path, exist_ok=True)
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	46	    report_name = f"/news_report_{formatted_datetime}.html"
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	47	    assert DisplayReport._display_report(DisplayReportData.HTML_CONTENT, report_path + report_name
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	48	    shutil.rmtree(report_path, ignore_errors=True)
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	50	def test_run_success():
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	51	    context = DisplayReportData.GOOD_CONTEXT
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	52	    DisplayReport().run(context)
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	53	    report_path = context.user_input.target_dir
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	54	    assert len(os.listdir(report_path)
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	55	    shutil.rmtree(report_path, ignore_errors=True)
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	57	def test_sanitize_html_content():
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	58	    html_content = "<h4>Braverman claims ‚Äî ‚Äùleadership rival‚Äù Jenrick‚Äò is from left of Tory party</h4>"
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	59	    assert DisplayReport.sanitize_html_content(html_content
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	9	from tests.headline_grabber.pipeline_steps.test_data.scrape_text_data import ScrapeTextData
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	24	def test_get_headlines_reu_beautifulsoup():
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	25	    scrape_text = ScrapeText()
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	26	    config = ScrapeTextData.REU_CONFIG
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	27	    assert scrape_text._get_headlines(config
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	30	def test_parse_headline_reu():
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	31	    scrape_text = ScrapeText()
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	32	    config = ScrapeTextData.REU_CONFIG
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	33	    with open("tests/headline_grabber/pipeline_steps/test_data/reu.html", "r"
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	34	        html = file.read()
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	35	    soup = BeautifulSoup(html, "html.parser")
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	39	    actualResult = scrape_text._parse_headline(headline, config.selectors, config.url)
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	40	    assert actualResult.title.strip(
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	41	    assert actualResult.description.strip(
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	42	    assert actualResult.link.strip(
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	55	    assert actualResult.title.strip(
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	56	    assert actualResult.description.strip(
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	57	    assert actualResult.link.strip(
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	60	def test_run_tol_success():
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	77	def test_run_reu_success():
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	78	    scrape_text = ScrapeText()
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	79	    config = ScrapeTextData.REU_CONFIG
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	80	    pipeline_context = PipelineContext(
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	81	        site_configs=[config],
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	82	        headlines=[],
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	83	        grouped_headlines={},
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	84	        documents_for_display={},
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	85	        user_input=UserPreferences(
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	87	            exclude=None,
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	88	        ),
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	89	    )
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	90	    actualResult = scrape_text.run(pipeline_context)
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	91	    assert len(actualResult.headlines
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	122	    headline = soup.find_all(config.selectors.headline.tag, class_=config.selectors.headline.identifier)[0]
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	124	    assert actualResult.description.strip(
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	125	                                                "seriously considering whether he can recover after a devastating "
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	126	                                                "debate performance.")
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	127	    assert actualResult.title.strip(
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	128	    assert actualResult.link.strip(
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	129	                                         '-debate.html')
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	132	def test_filter_results_false():
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	150	def test_filter_results_true():
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	159	def test_run_exception():
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	177	def test_run_success():
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	190	    actual_result = scrape_text.run(pipeline_context)
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	191	    assert len(actual_result.headlines
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	2	from headline_grabber.models.display_document import DisplayDocument
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	3	from headline_grabber.models.headline import Classification
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	4	from headline_grabber.models.pipeline_context import PipelineContext
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	5	from headline_grabber.models.user_preferences import UserPreferences
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	8	class DisplayReportData:
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	10	    GOOD_CONTEXT = PipelineContext(
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	11	        site_configs=[],
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	12	        headlines=[],
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	13	        grouped_headlines={},
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	14	        documents_for_display={
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	15	            "World": [
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	16	                DisplayDocument(
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	17	                    links=[
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	18	                        "https://www.thetimes.com/uk/politics/article/suella-braverman-tory-leadership-race-robert-jenrick-rivals-mnghlk9fn",
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	19	                    ],
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	20	                    summarized_title="Braverman claims leadership rival Jenrick is from left of Tory party",
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	21	                    summarized_description='Suella Braverman has accused Robert Jenrick of being a "centrist Rishi supporter" who is "from the left of the party", after one of her key supporters switched to backing the former immigration minister. Jenrick and Braverman, the former home secretary, are among seven of the remaining 121 Tory MPs preparing to stand for the leadership...',
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	22	                    average_sentiment=Classification("Positive", 0.1),
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	23	                    subjects=[
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	24	                        "First Subject",
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	25	                    ],
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	26	                    most_common_subject="World"
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	27	                )
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	28	            ]
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	29	        },
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	30	        user_input=UserPreferences(
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	31	            include="nyt",
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	32	            exclude=None,
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	33	            target_dir="/Users/n3t/Documents/COSC540/report0720",
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	34	            limit=None,
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	35	        )
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	36	    )
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	38	    HTML_CONTENT = r'''
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	39	        <!DOCTYPE html>
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	40	        <html>
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	41	        <head>
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	42	            <title>Dominate your HTML</title>
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	43	            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	44	            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" type="text/javascript"></script>
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	45	        </head>
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	46	        <body>
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	47	            <div class="container">
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	48	            <div class="row">
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	49	                <div class="col-12">
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	50	                <h1>Headline Grabber Report</h1>
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	51	                <div class="fst-italic">
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	52	                    <p>Generated At: 2024-07-21_23_01</p>
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	53	                    <p>This report contains content from the following news sources: </p>
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	54	                </div>
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	55	                </div>
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	56	            </div>
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	57	            <div class="row">
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	58	                <h2>World</h2>
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	59	                <div class="col-6">
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	60	                <h4>Braverman claims leadership rival Jenrick is from left of Tory party</h4>
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	61	                <p>Suella Braverman has accused Robert Jenrick of being a ‚Äúcentrist Rishi supporter‚Äù who is ‚Äúfrom the left of the party‚Äù, after one of her key supporters switched to backing the former immigration minister. Jenrick and Braverman, the former home secretary, are among seven of the remaining 121 Tory MPs preparing to stand for the leadership...</p>
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	62	                <b>Sentiment:
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	63	                    <span>Positive
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	64	                </b>
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	65	                <p>
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	66	                    <b>Sources:</b>
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	67	                </p>
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	68	                <ol>
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	69	                    <li>
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	70	                    <a href="https://www.thetimes.com/uk/politics/article/suella-braverman-tory-leadership-race-robert-jenrick-rivals-mnghlk9fn">https://www.thetimes.com/uk/politics/article/suella-braverman-tory-leadership-race-robert-jenrick-rivals-mnghlk9fn</a>
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	71	                    </li>
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	72	                </ol>
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	73	                </div>
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	74	                <hr>
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	75	            </div>
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	76	            </div>
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	77	        </body>
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	78	        </html>
+3a6d7813	Ton That Tu Nguyen	7/22/24 1:06	79	    '''
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	1	<!DOCTYPE html><html lang="en" data-layout="slices"><head><title>Reuters 
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	2	      var current_location = window.location.href;
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	4	      if
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	5	        var supportFetchApi = 'fetch' in window;
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	6	        var supportCSSGrid = window.CSS && CSS.supports('display', 'grid');
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	8	        if
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	9	          window.location.href = '/info-pages/supported-browsers/';
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	10	        }
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	11	      }
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	12	    })()</script><script src="/pf/resources/dist/reuters/js/index.js?d=204" async="" data-config="{&quot;API_ORIGIN&quot;:&quot;https://api-reuters-reuters-prod.cdn.arcpublishing.com&quot;,&quot;ADMIN&quot;:false,&quot;BUSINESS_COUNTRIES&quot;:[],&quot;CHARTBEAT_CONFIG&quot;:{&quot;title&quot;:&quot;Reuters 
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	13	      @font-face {
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	14	        font-family: knowledge-light;
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	15	        font-display: swap;
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	16	        src: url(https://www.reuters.com/static/fonts/knowledge/knowledge-light.woff2
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	17	          url(https://www.reuters.com/static/fonts/knowledge/knowledge-light.woff
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	18	      }
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	20	      @font-face {
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	21	        font-family: knowledge-regular;
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	22	        font-display: swap;
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	23	        src: url(https://www.reuters.com/static/fonts/knowledge/knowledge-regular.woff2
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	24	          url(https://www.reuters.com/static/fonts/knowledge/knowledge-regular.woff
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	25	      }
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	27	      @font-face {
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	28	        font-family: knowledge-medium;
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	29	        font-display: swap;
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	30	        src: url(https://www.reuters.com/static/fonts/knowledge/knowledge-medium.woff2
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	31	          url(https://www.reuters.com/static/fonts/knowledge/knowledge-medium.woff
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	32	      }
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	34	      @font-face {
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	35	        font-family: knowledge-bold;
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	36	        font-display: swap;
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	37	        src: url(https://www.reuters.com/static/fonts/knowledge/knowledge-bold.woff2
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	38	          url(https://www.reuters.com/static/fonts/knowledge/knowledge-bold.woff
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	39	      }
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	41	      @font-face {
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	42	        font-family: yakuhanjp-regular;
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	43	        font-display: swap;
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	44	        src: url(https://www.reuters.com/static/fonts/yakuhanjp/yakuhanjp-regular.woff2
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	45	      }
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	47	      @font-face {
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	48	        font-family: yakuhanjp-medium;
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	49	        font-display: swap;
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	50	        src: url(https://www.reuters.com/static/fonts/yakuhanjp/yakuhanjp-medium.woff2
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	51	      }
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	53	      @font-face {
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	54	        font-family: yakuhanjp-bold;
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	55	        font-display: swap;
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	56	        src: url(https://www.reuters.com/static/fonts/yakuhanjp/yakuhanjp-bold.woff2
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	57	      }
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	58	    </style><script type="application/javascript" id="polyfill-script">if(!Array.prototype.includes
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	59	function(w,d,s,l,i){w[l]=w[l]
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	60	new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	61	j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	62	'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	63	})(window,document,'script','dataLayer','GTM-K5WTBZN');
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	64	"				</script><script src=""//tru.am/scripts/custom/reuters.js"" async=""""></script><link href=""https://cdn.cookielaw.org/scripttemplates/otSDKStub.js"" rel=""preload"" as=""script"" type=""application/javascript""/><link href=""https://cdn.cookielaw.org/scripttemplates/202405.1.0/otBannerSdk.js"" rel=""preload"" as=""script"" type=""application/javascript""/>"
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	65	<script>(window.BOOMR_mq=window.BOOMR_mq
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	66	                              <script>!function(e){var n="https://s.go-mpulse.net/boomerang/";if("False"=="True")e.BOOMR_config=e.BOOMR_config
+b972f38f	Ton That Tu Nguyen	7/17/24 21:23	12	    REU_CONFIG = load_site_config("reu.yaml")
