@@ -142,7 +142,7 @@ def test_filter_results_false():
     assert scrape_text._filter_results(headline) is False
 
     long_title = "Biden Tells Allies He Knows He Has Only Days to Salvage Candidacy"
-    long_description = "President Biden's conversations are the first indication that he is seriously considering whether he can recover after a devastating debate performance."
+    long_description = "President Biden's conversations are the first indication that he is serious."
     headline = Headline(empty_link, long_title, long_description)
     assert scrape_text._filter_results(headline) is False
 
