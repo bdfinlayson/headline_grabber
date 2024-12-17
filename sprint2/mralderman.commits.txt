@@ -1,0 +1,525 @@
+5ea42b19 (mralderman         2024-07-03 21:10:54 -0400  42) @click.option(
+6ad8bea8 (mralderman         2024-07-05 16:31:43 -0400  43)     "--limit",
+6ad8bea8 (mralderman         2024-07-05 16:31:43 -0400  44)     "-l",
+5ea42b19 (mralderman         2024-07-03 21:10:54 -0400  46)     default=None,
+5ea42b19 (mralderman         2024-07-03 21:10:54 -0400  47)     required=False,
+29a5bbb0 (mralderman         2024-07-10 18:41:08 -0400  48)     callback=OptionValidator.validate_max_entries,
+6ad8bea8 (mralderman         2024-07-05 16:31:43 -0400  49)     help="Number specifying the maximum number of entries per topic in a report",
+5ea42b19 (mralderman         2024-07-03 21:10:54 -0400  50) )
+3db18227 (mralderman         2024-07-17 21:01:11 -0400  58) @click.option(
+3db18227 (mralderman         2024-07-17 21:01:11 -0400  59)     "--filter-sentiment",
+3db18227 (mralderman         2024-07-17 21:01:11 -0400  60)     "-f",
+3db18227 (mralderman         2024-07-17 21:01:11 -0400  61)     type=str,
+3db18227 (mralderman         2024-07-17 21:01:11 -0400  62)     default=None,
+3db18227 (mralderman         2024-07-17 21:01:11 -0400  63)     required=False,
+3db18227 (mralderman         2024-07-17 21:01:11 -0400  64)     callback=OptionValidator.validate_filter_sentiment,
+3db18227 (mralderman         2024-07-17 21:01:11 -0400  65)     help="Filters out news headlines ranked positive or negative based on entered value of positive or negative",
+3db18227 (mralderman         2024-07-17 21:01:11 -0400  66) )
+9347ef0e (mralderman 2024-07-07 15:50:03 -0400  1) abbreviation: tol
+9347ef0e (mralderman 2024-07-07 15:50:03 -0400  2) name: The Times of London
+9347ef0e (mralderman 2024-07-07 15:50:03 -0400  3) url: https://www.thetimes.com
+9347ef0e (mralderman 2024-07-07 15:50:03 -0400  4) engine: beautifulsoup
+9347ef0e (mralderman 2024-07-07 15:50:03 -0400  5) selectors:
+9347ef0e (mralderman 2024-07-07 15:50:03 -0400  6)     headline:
+9347ef0e (mralderman 2024-07-07 15:50:03 -0400  7)       tag: div
+9347ef0e (mralderman 2024-07-07 15:50:03 -0400  8)       identifier: Item-content
+9347ef0e (mralderman 2024-07-07 15:50:03 -0400  9)     link:
+9347ef0e (mralderman 2024-07-07 15:50:03 -0400 10)       tag: a
+9347ef0e (mralderman 2024-07-07 15:50:03 -0400 11)       identifier: href
+9347ef0e (mralderman 2024-07-07 15:50:03 -0400 12)     title:
+9347ef0e (mralderman 2024-07-07 15:50:03 -0400 13)       tag: h3
+9347ef0e (mralderman 2024-07-07 15:50:03 -0400 14)       identifier: Item-headline
+9347ef0e (mralderman 2024-07-07 15:50:03 -0400 15)     description:
+9347ef0e (mralderman 2024-07-07 15:50:03 -0400 16)       tag: p
+9347ef0e (mralderman 2024-07-07 15:50:03 -0400 17)       identifier: Dip Item-dip
+c8289fc5 (mralderman         2024-07-23 18:42:44 -0400 13)         filter_sentiment: str = None, 
+6ad8bea8 (mralderman         2024-07-05 16:31:43 -0400 19)         self.limit = limit
+3db18227 (mralderman         2024-07-17 21:01:11 -0400 20)         self.filter_sentiment = filter_sentiment
+5cda80dc (mralderman         2024-07-25 09:38:03 -0400  71)                 src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js",
+5cda80dc (mralderman         2024-07-25 09:38:03 -0400  84)                 with div(cls="accordion", id="accordionExample"):
+5cda80dc (mralderman         2024-07-25 09:38:03 -0400  85)                     for idx, subject in enumerate(tqdm(subjects, desc="Generating report")):
+5cda80dc (mralderman         2024-07-25 09:38:03 -0400  86)                         with div(cls="accordion-item"):
+5cda80dc (mralderman         2024-07-25 09:38:03 -0400  87)                             with h2(cls="accordion-header", id=f"heading{idx}"):
+5cda80dc (mralderman         2024-07-25 09:38:03 -0400  88)                                 button(
+5cda80dc (mralderman         2024-07-25 09:38:03 -0400  89)                                     subject,
+5cda80dc (mralderman         2024-07-25 09:38:03 -0400  90)                                     cls="accordion-button",
+5cda80dc (mralderman         2024-07-25 09:38:03 -0400  91)                                     type="button",
+5cda80dc (mralderman         2024-07-25 09:38:03 -0400  92)                                     data_bs_toggle="collapse",
+5cda80dc (mralderman         2024-07-25 09:38:03 -0400  93)                                     data_bs_target=f"#collapse{idx}",
+5cda80dc (mralderman         2024-07-25 09:38:03 -0400  94)                                     aria_expanded= "true" if idx==0 else "false",
+5cda80dc (mralderman         2024-07-25 09:38:03 -0400  95)                                     aria_controls=f"collapse{idx}"
+5cda80dc (mralderman         2024-07-25 09:38:03 -0400  96)                                 )
+5cda80dc (mralderman         2024-07-25 09:38:03 -0400  97)                             with div(
+5cda80dc (mralderman         2024-07-25 09:38:03 -0400  98)                                 cls=f"accordion-collapse collapse{' show' if idx==0 else ''}",
+5cda80dc (mralderman         2024-07-25 09:38:03 -0400  99)                                 id=f"collapse{idx}",
+5cda80dc (mralderman         2024-07-25 09:38:03 -0400 100)                                 aria_labelledby=f"heading{idx}",
+5cda80dc (mralderman         2024-07-25 09:38:03 -0400 101)                                 data_bs_parent="#accordionExample"
+5cda80dc (mralderman         2024-07-25 09:38:03 -0400 102)                             ):
+5cda80dc (mralderman         2024-07-25 09:38:03 -0400 103)                                 with div(cls="accordion-body"):
+5cda80dc (mralderman         2024-07-25 09:38:03 -0400 104)                                     for headline in context.documents_for_display[subject]:
+5cda80dc (mralderman         2024-07-25 09:38:03 -0400 105)                                         with div(cls="col-6"):
+5cda80dc (mralderman         2024-07-25 09:38:03 -0400 106)                                             h4(headline.summarized_title)
+5cda80dc (mralderman         2024-07-25 09:38:03 -0400 107)                                             p(headline.summarized_description)
+5cda80dc (mralderman         2024-07-25 09:38:03 -0400 108)                                             with b("Sentiment:"):
+5cda80dc (mralderman         2024-07-25 09:38:03 -0400 109)                                                 span(
+5cda80dc (mralderman         2024-07-25 09:38:03 -0400 110)                                                     f"{headline.average_sentiment.label} ({headline.average_sentiment.score})"
+5cda80dc (mralderman         2024-07-25 09:38:03 -0400 111)                                                     )
+5cda80dc (mralderman         2024-07-25 09:38:03 -0400 112)                                             p(b("Sources:"))
+5cda80dc (mralderman         2024-07-25 09:38:03 -0400 113)                                             with ol():
+5cda80dc (mralderman         2024-07-25 09:38:03 -0400 114)                                                 for lnk in headline.links:
+5cda80dc (mralderman         2024-07-25 09:38:03 -0400 115)                                                     li(a(lnk, href=lnk))
+5cda80dc (mralderman         2024-07-25 09:38:03 -0400 116)                                     hr()
+5ea42b19 (mralderman         2024-07-03 21:10:54 -0400  4) from typing import List
+6ad8bea8 (mralderman         2024-07-05 16:31:43 -0400  5) from collections import defaultdict
+5ea42b19 (mralderman         2024-07-03 21:10:54 -0400  6) 
+5ea42b19 (mralderman         2024-07-03 21:10:54 -0400  8) class FilterMaxResults(PipelineStep):
+5ea42b19 (mralderman         2024-07-03 21:10:54 -0400  9)     def run(self, context: PipelineContext):
+6ad8bea8 (mralderman         2024-07-05 16:31:43 -0400 10)         if context.user_input.limit is not None:
+6ad8bea8 (mralderman         2024-07-05 16:31:43 -0400 12)             subject_count = defaultdict(int)
+6ad8bea8 (mralderman         2024-07-05 16:31:43 -0400 13)             filtered_headline_list: List[Headline] = []
+6ad8bea8 (mralderman         2024-07-05 16:31:43 -0400 15)                 if subject_count[headline.subject.label] < context.user_input.limit:
+6ad8bea8 (mralderman         2024-07-05 16:31:43 -0400 16)                     filtered_headline_list.append(headline)
+5ea42b19 (mralderman         2024-07-03 21:10:54 -0400 17)                     subject_count[headline.subject.label] += 1
+6ad8bea8 (mralderman         2024-07-05 16:31:43 -0400 19)             context.headlines = filtered_headline_list
+6ad8bea8 (mralderman         2024-07-05 16:31:43 -0400 20) 
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  1) from headline_grabber.models.pipeline_context import PipelineContext
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  2) from headline_grabber.pipeline_steps.pipeline_step import PipelineStep
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  3) from headline_grabber.models.headline import Headline
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  4) from typing import List
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  5) from sys import exit
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  6) 
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  7) class FilterSentiment(PipelineStep):
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  8)     def run(self, context: PipelineContext):
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  9)         if context.user_input.filter_sentiment is not None:
+3db18227 (mralderman 2024-07-17 21:01:11 -0400 10)             
+3db18227 (mralderman 2024-07-17 21:01:11 -0400 11)             filtered_headline_list: List[Headline] = []
+3db18227 (mralderman 2024-07-17 21:01:11 -0400 12)             for headline in context.headlines:
+3db18227 (mralderman 2024-07-17 21:01:11 -0400 13)                 if headline.sentiment.label != context.user_input.filter_sentiment:
+3db18227 (mralderman 2024-07-17 21:01:11 -0400 14)                     filtered_headline_list.append(headline)
+3db18227 (mralderman 2024-07-17 21:01:11 -0400 15)             
+3db18227 (mralderman 2024-07-17 21:01:11 -0400 16)             context.headlines = filtered_headline_list
+3db18227 (mralderman 2024-07-17 21:01:11 -0400 17)         return context
+29a5bbb0 (mralderman         2024-07-10 18:41:08 -0400 10) from headline_grabber.pipeline_steps.filter_max_results import FilterMaxResults
+3db18227 (mralderman         2024-07-17 21:01:11 -0400 11) from headline_grabber.pipeline_steps.filter_sentiment import FilterSentiment
+5ea42b19 (mralderman         2024-07-03 21:10:54 -0400 18)         FilterMaxResults(),
+6ad8bea8 (mralderman         2024-07-05 16:31:43 -0400 19)         ScoreSentiment(),
+3db18227 (mralderman         2024-07-17 21:01:11 -0400 20)         FilterSentiment(),
+29a5bbb0 (mralderman         2024-07-10 18:41:08 -0400 34)     @staticmethod
+29a5bbb0 (mralderman         2024-07-10 18:41:08 -0400 35)     def validate_max_entries(ctx, param, value):
+29a5bbb0 (mralderman         2024-07-10 18:41:08 -0400 36)         if value is None:
+29a5bbb0 (mralderman         2024-07-10 18:41:08 -0400 37)             return value
+29a5bbb0 (mralderman         2024-07-10 18:41:08 -0400 39)         if isinstance(value, str):
+29a5bbb0 (mralderman         2024-07-10 18:41:08 -0400 40)             value = value.replace(",", " ").split()[0]
+29a5bbb0 (mralderman         2024-07-10 18:41:08 -0400 41) 
+29a5bbb0 (mralderman         2024-07-10 18:41:08 -0400 42)         try:
+29a5bbb0 (mralderman         2024-07-10 18:41:08 -0400 43)             value = int(value)
+29a5bbb0 (mralderman         2024-07-10 18:41:08 -0400 44)         except ValueError:
+29a5bbb0 (mralderman         2024-07-10 18:41:08 -0400 47)         return value
+c8289fc5 (mralderman         2024-07-23 18:42:44 -0400 48) 
+3db18227 (mralderman         2024-07-17 21:01:11 -0400 49)     @staticmethod
+3db18227 (mralderman         2024-07-17 21:01:11 -0400 50)     def validate_filter_sentiment(ctx, param, value):
+3db18227 (mralderman         2024-07-17 21:01:11 -0400 51)         if value is None or value =="":
+3db18227 (mralderman         2024-07-17 21:01:11 -0400 52)             return None
+3db18227 (mralderman         2024-07-17 21:01:11 -0400 53)         value = str(value)
+3db18227 (mralderman         2024-07-17 21:01:11 -0400 54)         value = value.upper()
+3db18227 (mralderman         2024-07-17 21:01:11 -0400 55)         if value != 'POS' and value != 'POSITIVE' and value != 'NEG' and value != 'NEGATIVE':
+3db18227 (mralderman         2024-07-17 21:01:11 -0400 56)             raise click.BadParameter(f'{value} must be either negative/positive/neg/pos')
+3db18227 (mralderman         2024-07-17 21:01:11 -0400 57)         value = 'POSITIVE' if 'POS' in value else 'NEGATIVE'
+3db18227 (mralderman         2024-07-17 21:01:11 -0400 58) 
+3db18227 (mralderman         2024-07-17 21:01:11 -0400 59)         return value
+1b412090 (mralderman         2024-07-25 10:28:27 -0400 31)     assert '<button aria-controls="collapse0" aria-expanded="true" class="accordion-button" data-bs-target="#collapse0" data-bs-toggle="collapse" type="button">World</button>' in html_report
+44587273 (mralderman         2024-07-09 13:44:51 -0400  18) def test_get_headlines_tol_beautifulsoup():
+44587273 (mralderman         2024-07-09 13:44:51 -0400  19)     scrape_text = ScrapeText()
+44587273 (mralderman         2024-07-09 13:44:51 -0400  20)     config = ScrapeTextData.TOL_CONFIG
+44587273 (mralderman         2024-07-09 13:44:51 -0400  21)     assert scrape_text._get_headlines(config) != []
+44587273 (mralderman         2024-07-09 13:44:51 -0400  22) 
+44587273 (mralderman         2024-07-09 13:44:51 -0400  45) def test_parse_headline_tol():
+44587273 (mralderman         2024-07-09 13:44:51 -0400  46)     scrape_text = ScrapeText()
+44587273 (mralderman         2024-07-09 13:44:51 -0400  47)     config = ScrapeTextData.TOL_CONFIG
+44587273 (mralderman         2024-07-09 13:44:51 -0400  48)     with open("tests/headline_grabber/pipeline_steps/test_data/tol.html", "r") as file:
+44587273 (mralderman         2024-07-09 13:44:51 -0400  49)         html = file.read()
+44587273 (mralderman         2024-07-09 13:44:51 -0400  50)     soup = BeautifulSoup(html, "html.parser")
+44587273 (mralderman         2024-07-09 13:44:51 -0400  54)     actualResult = scrape_text._parse_headline(headline, config.selectors, config.url)
+44587273 (mralderman         2024-07-09 13:44:51 -0400  59) 
+44587273 (mralderman         2024-07-09 13:44:51 -0400  61)     scrape_text = ScrapeText()
+44587273 (mralderman         2024-07-09 13:44:51 -0400  62)     config = ScrapeTextData.TOL_CONFIG
+44587273 (mralderman         2024-07-09 13:44:51 -0400  63)     pipeline_context = PipelineContext(
+44587273 (mralderman         2024-07-09 13:44:51 -0400  64)         site_configs=[config],
+44587273 (mralderman         2024-07-09 13:44:51 -0400  65)         headlines=[],
+44587273 (mralderman         2024-07-09 13:44:51 -0400  66)         grouped_headlines={},
+44587273 (mralderman         2024-07-09 13:44:51 -0400  67)         documents_for_display={},
+44587273 (mralderman         2024-07-09 13:44:51 -0400  68)         user_input=UserPreferences(
+44587273 (mralderman         2024-07-09 13:44:51 -0400  70)             exclude=None,
+44587273 (mralderman         2024-07-09 13:44:51 -0400  71)         ),
+44587273 (mralderman         2024-07-09 13:44:51 -0400  72)     )
+44587273 (mralderman         2024-07-09 13:44:51 -0400  73)     actualResult = scrape_text.run(pipeline_context)
+44587273 (mralderman         2024-07-09 13:44:51 -0400  74)     assert len(actualResult.headlines) > 0
+44587273 (mralderman         2024-07-09 13:44:51 -0400 10)     TOL_CONFIG = load_site_config("tol.yaml")
+44587273 (mralderman         2024-07-09 13:44:51 -0400 11) 
+44587273 (mralderman 2024-07-09 13:44:51 -0400  1) <div class="Item P-3 Theme--news">
+44587273 (mralderman 2024-07-09 13:44:51 -0400  2)     <div class="Item-content">
+44587273 (mralderman 2024-07-09 13:44:51 -0400  3)         <h3 class="Item-headline Headline--m">
+44587273 (mralderman 2024-07-09 13:44:51 -0400  4)             <a data-tracking="{&quot;teaser_lead_text&quot;:&quot;&quot;,&quot;article_flag&quot;:&quot;no flag&quot;,&quot;event_navigation_name&quot;:&quot;widget:article&quot;,&quot;article_parent_name&quot;:&quot;article:braverman claims leadership rival jenrick is from left of tory party&quot;,&quot;section_details&quot;:&quot;section:news&quot;}" href="/uk/politics/article/suella-braverman-tory-leadership-race-robert-jenrick-rivals-mnghlk9fn" class="js-tracking">
+44587273 (mralderman 2024-07-09 13:44:51 -0400  5)                 Braverman claims leadership rival Jenrick is from left of Tory party
+44587273 (mralderman 2024-07-09 13:44:51 -0400  6)             </a>
+44587273 (mralderman 2024-07-09 13:44:51 -0400  7)         </h3>
+44587273 (mralderman 2024-07-09 13:44:51 -0400  8)         <span class="ArticleFlag ArticleFlag--new ArticleFlag--stacked">
+44587273 (mralderman 2024-07-09 13:44:51 -0400  9)             <span>new
+44587273 (mralderman 2024-07-09 13:44:51 -0400 10) 
+44587273 (mralderman 2024-07-09 13:44:51 -0400 11)             </span>
+44587273 (mralderman 2024-07-09 13:44:51 -0400 12)         </span>
+44587273 (mralderman 2024-07-09 13:44:51 -0400 13)         <a data-tracking="{&quot;teaser_lead_text&quot;:&quot;&quot;,&quot;article_flag&quot;:&quot;no flag&quot;,&quot;event_navigation_name&quot;:&quot;widget:article&quot;,&quot;article_parent_name&quot;:&quot;article:braverman claims leadership rival jenrick is from left of tory party&quot;,&quot;section_details&quot;:&quot;section:news&quot;}" href="/uk/politics/article/suella-braverman-tory-leadership-race-robert-jenrick-rivals-mnghlk9fn" class="js-tracking">
+44587273 (mralderman 2024-07-09 13:44:51 -0400 14)             <p class="Dip Item-dip">
+44587273 (mralderman 2024-07-09 13:44:51 -0400 15)                 <span class="u-showOnWide">
+44587273 (mralderman 2024-07-09 13:44:51 -0400 16)                     Suella Braverman has accused Robert Jenrick of being a “centrist Rishi supporter” who is “from the left of the party”, after one of her key supporters switched to backing the former immigration minister. Jenrick and Braverman, the former home secretary, are among seven of the remaining 121 Tory MPs preparing to stand for the leadership...
+44587273 (mralderman 2024-07-09 13:44:51 -0400 17)                 </span>
+44587273 (mralderman 2024-07-09 13:44:51 -0400 18)             </p>
+44587273 (mralderman 2024-07-09 13:44:51 -0400 19)         </a>
+44587273 (mralderman 2024-07-09 13:44:51 -0400 20)     </div>
+44587273 (mralderman 2024-07-09 13:44:51 -0400 21) </div>
+3db18227 (mralderman 2024-07-17 21:01:11 -0400   1) import pytest
+3db18227 (mralderman 2024-07-17 21:01:11 -0400   2) from headline_grabber.models.pipeline_context import PipelineContext
+3db18227 (mralderman 2024-07-17 21:01:11 -0400   3) from headline_grabber.pipeline_steps.pipeline_step import PipelineStep
+3db18227 (mralderman 2024-07-17 21:01:11 -0400   4) from headline_grabber.pipeline_steps.filter_sentiment import FilterSentiment
+3db18227 (mralderman 2024-07-17 21:01:11 -0400   5) from src.headline_grabber.pipelines.pipeline import Pipeline
+3db18227 (mralderman 2024-07-17 21:01:11 -0400   6) from src.headline_grabber.models.user_preferences import UserPreferences
+3db18227 (mralderman 2024-07-17 21:01:11 -0400   7) from src.headline_grabber.models.headline import Classification
+3db18227 (mralderman 2024-07-17 21:01:11 -0400   8) from src.headline_grabber.models.headline import Headline
+3db18227 (mralderman 2024-07-17 21:01:11 -0400   9) 
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  10) test_pipline = Pipeline([FilterSentiment()])
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  11) 
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  12) def test_user_input_none():
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  13)     context = PipelineContext(
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  14)         site_configs=[],
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  15)         headlines=[],
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  16)         grouped_headlines={},
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  17)         documents_for_display={},
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  18)         user_input=UserPreferences(
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  19)             include=None,
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  20)             exclude=None,
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  21)             target_dir=None,
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  22)             limit=None,
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  23)             filter_sentiment=None,
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  24)         ),
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  25)     )
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  26)     context.headlines.append(Classification("sports", 0.1))
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  27)     context.headlines[0].sentiment = Classification('POSITIVE', 0.1)
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  28)     context = test_pipline.run(context)
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  29)     assert len(context.headlines) == 1
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  30) 
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  31) def test_user_input_pos_no_filter():
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  32)     context = PipelineContext(
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  33)         site_configs=[],
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  34)         headlines=[],
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  35)         grouped_headlines={},
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  36)         documents_for_display={},
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  37)         user_input=UserPreferences(
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  38)             include=None,
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  39)             exclude=None,
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  40)             target_dir=None,
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  41)             limit=None,
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  42)             filter_sentiment='POSITIVE',
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  43)         ),
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  44)     )
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  45)     context.headlines.append(Classification("sports", 0.1))
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  46)     context.headlines[0].sentiment = Classification('NEGATIVE', 0.1)
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  47)     context = test_pipline.run(context)
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  48)     assert len(context.headlines) == 1
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  49) 
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  50) def test_user_input_pos_filter():
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  51)     context = PipelineContext(
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  52)         site_configs=[],
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  53)         headlines=[],
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  54)         grouped_headlines={},
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  55)         documents_for_display={},
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  56)         user_input=UserPreferences(
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  57)             include=None,
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  58)             exclude=None,
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  59)             target_dir=None,
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  60)             limit=None,
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  61)             filter_sentiment='POSITIVE',
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  62)         ),
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  63)     )
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  64)     context.headlines.append(Classification("sports", 0.1))
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  65)     context.headlines[0].sentiment = Classification('POSITIVE', 0.1)
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  66)     context.headlines.append(Classification("sports", 0.1))
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  67)     context.headlines[1].sentiment = Classification('NEGATIVE', 0.1)
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  68)     context = test_pipline.run(context)
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  69)     assert len(context.headlines) == 1
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  70) 
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  71) def test_user_input_neg_no_filter():
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  72)     context = PipelineContext(
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  73)         site_configs=[],
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  74)         headlines=[],
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  75)         grouped_headlines={},
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  76)         documents_for_display={},
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  77)         user_input=UserPreferences(
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  78)             include=None,
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  79)             exclude=None,
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  80)             target_dir=None,
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  81)             limit=None,
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  82)             filter_sentiment='NEGATIVE',
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  83)         ),
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  84)     )
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  85)     context.headlines.append(Classification("sports", 0.1))
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  86)     context.headlines[0].sentiment = Classification('POSITIVE', 0.1)
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  87)     context = test_pipline.run(context)
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  88)     assert len(context.headlines) == 1
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  89)     
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  90) def test_user_input_neg_filter():
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  91)     context = PipelineContext(
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  92)         site_configs=[],
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  93)         headlines=[],
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  94)         grouped_headlines={},
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  95)         documents_for_display={},
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  96)         user_input=UserPreferences(
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  97)             include=None,
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  98)             exclude=None,
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  99)             target_dir=None,
+3db18227 (mralderman 2024-07-17 21:01:11 -0400 100)             limit=None,
+3db18227 (mralderman 2024-07-17 21:01:11 -0400 101)             filter_sentiment='NEGATIVE',
+3db18227 (mralderman 2024-07-17 21:01:11 -0400 102)         ),
+3db18227 (mralderman 2024-07-17 21:01:11 -0400 103)     )
+3db18227 (mralderman 2024-07-17 21:01:11 -0400 104)     context.headlines.append(Classification("sports", 0.1))
+3db18227 (mralderman 2024-07-17 21:01:11 -0400 105)     context.headlines[0].sentiment = Classification('POSITIVE', 0.1)
+3db18227 (mralderman 2024-07-17 21:01:11 -0400 106)     context.headlines.append(Classification("sports", 0.1))
+3db18227 (mralderman 2024-07-17 21:01:11 -0400 107)     context.headlines[1].sentiment = Classification('NEGATIVE', 0.1)
+3db18227 (mralderman 2024-07-17 21:01:11 -0400 108)     context = test_pipline.run(context)
+3db18227 (mralderman 2024-07-17 21:01:11 -0400 109)     assert len(context.headlines) == 1
+c372b23d (mralderman 2024-07-14 14:31:54 -0400  1) from bs4 import BeautifulSoup
+c372b23d (mralderman 2024-07-14 14:31:54 -0400  2) import pytest
+c372b23d (mralderman 2024-07-14 14:31:54 -0400  3) from headline_grabber.models.news_site import ElementSelector, NewsSite, PageSelectors
+c372b23d (mralderman 2024-07-14 14:31:54 -0400  4) from headline_grabber.models.pipeline_context import PipelineContext
+c372b23d (mralderman 2024-07-14 14:31:54 -0400  5) from headline_grabber.models.user_preferences import UserPreferences
+c372b23d (mralderman 2024-07-14 14:31:54 -0400  6) from headline_grabber.pipeline_steps.scrape_text import ScrapeText
+c372b23d (mralderman 2024-07-14 14:31:54 -0400  7) 
+c372b23d (mralderman 2024-07-14 14:31:54 -0400  8) 
+c372b23d (mralderman 2024-07-14 14:31:54 -0400  9) STUB_HTML = """
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 10) <div class="card | inline_block img_r padding_none margin_top margin_left margin_right margin_bottom width_full i_h_d-hw">
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 11)     <a class="card color_inherit" href="/2024/07/13/nation/trump-rally-shooting-assassination-attempt-investigation/" aria-label="Trump is injured but ‘fine’ after assassination attempt leaves rally-goer and gunman dead">
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 12)         <div>
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 13)             <h2 class="headline | bold border_box font_primary margin_bottom" style="font-size: 22px;">
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 14)                 <div id="" class="image | relative margin_left_16 margin_bottom_10 width_full false false">
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 15)                     <figure class="font_primary margin_center false false" style="height: auto;" id="img-f0f7rlvRUVxS3AM">
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 16)                         <img id="img-f0f7rlvRUVxS3AM-image" alt="Republican presidential candidate former President Donald Trump is surround by U.S. Secret Service agents at a campaign rally, Saturday, July 13, 2024, in Butler, Pa. (AP Photo/Evan Vucci)" class="height_a width_full width_full--mobile width_full--tablet-only" data-src="https://bostonglobe-prod.cdn.arcpublishing.com/resizer/55Zbch4SsFQHtjgJJW1Qd_IMJRk=/480x319/filters:focal(1927.5x10:1937.5x0)/cloudfront-us-east-1.images.arcpublishing.com/bostonglobe/PSKJTVN4Z3VQQROSEH4LWOHJ4A.jpg" data-srcset="https://bostonglobe-prod.cdn.arcpublishing.com/resizer/q6mq0Kn__FKDWHdnzbAUJwO9dgw=/1440x959/filters:focal(1927.5x10:1937.5x0)/cloudfront-us-east-1.images.arcpublishing.com/bostonglobe/PSKJTVN4Z3VQQROSEH4LWOHJ4A.jpg 1440w, https://bostonglobe-prod.cdn.arcpublishing.com/resizer/IsvfHzKJmUGKFaddfMrdkruXOAI=/1280x853/filters:focal(1927.5x10:1937.5x0)/cloudfront-us-east-1.images.arcpublishing.com/bostonglobe/PSKJTVN4Z3VQQROSEH4LWOHJ4A.jpg 1280w, https://bostonglobe-prod.cdn.arcpublishing.com/resizer/7HTPXr8vKPKCDukmHfwqBrK66F8=/1024x682/filters:focal(1927.5x10:1937.5x0)/cloudfront-us-east-1.images.arcpublishing.com/bostonglobe/PSKJTVN4Z3VQQROSEH4LWOHJ4A.jpg 1024w, https://bostonglobe-prod.cdn.arcpublishing.com/resizer/Ncm9IEp1b-_rRB9X24XOOZWwWMA=/820x546/filters:focal(1927.5x10:1937.5x0)/cloudfront-us-east-1.images.arcpublishing.com/bostonglobe/PSKJTVN4Z3VQQROSEH4LWOHJ4A.jpg 820w, https://bostonglobe-prod.cdn.arcpublishing.com/resizer/FML5-bLhmX3nBcqwoFdoDAQFTbc=/600x399/filters:focal(1927.5x10:1937.5x0)/cloudfront-us-east-1.images.arcpublishing.com/bostonglobe/PSKJTVN4Z3VQQROSEH4LWOHJ4A.jpg 600w, https://bostonglobe-prod.cdn.arcpublishing.com/resizer/27MoWwU1Ke41Smpif-O54DpSPX0=/420x279/filters:focal(1927.5x10:1937.5x0)/cloudfront-us-east-1.images.arcpublishing.com/bostonglobe/PSKJTVN4Z3VQQROSEH4LWOHJ4A.jpg 420w, https://bostonglobe-prod.cdn.arcpublishing.com/resizer/eoisYKufJquSk4rNegoYfN_V3Jg=/240x159/filters:focal(1927.5x10:1937.5x0)/cloudfront-us-east-1.images.arcpublishing.com/bostonglobe/PSKJTVN4Z3VQQROSEH4LWOHJ4A.jpg 240w" src="https://bostonglobe-prod.cdn.arcpublishing.com/resizer/55Zbch4SsFQHtjgJJW1Qd_IMJRk=/480x319/filters:focal(1927.5x10:1937.5x0)/cloudfront-us-east-1.images.arcpublishing.com/bostonglobe/PSKJTVN4Z3VQQROSEH4LWOHJ4A.jpg" srcset="https://bostonglobe-prod.cdn.arcpublishing.com/resizer/q6mq0Kn__FKDWHdnzbAUJwO9dgw=/1440x959/filters:focal(1927.5x10:1937.5x0)/cloudfront-us-east-1.images.arcpublishing.com/bostonglobe/PSKJTVN4Z3VQQROSEH4LWOHJ4A.jpg 1440w, https://bostonglobe-prod.cdn.arcpublishing.com/resizer/IsvfHzKJmUGKFaddfMrdkruXOAI=/1280x853/filters:focal(1927.5x10:1937.5x0)/cloudfront-us-east-1.images.arcpublishing.com/bostonglobe/PSKJTVN4Z3VQQROSEH4LWOHJ4A.jpg 1280w, https://bostonglobe-prod.cdn.arcpublishing.com/resizer/7HTPXr8vKPKCDukmHfwqBrK66F8=/1024x682/filters:focal(1927.5x10:1937.5x0)/cloudfront-us-east-1.images.arcpublishing.com/bostonglobe/PSKJTVN4Z3VQQROSEH4LWOHJ4A.jpg 1024w, https://bostonglobe-prod.cdn.arcpublishing.com/resizer/Ncm9IEp1b-_rRB9X24XOOZWwWMA=/820x546/filters:focal(1927.5x10:1937.5x0)/cloudfront-us-east-1.images.arcpublishing.com/bostonglobe/PSKJTVN4Z3VQQROSEH4LWOHJ4A.jpg 820w, https://bostonglobe-prod.cdn.arcpublishing.com/resizer/FML5-bLhmX3nBcqwoFdoDAQFTbc=/600x399/filters:focal(1927.5x10:1937.5x0)/cloudfront-us-east-1.images.arcpublishing.com/bostonglobe/PSKJTVN4Z3VQQROSEH4LWOHJ4A.jpg 600w, https://bostonglobe-prod.cdn.arcpublishing.com/resizer/27MoWwU1Ke41Smpif-O54DpSPX0=/420x279/filters:focal(1927.5x10:1937.5x0)/cloudfront-us-east-1.images.arcpublishing.com/bostonglobe/PSKJTVN4Z3VQQROSEH4LWOHJ4A.jpg 420w, https://bostonglobe-prod.cdn.arcpublishing.com/resizer/eoisYKufJquSk4rNegoYfN_V3Jg=/240x159/filters:focal(1927.5x10:1937.5x0)/cloudfront-us-east-1.images.arcpublishing.com/bostonglobe/PSKJTVN4Z3VQQROSEH4LWOHJ4A.jpg 240w" loading="lazy">
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 17)                         <figcaption class=" img_caption | margin_horizontal_0--mobile margin_horizontal_0--tablet text_align_right">
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 18)                             <span class="credit uppercase"></span>
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 19)                         </figcaption>
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 20)                     </figure>
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 21)                 </div>
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 22)                 <span id="headline-f0f7rlvRUVxS3AM">Trump is injured but ‘fine’ after assassination attempt leaves rally-goer and gunman dead.</span>
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 23)                 <div class="deck | border_box inline_block  font_primary padding_bottom" style="font-size: 14px; line-height: 1.3;">
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 24)                     <span id="deck-f0f7rlvRUVxS3AM" class="display_block">Former president Trump is in “great spirits” and doing well after an assassination attempt on Saturday, aides said. The shooter and a spectator were killed.    </span>
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 25)                 </div>
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 26)             </h2>
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 27)         </div>
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 28)     </a>
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 29) </div>
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 30) """
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 31) 
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 32) @pytest.fixture
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 33) def scrape_text_instance():
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 34)     return ScrapeText()
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 35) 
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 36) 
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 37) def test_get_headlines_beautifulsoup_with_stub_html(scrape_text_instance):
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 38)     config = NewsSite(
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 39)         abbreviation="bgb",
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 40)         name="The Boston Globe",
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 41)         url="https://www.bostonglobe.com",
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 42)         engine="beautifulsoup",
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 43)         selectors=PageSelectors(
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 44)             headline=ElementSelector(tag="div", identifier="card"),
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 45)             link=ElementSelector(tag="a", identifier="href"),
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 46)             description=ElementSelector(tag="div", identifier="deck"),
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 47)             title=ElementSelector(tag="h2", identifier="headline"),
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 48)         ),
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 49)     )
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 50)     pipeline_context = PipelineContext(
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 51)             site_configs=[config],
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 52)             headlines=[],
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 53)             grouped_headlines={},
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 54)             documents_for_display={},
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 55)             user_input=UserPreferences(
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 56)                 include=['bgb'],
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 57)                 exclude=None,
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 58)             ),
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 59)         )
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 60)     headlines = scrape_text_instance._get_headlines_beautifulsoup(config, html=STUB_HTML)
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 61)     assert len(headlines) > 0
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 62)     pipeline_context.headlines.extend(headlines)
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 63)     assert len(pipeline_context.headlines) > 0
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 64) 
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 65) def test_parse_headline(scrape_text_instance):
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 66)     dummy_tag = BeautifulSoup(STUB_HTML, "html.parser").find("div", class_="card")
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 67)     selectors = PageSelectors(
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 68)         headline=ElementSelector(tag="div", identifier="card"),
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 69)         link=ElementSelector(tag="a", identifier="href"),
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 70)         description=ElementSelector(tag="div", identifier="deck"),
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 71)         title=ElementSelector(tag="h2", identifier="headline"),
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 72)     )
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 73)     stub_url = 'https://www.bostonglobe.com'
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 74)     parsed_headline = scrape_text_instance._parse_headline(dummy_tag, selectors, stub_url)
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 75)     parsed_headline.title = parsed_headline.title.lstrip()
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 76)     parsed_headline.title = parsed_headline.title.rstrip()
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 77)     parsed_headline_title_cleaned = parsed_headline.title.splitlines()[0]
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 78)     parsed_headline_description_cleaned = ' '.join(parsed_headline.description.split())
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 79)     parsed_headline_link_cleaned = parsed_headline.link.replace(" ", "")
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 80)     print(parsed_headline_link_cleaned)
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 81)     assert parsed_headline_title_cleaned == "Trump is injured but ‘fine’ after assassination attempt leaves rally-goer and gunman dead."
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 82) 
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 83)     assert parsed_headline_description_cleaned == (
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 84)         'Former president Trump is in “great spirits” and doing well after an assassination attempt on Saturday, aides said. The shooter and a spectator were killed.'
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 85)     )
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 86)     assert parsed_headline_link_cleaned == 'https://www.bostonglobe.com/2024/07/13/nation/trump-rally-shooting-assassination-attempt-investigation/'
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 87)     
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 88) if __name__ == "__main__":
+c372b23d (mralderman 2024-07-14 14:31:54 -0400 89)     pytest.main()
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  1) import pytest
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  2) import click
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  3) from headline_grabber.validators.click.option_validator import OptionValidator
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  4) 
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  5) def test_validate_filter_sentiment():
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  6)     # Test cases for valid input
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  7)     assert OptionValidator.validate_filter_sentiment(None, None, 'POS') == 'POSITIVE'
+ba70aaca (mralderman 2024-07-23 18:36:28 -0400  8)     assert OptionValidator.validate_filter_sentiment(None, None, 'PoS') == 'POSITIVE'
+3db18227 (mralderman 2024-07-17 21:01:11 -0400  9)     assert OptionValidator.validate_filter_sentiment(None, None, 'pos') == 'POSITIVE'
+3db18227 (mralderman 2024-07-17 21:01:11 -0400 10)     assert OptionValidator.validate_filter_sentiment(None, None, 'POSITIVE') == 'POSITIVE'
+3db18227 (mralderman 2024-07-17 21:01:11 -0400 11)     assert OptionValidator.validate_filter_sentiment(None, None, 'positive') == 'POSITIVE'
+ba70aaca (mralderman 2024-07-23 18:36:28 -0400 12)     assert OptionValidator.validate_filter_sentiment(None, None, 'PoSiTiVe') == 'POSITIVE'
+3db18227 (mralderman 2024-07-17 21:01:11 -0400 13)     assert OptionValidator.validate_filter_sentiment(None, None, 'NEG') == 'NEGATIVE'
+ba70aaca (mralderman 2024-07-23 18:36:28 -0400 14)     assert OptionValidator.validate_filter_sentiment(None, None, 'NeG') == 'NEGATIVE'
+3db18227 (mralderman 2024-07-17 21:01:11 -0400 15)     assert OptionValidator.validate_filter_sentiment(None, None, 'neg') == 'NEGATIVE'
+3db18227 (mralderman 2024-07-17 21:01:11 -0400 16)     assert OptionValidator.validate_filter_sentiment(None, None, 'NEGATIVE') == 'NEGATIVE'
+3db18227 (mralderman 2024-07-17 21:01:11 -0400 17)     assert OptionValidator.validate_filter_sentiment(None, None, 'negative') == 'NEGATIVE'
+ba70aaca (mralderman 2024-07-23 18:36:28 -0400 18)     assert OptionValidator.validate_filter_sentiment(None, None, 'NeGaTiVe') == 'NEGATIVE'
+3db18227 (mralderman 2024-07-17 21:01:11 -0400 19) 
+3db18227 (mralderman 2024-07-17 21:01:11 -0400 20)     # Test cases for invalid input
+3db18227 (mralderman 2024-07-17 21:01:11 -0400 21)     with pytest.raises(click.BadParameter):
+3db18227 (mralderman 2024-07-17 21:01:11 -0400 22)         OptionValidator.validate_filter_sentiment(None, None, 'neutral')
+3db18227 (mralderman 2024-07-17 21:01:11 -0400 23)     
+3db18227 (mralderman 2024-07-17 21:01:11 -0400 24)     with pytest.raises(click.BadParameter):
+3db18227 (mralderman 2024-07-17 21:01:11 -0400 25)         OptionValidator.validate_filter_sentiment(None, None, '123')
+3db18227 (mralderman 2024-07-17 21:01:11 -0400 26) 
+3db18227 (mralderman 2024-07-17 21:01:11 -0400 27)     with pytest.raises(click.BadParameter):
+3db18227 (mralderman 2024-07-17 21:01:11 -0400 28)         OptionValidator.validate_filter_sentiment(None, None, 'positive123')
+3db18227 (mralderman 2024-07-17 21:01:11 -0400 29) 
+ba70aaca (mralderman 2024-07-23 18:36:28 -0400 30)     with pytest.raises(click.BadParameter):
+ba70aaca (mralderman 2024-07-23 18:36:28 -0400 31)         OptionValidator.validate_filter_sentiment(None, None, 'positeve')
+ba70aaca (mralderman 2024-07-23 18:36:28 -0400 32) 
+ba70aaca (mralderman 2024-07-23 18:36:28 -0400 33)     with pytest.raises(click.BadParameter):
+ba70aaca (mralderman 2024-07-23 18:36:28 -0400 34)         OptionValidator.validate_filter_sentiment(None, None, 'negitive')
+ba70aaca (mralderman 2024-07-23 18:36:28 -0400 35) 
+3db18227 (mralderman 2024-07-17 21:01:11 -0400 36)     # Test cases for None or empty input
+3db18227 (mralderman 2024-07-17 21:01:11 -0400 37)     assert OptionValidator.validate_filter_sentiment(None, None, None) is None
+3db18227 (mralderman 2024-07-17 21:01:11 -0400 38)     assert OptionValidator.validate_filter_sentiment(None, None, "") is None
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400  1) import pytest
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400  2) from headline_grabber.models.pipeline_context import PipelineContext
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400  3) from headline_grabber.pipeline_steps.pipeline_step import PipelineStep
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400  4) from headline_grabber.pipeline_steps.filter_max_results import FilterMaxResults
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400  5) from src.headline_grabber.pipelines.pipeline import Pipeline
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400  6) from src.headline_grabber.models.user_preferences import UserPreferences
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400  7) from src.headline_grabber.models.headline import Classification
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400  8) from src.headline_grabber.models.headline import Headline
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400  9) 
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 10) test_pipline = Pipeline([FilterMaxResults()])
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 13) def test_user_input_none():
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 15)     context = PipelineContext(
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 16)         site_configs=[],
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 17)         headlines=[],
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 18)         grouped_headlines={},
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 19)         documents_for_display={},
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 20)         user_input=UserPreferences(
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 21)             include=None,
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 22)             exclude=None,
+29a5bbb0 (mralderman  2024-07-10 18:41:08 -0400 23)             target_dir=None,
+29a5bbb0 (mralderman  2024-07-10 18:41:08 -0400 24)             limit=None,
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 25)         ),
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 26)     )
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 27)     context.headlines.append(Classification("sports", 0.1))
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 28)     context.headlines.append(Classification("sports", 0.1))
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 29)     context.headlines.append(Classification("sports", 0.1))
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 30)     context = test_pipline.run(context)
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 31)     assert len(context.headlines) == 3
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 32) 
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 33) 
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 34) def test_user_input_two_clips_results():
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 35)     context = PipelineContext(
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 36)         site_configs=[],
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 37)         headlines=[],
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 38)         grouped_headlines={},
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 39)         documents_for_display={},
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 40)         user_input=UserPreferences(
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 41)             include=None,
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 42)             exclude=None,
+29a5bbb0 (mralderman  2024-07-10 18:41:08 -0400 43)             target_dir=None,
+29a5bbb0 (mralderman  2024-07-10 18:41:08 -0400 44)             limit=2,
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 45)         ),
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 46)     )
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 47)     context.headlines.append(Headline("a", "b", "c", Classification("sports", 0.1)))
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 48)     context.headlines.append(Headline("a", "b", "c", Classification("sports", 0.1)))
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 49)     context.headlines.append(Headline("a", "b", "c", Classification("sports", 0.1)))
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 50)     context = test_pipline.run(context)
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 52)     assert len(context.headlines) == 2
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 53) 
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 55) def test_user_input_two_does_not_clip_results():
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 56)     context = PipelineContext(
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 57)         site_configs=[],
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 58)         headlines=[],
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 59)         grouped_headlines={},
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 60)         documents_for_display={},
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 61)         user_input=UserPreferences(
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 62)             include=None,
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 63)             exclude=None,
+29a5bbb0 (mralderman  2024-07-10 18:41:08 -0400 64)             target_dir=None,
+29a5bbb0 (mralderman  2024-07-10 18:41:08 -0400 65)             limit=3,
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 66)         ),
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 67)     )
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 68)     context.headlines.append(Headline("a", "b", "c", Classification("sports", 0.1)))
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 69)     context.headlines.append(Headline("a", "b", "c", Classification("sports", 0.1)))
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 70)     context.headlines.append(Headline("a", "b", "c", Classification("World", 0.1)))
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 71)     context = test_pipline.run(context)
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 73)     assert len(context.headlines) == 3
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 74) 
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 76) def test_user_input_two_clips_3_but_not_one():
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 77)     context = PipelineContext(
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 78)         site_configs=[],
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 79)         headlines=[],
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 80)         grouped_headlines={},
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 81)         documents_for_display={},
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 82)         user_input=UserPreferences(
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 83)             include=None,
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 84)             exclude=None,
+29a5bbb0 (mralderman  2024-07-10 18:41:08 -0400 85)             target_dir=None,
+29a5bbb0 (mralderman  2024-07-10 18:41:08 -0400 86)             limit=2,
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 87)         ),
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 88)     )
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 89)     context.headlines.append(Headline("a", "b", "c", Classification("sports", 0.1)))
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 90)     context.headlines.append(Headline("a", "b", "c", Classification("sports", 0.1)))
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 91)     context.headlines.append(Headline("a", "b", "c", Classification("sports", 0.1)))
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 92)     context.headlines.append(Headline("a", "b", "c", Classification("World", 0.1)))
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 93)     context = test_pipline.run(context)
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 94) 
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400  1) import pytest
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400  2) import click
+29a5bbb0 (mralderman  2024-07-10 18:41:08 -0400  3) from headline_grabber.validators.click.option_validator import OptionValidator
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400  4) 
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400  6) def test_validate_number_single_value():
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400  8)     assert result == 5
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400  9) 
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 11) def test_validate_number_comma_separated():
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 13)     assert result == 5
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 14) 
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 16) def test_validate_number_space_separated():
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 18)     assert result == 5
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 19) 
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 21) def test_validate_number_invalid_value():
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 22)     with pytest.raises(click.BadParameter):
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 25) 
+5ea42b19 (mralderman  2024-07-03 21:10:54 -0400 26) def test_validate_number_default_value():
+29a5bbb0 (mralderman  2024-07-10 18:41:08 -0400 27)     result = OptionValidator.validate_max_entries(None, None, None)
+3db18227 (mralderman  2024-07-17 21:01:11 -0400 28)     assert result == None
+3db18227 (mralderman  2024-07-17 21:01:11 -0400 29) 
+3db18227 (mralderman  2024-07-17 21:01:11 -0400 30) def test_validate_number_int():
+3db18227 (mralderman  2024-07-17 21:01:11 -0400 31)     result = OptionValidator.validate_max_entries(None, None, 5)
+c8289fc5 (mralderman  2024-07-23 18:42:44 -0400 32)     assert result == 5
